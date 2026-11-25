@@ -116,9 +116,8 @@ export default function Home() {
 
       {/* แบนเนอร์ */}
       <div class="relative mt-6 px-4">
-        {/* สไลด์แบนเนอร์ 2:1 · ไฟล์ตัวอย่าง home-banner-1..4.jpg เป็น 4:1 → ข้างซ้าย/ขวาถูกตัด จนกว่าจะได้งาน 2:1 จริง */}
-        {/* สไลด์สุดท้าย = ช่องเทาบอกขนาดรูป (สำหรับทีมทำแบนเนอร์) */}
-        <BannerCarousel images={[...[1, 2, 3].map((n) => `/images/figma/home-banner-${n}.jpg`), ""]} />
+        {/* สไลด์แบนเนอร์ 2:1 · รูปจริงจากเจ้าของ (2400×1200 → ย่อ 1200×600 jpg) public/images/home/slide-1..4.jpg — 2026-11-25 · slide-2 (Playground) ขึ้นก่อน */}
+        <BannerCarousel images={[2, 1, 3, 4].map((n) => `/images/home/slide-${n}.jpg`)} />
       </div>
 
       {/* ภารกิจสะสมคอยน์ (ก่อนส่วนแลกสินค้า) */}
