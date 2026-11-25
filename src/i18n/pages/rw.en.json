@@ -7,7 +7,8 @@
   "rw.products": "Products",
   "rw.title": "Rewards",
   "rw.total_coins": "Total coins",
-  "rw.wallet_group": "My wallet",
+  "rw.wallet_group": "Coupons & history",
   "rw.tab_products": "Products",
-  "rw.tab_coupons": "Coupons"
+  "rw.tab_coupons": "Coupons",
+  "rw.tab_redemptions": "Redemptions"
 }

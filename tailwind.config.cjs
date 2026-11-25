@@ -169,10 +169,15 @@ module.exports = {
       keyframes: {
         "content-show": { from: { opacity: 0, transform: "scale(0.96)" }, to: { opacity: 1, transform: "scale(1)" } },
         "content-hide": { from: { opacity: 1, transform: "scale(1)" }, to: { opacity: 0, transform: "scale(0.96)" } },
+        // bottom sheet: เลื่อนขึ้นตรงๆ จากล่าง — ต้องคง translateX(-50%) ของ .fixed-frame ไว้ ไม่งั้นจะเลื่อนเฉียง
+        "sheet-in": { from: { transform: "translate(-50%, 100%)" }, to: { transform: "translate(-50%, 0)" } },
+        "sheet-out": { from: { transform: "translate(-50%, 0)" }, to: { transform: "translate(-50%, 100%)" } },
       },
       animation: {
         "content-show": "content-show 0.2s ease-out",
         "content-hide": "content-hide 0.2s ease-out",
+        "sheet-in": "sheet-in 0.28s cubic-bezier(0.32, 0.72, 0, 1)",
+        "sheet-out": "sheet-out 0.2s ease-in",
       },
     },
   },

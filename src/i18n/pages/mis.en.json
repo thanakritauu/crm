@@ -34,5 +34,6 @@
   "mis.start": "Start mission",
   "mis.start_question": "Start the mission now?",
   "mis.start_question_desc": "Buy participating products and collect coins to redeem rewards!",
-  "mis.use_coins": "Use {{coins}} coins"
+  "mis.use_coins": "Use {{coins}} coins",
+  "mis.start_mission_all": "Start mission"
 }

@@ -9,6 +9,7 @@ import { usePartnerPath } from "~/lib/theme";
 import { cn, formatNumber } from "~/lib/utils";
 import { pointsExpire } from "~/prototype/settings";
 import { PlatformRefreshButton } from "~/components/platform/platform-refresh-button";
+import { CountUp } from "~/components/ui/count-up";
 import { expiringPoints } from "~/services/history-service";
 
 /**
@@ -61,6 +62,8 @@ function BalanceBody(props: {
   onBrand?: boolean;
   /** ไอคอนรีเฟรชแทน ">" มุมขวา (การ์ดหน้าแรก) — ไม่มีลิงก์ประวัติ */
   refresh?: boolean;
+  /** ตัวเลขนับขึ้น/ลงเมื่อยอดเปลี่ยน (หน้าแรก) */
+  countUp?: boolean;
 }) {
   const { t } = useI18n();
   const to = usePartnerPath();
@@ -73,7 +76,7 @@ function BalanceBody(props: {
       <span class="flex items-center justify-between gap-2">
         <span class="flex min-w-0 items-center gap-1">
           <BalanceIcon unit={props.unit} size={16} />
-          <span class={cn("truncate text-12", props.onBrand ? "text-white" : "text-gray")}>{props.label ?? t(coins() ? "club.your_coins" : "club.your_points")}</span>
+          <span class={cn("truncate text-12 font-medium", props.onBrand ? "text-white" : "text-gray")}>{props.label ?? t(coins() ? "club.your_coins" : "club.your_points")}</span>
         </span>
         {/* การ์ดหน้าแรก: ไอคอนรีเฟรชแทน ">" ตำแหน่งเดียวกัน (กดแล้วอัปเดตยอดทันที) · อื่นๆ: ">" = ประวัติ */}
         <Show when={props.refresh}>
@@ -91,11 +94,16 @@ function BalanceBody(props: {
         </Show>
       </span>
       <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary" : "text-primary")}>
-        <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")}>{formatNumber(props.amount)}</span>
+        <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")}>
+          <Show when={props.countUp} fallback={formatNumber(props.amount)}>
+            <CountUp value={props.amount} id={props.unit} />
+          </Show>
+        </span>
         <span class="shrink-0 text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
       </span>
       <Show when={props.hint}>
-        <span class={cn("text-12", props.onBrand ? "text-white" : "text-gray")}>{props.hint}</span>
+        {/* ชิดตัวเลขขึ้น (-mt-1) */}
+        <span class={cn("-mt-1 text-12", props.onBrand ? "text-white" : "text-gray")}>{props.hint}</span>
       </Show>
     </div>
   );
@@ -126,25 +134,34 @@ function ExpiringLine(props: { onBrand?: boolean }) {
  * แบบบรรทัดเดียว (หน้าแลกรางวัล = คะแนน · หน้าภารกิจ = คอยน์): "คะแนนของคุณ ······ 1,250 คะแนน >"
  * อยู่หน้าที่ใช้สกุลนั้นแล้ว → ทั้งแถบแตะไปประวัติของสกุลนั้น
  */
-function BalanceInline(props: { unit: BalanceUnit; amount: number; label?: string }) {
+function BalanceInline(props: { unit: BalanceUnit; amount: number; label?: string; link?: boolean }) {
   const { t } = useI18n();
   const to = usePartnerPath();
   const coins = () => props.unit === "coins";
-  return (
-    <A href={to(HISTORY[props.unit])} class="flex items-center justify-between gap-2 p-4" aria-label={t(coins() ? "club.coins_history" : "club.points_history")}>
-      <span class="flex min-w-0 items-center gap-1">
-        <BalanceIcon unit={props.unit} size={16} />
-        <span class="truncate text-12 text-gray">{props.label ?? t(coins() ? "club.your_coins" : "club.your_points")}</span>
+  const body = () => (
+    <>
+      {/* ไอคอน 24 · ป้าย 14 Medium (ใหญ่กว่าการ์ดคู่ เพราะมีที่ทั้งบรรทัด) · ตัวเลข 24 Semibold · หน่วย 14 Medium · ">" 16 เว้นจากหน่วย 8 */}
+      <span class="flex min-w-0 items-center gap-2">
+        <BalanceIcon unit={props.unit} size={24} />
+        <span class="truncate text-14 font-medium text-dark">{props.label ?? t(coins() ? "club.your_coins" : "club.your_points")}</span>
       </span>
-      {/* ตัวอักษรเหมือนการ์ดหน้าแรกทุกอย่าง (ป้าย 12 เทา · ตัวเลข 24 Semibold · หน่วย 14 Medium · > 16) แค่อยู่บรรทัดเดียว */}
-      <span class={cn("flex shrink-0 items-center gap-1", coins() ? "text-teriary" : "text-primary")}>
+      <span class={cn("flex shrink-0 items-center gap-2", coins() ? "text-teriary" : "text-primary")}>
         <span class="flex items-baseline gap-1">
           <span class="text-24 font-semibold">{formatNumber(props.amount)}</span>
           <span class="text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
         </span>
-        <IconChevronRight size={16} class="text-gray" />
+        <Show when={props.link !== false}>
+          <IconChevronRight size={16} class="text-gray" />
+        </Show>
       </span>
-    </A>
+    </>
+  );
+  return (
+    <Show when={props.link !== false} fallback={<div class="flex items-center justify-between gap-2 p-4">{body()}</div>}>
+      <A href={to(HISTORY[props.unit])} class="flex items-center justify-between gap-2 p-4" aria-label={t(coins() ? "club.coins_history" : "club.points_history")}>
+        {body()}
+      </A>
+    </Show>
   );
 }
 
@@ -167,7 +184,7 @@ export function BalanceBar(props: {
         when={props.inline}
         fallback={<BalanceBody unit={props.unit} amount={amount()} label={props.label} size={props.size ?? "md"} href={props.href} history={props.history} />}
       >
-        <BalanceInline unit={props.unit} amount={amount()} label={props.label} />
+        <BalanceInline unit={props.unit} amount={amount()} label={props.label} link={props.history !== false} />
       </Show>
       <Show when={props.unit === "points" && props.amount === undefined}>
         <ExpiringLine />
@@ -185,6 +202,10 @@ export function BalanceSplit(props: {
   refresh?: boolean;
   /** ปลายทางเมื่อแตะฝั่งคะแนน (ค่าเริ่มต้น: แลกรางวัล) — หน้าแรกใช้ "earn" (สะสมคะแนน) */
   pointsHref?: string;
+  /** ตัวเลขนับขึ้น/ลงเมื่อยอดเปลี่ยน */
+  countUp?: boolean;
+  /** false = ไม่มี ">" ประวัติ (หน้าแรก: อัปเดตด้วยปุ่มรีเฟรชข้างกระดิ่งแทน) */
+  history?: boolean;
 }) {
   const { t } = useI18n();
   const pink = () => props.tone === "pink";
@@ -194,8 +215,8 @@ export function BalanceSplit(props: {
   return (
     <div class={cn(cardClass, "flex flex-col text-left", pink() && "bg-primary-surface", brand() && "bg-primary", props.class)}>
       <div class={cn("grid grid-cols-2 divide-x", pink() ? "divide-white" : brand() ? "divide-white/30" : "divide-stroke")}>
-        <BalanceBody unit="points" amount={session.customer.points} label={t("club.your_points")} hint={t("club.points_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} href={props.pointsHref} />
-        <BalanceBody unit="coins" amount={session.customer.coins} label={t("club.your_coins")} hint={t("club.coins_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} />
+        <BalanceBody unit="points" amount={session.customer.points} label={t("club.your_points")} hint={t("club.points_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} href={props.pointsHref} countUp={props.countUp} history={props.history} />
+        <BalanceBody unit="coins" amount={session.customer.coins} label={t("club.your_coins")} hint={t("club.coins_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} countUp={props.countUp} history={props.history} />
       </div>
       <ExpiringLine onBrand={brand()} />
     </div>

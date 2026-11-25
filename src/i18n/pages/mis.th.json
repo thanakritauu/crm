@@ -34,5 +34,6 @@
   "mis.start": "เริ่มภารกิจ",
   "mis.start_question": "เริ่มภารกิจเลยไหม?",
   "mis.start_question_desc": "ซื้อสินค้าที่ร่วมรายการ แล้วสะสมคอยน์ เพื่อใช้แลกรางวัลได้เลย!",
-  "mis.use_coins": "ใช้ {{coins}} คอยน์"
+  "mis.use_coins": "ใช้ {{coins}} คอยน์",
+  "mis.start_mission_all": "เริ่มทำภารกิจ"
 }

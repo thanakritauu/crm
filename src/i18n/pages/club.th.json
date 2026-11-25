@@ -32,5 +32,9 @@
   "club.points_updated": "อัปเดตคะแนนสำเร็จ",
   "club.connect_for_auto_points": "เชื่อมต่อแพลตฟอร์มออนไลน์ เพื่อรับคะแนนจากคำสั่งซื้ออัตโนมัติ",
   "club.no_new_platform_orders": "ไม่มีคำสั่งซื้อใหม่จากแพลตฟอร์มออนไลน์",
-  "club.new_platform_orders": "พบคำสั่งซื้อใหม่ {{count}} รายการ"
+  "club.new_platform_orders": "พบคำสั่งซื้อใหม่ {{count}} รายการ",
+  "club.refresh_all": "อัปเดตคะแนนและคอยน์",
+  "club.balances_updated": "อัปเดตคะแนนและคอยน์แล้ว",
+  "club.balances_up_to_date": "คะแนนและคอยน์ของคุณเป็นปัจจุบันแล้ว",
+  "club.balances_now": "คะแนน {{points}} คะแนน · คอยน์ {{coins}} คอยน์"
 }

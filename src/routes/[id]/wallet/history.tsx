@@ -26,7 +26,7 @@ import { privilegeService, REDEEM_STATUS } from "~/services/privilege-service";
  * - คะแนน: ได้รับ / ใช้แลก (/ หมดอายุ เมื่อเปิด "คะแนนมีวันหมดอายุ") · แถวแบบหน้าการแจ้งเตือน (ActivityRow)
  * - คอยน์: ได้รับ / ใช้ · จัดกลุ่มตามเดือน
  * - การแลก: การ์ดรูป + สถานะ (Figma Reward History) → รายละเอียดการแลก /rewards/:id?redeem=
- * ยอดคงเหลือของแท็บนั้น: BalanceBar ใต้แท็บ (pattern เดียวกับทุกหน้า)
+ * หัวหน้า: ชื่อกึ่งกลาง + ยอดคงเหลือของแท็บ (BalanceBar inline) · แท็บ คะแนน / คอยน์ / การแลกรางวัล อยู่นอกพื้นหัวหน้า
  */
 type Type = "points" | "coins" | "redemptions";
 type PointFilter = "received" | "redeemed" | "expired";
@@ -42,27 +42,23 @@ export default function WalletHistoryPage() {
 
   return (
     <div class="img-background min-h-screen bg-white bg-cover bg-center">
-      <PageHeader
-        tone="primary"
-        title={t("rw.history_title")}
-      >
+      {/* หัวหน้าแบบเดียวกับแลกรางวัล/ภารกิจ: ชื่อกึ่งกลาง + ยอดคงเหลือ (บรรทัดเดียว) ในหัวหน้า · แท็บอยู่นอกพื้นหัวหน้า */}
+      <PageHeader tone="primary" align="center" title={t("rw.history_title")}>
+        <Show when={type() !== "redemptions"}>
+          <BalanceBar unit={type() === "coins" ? "coins" : "points"} inline history={false} />
+        </Show>
+      </PageHeader>
+      <div class="px-4 pt-4">
         <PillTabs
           value={type()}
           onChange={(v) => setParams({ type: v === "points" ? undefined : v, filter: undefined }, { replace: true })}
           items={[
             { value: "points", label: t("rw.points") },
             { value: "coins", label: t("rw.coins") },
-            { value: "redemptions", label: t("privilage.exchange_history") },
+            { value: "redemptions", label: t("rw.tab_redemptions") },
           ]}
         />
-      </PageHeader>
-
-      {/* ยอดคงเหลือของแท็บนั้น — BalanceBar (อยู่หน้าประวัติแล้ว → ไม่มีลิงก์ประวัติ · แตะแถบ → แลกรางวัล/ภารกิจ) */}
-      <Show when={type() !== "redemptions"}>
-        <div class="px-4 pt-4">
-          <BalanceBar unit={type() === "coins" ? "coins" : "points"} history={false} />
-        </div>
-      </Show>
+      </div>
 
       <Switch>
         <Match when={type() === "points"}>

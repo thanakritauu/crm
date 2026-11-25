@@ -55,7 +55,7 @@ export function PlatformConnectList(props: { class?: string }) {
         <For each={enabled()}>
           {(p) => (
             // LINE Shopping: ขอบชมพู + ริบบิ้นโปรบนสุด ให้เด่นกว่าการ์ดอื่น
-            <Card class={cn("relative flex flex-col gap-4 overflow-hidden p-4", p.platform === "line" && "border border-primary")}>
+            <Card class={cn("relative flex flex-col gap-4 overflow-hidden p-4", p.platform === "line" && "border-2 border-primary")}>
               {/* LINE Shopping: ริบบิ้นโปรเต็มความกว้างบนสุดของการ์ด (แทนป้ายมุม + แถบโปรด้านล่าง) */}
               <Show when={p.platform === "line"}>
                 <p class="-mx-4 -mt-4 bg-primary px-4 py-2 text-14 font-medium text-white">{t("core.line_promo")}</p>

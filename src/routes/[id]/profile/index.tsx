@@ -11,6 +11,7 @@ import { session, sessionActions } from "~/lib/session";
 import { usePartnerPath } from "~/lib/theme";
 import { cn } from "~/lib/utils";
 import { Toast } from "~/components/ui/toast";
+import { tierSystem } from "~/prototype/settings";
 import { Avatar } from "~/components/ui/avatar";
 import { takeFlash } from "~/lib/navigation";
 import { UnreadBadge } from "~/components/layout/notification-bell";
@@ -81,7 +82,7 @@ export default function Profile() {
       group: t("profile.profile_group"),
       menu: [
         { name: t("profile.personal_info"), icon: Icons.user, path: "profile/info" },
-        { name: t("tier.title"), icon: Icons.crown, path: "profile/tier" },
+        ...(tierSystem() ? [{ name: t("tier.title"), icon: Icons.crown, path: "profile/tier" }] : []),
         { name: t("profile.shipping_address"), icon: Icons.pin, path: "profile/addresses" },
       ],
     },
@@ -132,7 +133,7 @@ export default function Profile() {
 
       <div class="mt-[-36px] flex flex-col gap-4 px-4">
         {/* คะแนน | คอยน์ — BalanceSplit เหมือนหน้าแรก (เดิมการ์ดคะแนนอย่างเดียว) */}
-        <Show when={!isGuest()} fallback={<BalanceBar unit="points" history={false} href={false} />}>
+        <Show when={!isGuest()} fallback={<BalanceBar unit="points" inline history={false} />}>
           <BalanceSplit />
         </Show>
 

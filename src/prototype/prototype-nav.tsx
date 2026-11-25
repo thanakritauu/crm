@@ -1,7 +1,7 @@
 import { A, useLocation } from "@solidjs/router";
 import { createSignal, For, onMount, Show } from "solid-js";
 import { applyFrameMode } from "~/components/layout/mobile-frame";
-import { outsideLine, pointsExpire, restorePrototypeSettings, setOutsideLine, setPointsExpire } from "./settings";
+import { outsideLine, pointsExpire, restorePrototypeSettings, setOutsideLine, setPointsExpire, setShowTierCard, setTierSystem, showTierCard, tierSystem } from "./settings";
 import { Dialog as DialogPrimitive } from "@kobalte/core/dialog";
 import { resetSession, session, sessionActions } from "~/lib/session";
 import { customer as mockCustomer } from "~/mocks/customer";
@@ -111,6 +111,26 @@ export function PrototypeNav() {
             <span>จำลองเปิดนอก LINE (หน้าเข้าสู่ระบบมีปุ่ม "เบอร์มือถือ")</span>
             <span class={cn("h-5 w-9 shrink-0 rounded-full p-1 transition", outsideLine() ? "bg-primary" : "bg-stroke-strong")}>
               <span class={cn("block h-4 w-4 rounded-full bg-white transition", outsideLine() && "translate-x-4")} />
+            </span>
+          </button>
+          <button
+            type="button"
+            class="mt-1 flex w-full items-center justify-between rounded-xl px-4 py-2 text-left text-14 text-dark hover:bg-surface-gray"
+            onClick={() => setTierSystem(!tierSystem())}
+          >
+            <span>มีระบบระดับสมาชิก (ปิด = ไม่มีระดับเลย)</span>
+            <span class={cn("h-5 w-9 shrink-0 rounded-full p-1 transition", tierSystem() ? "bg-primary" : "bg-stroke-strong")}>
+              <span class={cn("block h-4 w-4 rounded-full bg-white transition", tierSystem() && "translate-x-4")} />
+            </span>
+          </button>
+          <button
+            type="button"
+            class="mt-1 flex w-full items-center justify-between rounded-xl px-4 py-2 text-left text-14 text-dark hover:bg-surface-gray"
+            onClick={() => setShowTierCard(!showTierCard())}
+          >
+            <span>แสดงการ์ด "ระดับของคุณ" ในหน้าแรก</span>
+            <span class={cn("h-5 w-9 shrink-0 rounded-full p-1 transition", showTierCard() ? "bg-primary" : "bg-stroke-strong")}>
+              <span class={cn("block h-4 w-4 rounded-full bg-white transition", showTierCard() && "translate-x-4")} />
             </span>
           </button>
           <button

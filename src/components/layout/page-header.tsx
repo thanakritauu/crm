@@ -35,15 +35,16 @@ export function PageHeader(props: {
   return (
     <header class={cn("flex flex-col gap-4 p-4", primary() ? "rounded-b-3xl bg-primary text-white" : "bg-white text-dark", props.class)}>
       <Show when={title() !== undefined || !props.hideBack || right()}>
-        <div class={cn("relative flex min-h-6 items-center gap-2", center() && "justify-center px-8")}>
+        <div class={cn("relative flex min-h-8 items-center gap-2", center() && "justify-center px-10")}>
           <Show when={!props.hideBack}>
             <button
               type="button"
               aria-label={t("common.back")}
-              class={cn("hit-area shrink-0", center() && "absolute left-0 top-1/2 -translate-y-1/2")}
+              // วงกลมดำโปร่ง 32px + ลูกศรขาว — แบบเดียวกับหน้ารายละเอียด (NavigationTopbar บนรูป) ทุกหน้า
+              class={cn("hit-area flex size-8 shrink-0 items-center justify-center rounded-full bg-black/20 transition active:scale-95", center() && "absolute left-0 top-1/2 -translate-y-1/2")}
               onClick={() => (props.onBack ? props.onBack() : goBack(props.backTo))}
             >
-              <IconBack size={24} class={primary() ? "text-white" : "text-dark"} />
+              <IconBack size={24} class="text-white" />
             </button>
           </Show>
           <h1 class={cn("min-w-0 whitespace-pre-line text-18 font-semibold", center() ? "text-center" : "flex-1")}>{title()}</h1>

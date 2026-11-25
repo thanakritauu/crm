@@ -1,6 +1,6 @@
 import { A, useNavigate } from "@solidjs/router";
 import { createSignal, For, Show, type JSX } from "solid-js";
-import { CouponTicket } from "~/components/coupon/coupon-ticket";
+import { RewardGridCard } from "~/components/ui/reward-grid-card";
 import { IconChevronRight, IconTicket } from "~/components/ui/icons";
 import { TicketIcon } from "~/components/reward/icons";
 import { Badge } from "~/components/ui/badge";
@@ -63,28 +63,22 @@ export function CouponCatalog(props: { extra?: JSX.Element }) {
           <IconChevronRight size={16} class="text-gray" />
         </A>
       </div>
-      {/* สิทธิพิเศษที่เป็นคูปอง (ส่งมาจากหน้าแลกรางวัล) */}
-      {props.extra}
-      <div class="p-4">
-        <div class="grid grid-cols-1 gap-y-2">
-          <For each={couponService.catalog()}>
-            {(c) => (
-              <CouponTicket
-                coupon={c}
-                onClick={() => requireMember(() => pick(c))}
-                footer={
-                  <div class="mt-2 flex items-center justify-between gap-2">
-                    <Badge tone="teriary" size="md" class="py-1">
-                      {t("common.use")} {formatNumber(c.points)} {t("common.points")}
-                    </Badge>
-                    {/* ทั้งการ์ดกดได้อยู่แล้ว → ใช้หน้าตา Button แต่เป็น span */}
-                    <span class={buttonVariants({ variant: "primary", size: "sm" })}>{t("common.redeem_coupon")}</span>
-                  </div>
-                }
-              />
-            )}
-          </For>
-        </div>
+      {/* คูปองแบบการ์ดแนวตั้ง 2 คอลัมน์ — แบบเดียวกับการ์ดแลกสินค้าหน้าแรก (เดิมเป็นตั๋วแนวนอน) · แตะ = ยืนยันแลก */}
+      <div class="grid grid-cols-2 gap-4 p-4">
+        {/* สิทธิพิเศษที่เป็นคูปอง (ส่งมาจากหน้าแลกรางวัล) + คูปองในแคตตาล็อก ใน grid เดียวกัน */}
+        {props.extra}
+        <For each={couponService.catalog()}>
+          {(c) => (
+            <RewardGridCard
+              onClick={() => requireMember(() => pick(c))}
+              image={{ colors: c.cover, src: c.image }}
+              title={c.title}
+              cost={c.points}
+              unit="points"
+              balance={session.isMember ? session.customer.points : 0}
+            />
+          )}
+        </For>
       </div>
 
       <AlertDialog

@@ -16,7 +16,9 @@ import { cn, formatNumber } from "~/lib/utils";
  * - unit: points (ไอคอนคะแนนของธีม สีชมพู) | coins (เหรียญ C สีส้ม) — สองสกุลแยกกันเสมอ
  */
 export function RewardGridCard(props: {
-  href: string;
+  /** ลิงก์ไปหน้ารายละเอียด หรือ onClick (เช่นคูปองที่แลกผ่าน dialog) */
+  href?: string;
+  onClick?: () => void;
   image: { colors: [string, string]; src?: string };
   title: string;
   cost: number;
@@ -30,8 +32,8 @@ export function RewardGridCard(props: {
   const short = () => Math.max(0, props.cost - props.balance);
   const locked = () => !props.overlay && short() > 0;
   const coins = () => props.unit === "coins";
-  return (
-    <A href={props.href} class={cn(cardClass, "flex flex-col overflow-hidden", props.class)}>
+  const body = () => (
+    <>
       <div class="relative aspect-square w-full">
         <CoverImage colors={props.image.colors} src={props.image.src} label={props.title} class="absolute inset-0 size-full" />
         <Show when={props.overlay}>
@@ -59,6 +61,20 @@ export function RewardGridCard(props: {
           </Show>
         </div>
       </div>
-    </A>
+    </>
+  );
+  return (
+    <Show
+      when={props.href}
+      fallback={
+        <button type="button" onClick={props.onClick} class={cn(cardClass, "flex flex-col overflow-hidden text-left", props.class)}>
+          {body()}
+        </button>
+      }
+    >
+      <A href={props.href!} class={cn(cardClass, "flex flex-col overflow-hidden", props.class)}>
+        {body()}
+      </A>
+    </Show>
   );
 }

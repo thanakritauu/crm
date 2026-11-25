@@ -176,7 +176,7 @@ export default function MissionDetail() {
         >
           {/* คอยน์ของภารกิจนี้ (แยกจากคอยน์รวม) — BalanceBar pattern เดียวกับทุกหน้า */}
           <Show when={isCoin()}>
-            <BalanceBar unit="coins" amount={m().coin_balance ?? 0} label={t("club.this_mission_coins")} href={false} history={false} />
+            <BalanceBar unit="coins" inline amount={m().coin_balance ?? 0} label={t("club.this_mission_coins")} history={false} />
           </Show>
           <DetailTitle title={m().title} description={m().description}>
             <Show when={m().coin_rules?.length}>

@@ -95,8 +95,8 @@
   "core.select_prefix": "Select",
   "core.show_code": "Show code",
   "core.show_screen_to_staff": "Show this screen to staff to claim your reward, or tell them the code below",
-  "core.tab_received": "Received",
-  "core.tab_redeemed": "Redeemed",
+  "core.tab_received": "Points received",
+  "core.tab_redeemed": "Points redeemed",
   "core.total_points_amount": "Total points: {{points}}",
   "core.unbind_confirm_desc_1": "If you disconnect, this account",
   "core.unbind_confirm_desc_2": "can't be connected again later",
@@ -108,5 +108,7 @@
   "core.welcome_desc": "You've signed up successfully. Start earning points and completing missions now.",
   "core.welcome_title": "Welcome to Charmiss Club",
   "history.point_history": "Point history",
-  "core.line_badge": "10x points"
+  "core.line_badge": "10x points",
+  "core.banner_placeholder": "Banner area",
+  "core.banner_size": "Image size 1200 × 600 px (2:1)"
 }

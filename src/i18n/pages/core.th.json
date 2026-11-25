@@ -95,8 +95,8 @@
   "core.select_prefix": "เลือก",
   "core.show_code": "แสดงรหัส",
   "core.show_screen_to_staff": "แสดงหน้าจอนี้กับพนักงานเพื่อรับรางวัล หรือแจ้งรหัสด้านล่าง",
-  "core.tab_received": "ได้รับ",
-  "core.tab_redeemed": "ใช้แลก",
+  "core.tab_received": "คะแนนที่ได้รับ",
+  "core.tab_redeemed": "คะแนนที่ใช้แลก",
   "core.total_points_amount": "คะแนนทั้งหมด {{points}} คะแนน",
   "core.unbind_confirm_desc_1": "หากยกเลิกเชื่อมต่อ บัญชีนี้",
   "core.unbind_confirm_desc_2": "จะไม่สามารถเชื่อมต่อได้อีกในภายหลัง",
@@ -108,5 +108,7 @@
   "core.welcome_desc": "สมัครสมาชิกสำเร็จ เริ่มสะสมคะแนนและทำภารกิจได้เลย",
   "core.welcome_title": "ยินดีต้อนรับสู่ Charmiss Club",
   "history.point_history": "ประวัติคะแนน",
-  "core.line_badge": "x10 คะแนน"
+  "core.line_badge": "x10 คะแนน",
+  "core.banner_placeholder": "พื้นที่แบนเนอร์",
+  "core.banner_size": "ขนาดรูป 1200 × 600 px (สัดส่วน 2:1)"
 }

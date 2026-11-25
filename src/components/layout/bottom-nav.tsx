@@ -32,14 +32,15 @@ export function BottomNav() {
 
   return (
     <nav class="fixed-frame bottom-0 z-bar bg-white px-2 pb-8 drop-shadow-card">
-      <div class="relative mx-auto flex max-w-mobile items-center justify-between">
+      {/* 5 ช่องกว้างเท่ากัน (grid) — ระยะห่างเท่ากันทุกขนาดจอ */}
+      <div class="relative mx-auto grid max-w-mobile grid-cols-5 items-end">
         <For each={ITEMS}>
           {(item) =>
             item.icon ? (
               <button
                 type="button"
                 onClick={() => navigate(`/${partner()}/${item.path}`)}
-                class="flex w-[60px] flex-col items-center justify-end gap-2 pb-1 pt-2"
+                class="flex min-w-0 flex-col items-center justify-end gap-2 pb-1 pt-2"
               >
                 <span class="relative flex">
                   <Dynamic component={item.icon} size={16} class={isActive(item.path) ? "text-primary" : "text-dark"} />
@@ -50,7 +51,7 @@ export function BottomNav() {
               <button
                 type="button"
                 onClick={() => navigate(`/${partner()}/${item.path}`)}
-                class="group relative flex h-[54px] w-[60px] flex-col items-center"
+                class="group relative flex h-[54px] min-w-0 flex-col items-center"
               >
                 <span class="absolute top-[-24px] flex flex-col items-center gap-2">
                   {/* ไอคอน P (ไฟล์ของแบรนด์) + ขอบขาว/เงาให้ดูยกขึ้นเหมือนเดิม */}

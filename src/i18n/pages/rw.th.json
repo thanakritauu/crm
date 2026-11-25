@@ -7,7 +7,8 @@
   "rw.products": "ของรางวัล",
   "rw.title": "แลกรางวัล",
   "rw.total_coins": "คอยน์ทั้งหมด",
-  "rw.wallet_group": "กระเป๋าของฉัน",
+  "rw.wallet_group": "คูปองและประวัติ",
   "rw.tab_products": "แลกสินค้า",
-  "rw.tab_coupons": "แลกคูปอง"
+  "rw.tab_coupons": "แลกคูปอง",
+  "rw.tab_redemptions": "การแลกรางวัล"
 }

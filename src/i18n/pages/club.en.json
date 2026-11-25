@@ -32,5 +32,9 @@
   "club.points_updated": "Points updated",
   "club.connect_for_auto_points": "Connect an online platform to earn points from orders automatically",
   "club.no_new_platform_orders": "No new orders from online platforms",
-  "club.new_platform_orders": "{{count}} new orders found"
+  "club.new_platform_orders": "{{count}} new orders found",
+  "club.refresh_all": "Refresh points and coins",
+  "club.balances_updated": "Points and coins updated",
+  "club.balances_up_to_date": "Your points and coins are up to date",
+  "club.balances_now": "{{points}} points · {{coins}} coins"
 }

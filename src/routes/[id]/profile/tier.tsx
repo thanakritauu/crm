@@ -1,5 +1,7 @@
 import { createSignal, For, Show } from "solid-js";
 import { PageHeader } from "~/components/layout/page-header";
+import { EmptyData } from "~/components/ui/empty-data";
+import { tierSystem } from "~/prototype/settings";
 import { Badge } from "~/components/ui/badge";
 import { cardClass } from "~/components/ui/card";
 import { Sheet } from "~/components/ui/sheet";
@@ -21,6 +23,18 @@ export default function TierPage() {
   const [howOpen, setHowOpen] = createSignal(false);
 
   return (
+    <Show
+      when={tierSystem()}
+      fallback={
+        // prototype: ยังไม่มีระบบระดับสมาชิก (ปิดจากเมนู prototype)
+        <div class="min-h-screen bg-white">
+          <PageHeader tone="primary" backTo="profile" title={t("tier.title")} />
+          <div class="flex min-h-[50vh] items-center justify-center px-4">
+            <EmptyData title={t("tier.no_tier_system")} description={t("tier.no_tier_system_desc")} />
+          </div>
+        </div>
+      }
+    >
     <div class="min-h-screen bg-white">
       <PageHeader
         tone="primary"
@@ -123,5 +137,6 @@ export default function TierPage() {
         <p class="whitespace-pre-line text-14 text-gray">{t("tier.how_desc")}</p>
       </Sheet>
     </div>
+    </Show>
   );
 }

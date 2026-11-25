@@ -168,8 +168,8 @@ function CouponPrivileges() {
   const overlayOf = usePrivilegeOverlay();
   const list = () => privilegeService.list().filter((p) => p.reward_type === "coupon");
   return (
+    // การ์ดอย่างเดียว (ไม่มี grid ห่อ) — CouponCatalog วางรวมใน grid เดียวกับคูปองอื่น
     <Show when={list().length}>
-      <div class="grid grid-cols-2 gap-4 px-4 pt-4">
         <For each={list()}>
           {(p) => (
             <RewardGridCard
@@ -183,7 +183,6 @@ function CouponPrivileges() {
             />
           )}
         </For>
-      </div>
     </Show>
   );
 }

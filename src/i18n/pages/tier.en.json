@@ -3,7 +3,7 @@
   "tier.to_next": "{{points}} more points to {{tier}}",
   "tier.top": "You're at the highest tier",
   "tier.earned_12m": "Points earned this year",
-  "tier.how_title": "How tiers work",
+  "tier.how_title": "How are tiers calculated?",
   "tier.how_desc": "Your tier is based on points earned from purchases on every channel this year (1 point per ฿10).\nRedeeming points never lowers your tier, and mission coins don't count.",
   "tier.min_points": "{{points}}+ points (spend ฿{{spend}})",
   "tier.current_badge": "Your tier",
@@ -18,5 +18,7 @@
   "tier.perk_member_discount": "Member-only discounts",
   "tier.perk_x2": "x2 points",
   "tier.perk_birthday_300": "฿300 birthday coupon",
-  "tier.perk_early_access": "Early access to new products"
+  "tier.perk_early_access": "Early access to new products",
+  "tier.no_tier_system": "No membership tiers yet",
+  "tier.no_tier_system_desc": "Earn points from purchases and redeem rewards"
 }

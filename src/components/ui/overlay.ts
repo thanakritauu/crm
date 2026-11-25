@@ -14,6 +14,6 @@ export const overlayCenter = "fixed inset-0 z-modal flex items-center justify-ce
 export const modalPanel =
   "flex w-modal max-w-full flex-col rounded-3xl bg-white shadow-card data-[expanded]:animate-content-show data-[closed]:animate-content-hide";
 
-/** bottom sheet: ชิดล่างในกรอบมือถือ มุมบน 24 + เลื่อนขึ้น */
+/** bottom sheet: ชิดล่างในกรอบมือถือ มุมบน 24 + เลื่อนขึ้นตรงๆ จากล่าง / ลงตอนปิด (keyframes sheet-in/out คง translateX(-50%)) */
 export const sheetPanel =
-  "fixed-frame bottom-0 z-modal flex flex-col rounded-t-3xl bg-white data-[expanded]:animate-in data-[expanded]:slide-in-from-bottom";
+  "fixed-frame bottom-0 z-modal flex flex-col rounded-t-3xl bg-white data-[expanded]:animate-sheet-in data-[closed]:animate-sheet-out";

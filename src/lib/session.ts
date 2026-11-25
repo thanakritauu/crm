@@ -62,6 +62,8 @@ export function restoreSession() {
       const customer = { ...base.customer, ...saved.customer };
       // รูปโปรไฟล์ตั้งต้นเดิม (ไอคอนผู้ใช้แบบรูป) → ใช้รูปจำลองใหม่ ให้หน้าแรกกับโปรไฟล์ตรงกัน
       if (customer.profile_image === "/images/default-profile.png") customer.profile_image = base.customer.profile_image;
+      // รหัสสมาชิกแก้ไม่ได้ → ใช้ค่าจาก mock เสมอ (รูปแบบ charmiss000000005)
+      customer.member_code = base.customer.member_code;
       setSession({ ...base, ...saved, notifications: notis, customer });
     }
     sessionActions.expireCoupons();
@@ -206,7 +208,7 @@ export const sessionActions = {
           id: couponId,
           title: `คูปองส่วนลด ฿${discount}`,
           discount: `฿${discount}`,
-          description: "คูปองจากการแลกคะแนนสะสม",
+          description: "คูปองจากการแลกคะแนน",
           code,
           points,
           expires_at: expires,

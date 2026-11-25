@@ -5,6 +5,7 @@ import { MemberCard } from "~/components/home/member-card";
 import { WelcomePopup } from "~/components/home/welcome-popup";
 import { BottomNav, BottomNavSpacer } from "~/components/layout/bottom-nav";
 import { NotificationBell } from "~/components/layout/notification-bell";
+import { PlatformRefreshButton } from "~/components/platform/platform-refresh-button";
 import { BalanceSplit } from "~/components/ui/balance-bar";
 import { Avatar } from "~/components/ui/avatar";
 import { MissionGridCard } from "~/components/mission/mission-grid-card";
@@ -21,6 +22,7 @@ import type { Privilege } from "~/mocks/privileges";
 import { missionService } from "~/services/mission-service";
 import { privilegeService } from "~/services/privilege-service";
 import { tierStatus } from "~/services/tier-service";
+import { showTierCard, tierSystem } from "~/prototype/settings";
 
 /**
  * /:partner/home — หน้าแรกสมาชิก (โครงแบบ Okya · token ตาม Figma Charmiss)
@@ -92,22 +94,31 @@ export default function Home() {
               <Avatar size={40} />
               <span class="flex min-w-0 flex-col">
                 <span class="truncate text-18 font-semibold text-dark">{t("core.hello_name", { name: session.customer.name || session.customer.line_display_name })}</span>
-                <span class="truncate text-12 text-gray">{t(`tier.name_${tierStatus().current.id}`)}</span>
+                {/* รหัสสมาชิก (เช่น charmiss000000005) แทนชื่อระดับ */}
+                <span class="truncate text-12 text-gray">{session.customer.member_code}</span>
               </span>
             </A>
-            <NotificationBell />
+            {/* ปุ่มเดียวอัปเดตทั้งคะแนนและคอยน์ — วงกลมขาวข้างกระดิ่ง (ตัดสินใจ 2026-11-25) */}
+            <div class="flex shrink-0 items-center gap-2">
+              <PlatformRefreshButton unit="all" />
+              <NotificationBell />
+            </div>
           </div>
 
           {/* คะแนน | คอยน์ — BalanceSplit (pattern เดียวกับทุกหน้า) · หน้าแรกพื้นชมพูเข้ม ตัวขาว (แบบ B — เลือกแล้ว 2026-11-25) */}
-          <BalanceSplit size="lg" tone="brand" refresh pointsHref="earn" />
-          <TierRow />
+          <BalanceSplit size="lg" tone="brand" pointsHref="earn" countUp history={false} />
+          {/* การ์ดระดับของคุณ — เปิด/ปิดได้จากเมนู prototype (มีระบบระดับ + แสดงการ์ด) */}
+          <Show when={tierSystem() && showTierCard()}>
+            <TierRow />
+          </Show>
         </div>
       </Show>
 
       {/* แบนเนอร์ */}
       <div class="relative mt-6 px-4">
         {/* สไลด์แบนเนอร์ 2:1 · ไฟล์ตัวอย่าง home-banner-1..4.jpg เป็น 4:1 → ข้างซ้าย/ขวาถูกตัด จนกว่าจะได้งาน 2:1 จริง */}
-        <BannerCarousel images={[1, 2, 3, 4].map((n) => `/images/figma/home-banner-${n}.jpg`)} />
+        {/* สไลด์สุดท้าย = ช่องเทาบอกขนาดรูป (สำหรับทีมทำแบนเนอร์) */}
+        <BannerCarousel images={[...[1, 2, 3].map((n) => `/images/figma/home-banner-${n}.jpg`), ""]} />
       </div>
 
       {/* ภารกิจสะสมคอยน์ (ก่อนส่วนแลกสินค้า) */}

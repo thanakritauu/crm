@@ -1,7 +1,7 @@
 /** ข้อมูลจำลองของสมาชิกที่ล็อกอิน (ต้นฉบับ: customer-service / customer_event_point) */
 export type Customer = {
   id: string;
-  /** รหัสสมาชิกที่แสดงบนการ์ด (เช่น charmiss00000005) */
+  /** รหัสสมาชิก (รูปแบบ charmiss + เลข 9 หลัก เช่น charmiss000000005) — แสดงใต้ชื่อในหน้าแรก */
   member_code: string;
   line_display_name: string;
   name: string;
@@ -32,7 +32,7 @@ export type Address = {
 
 export const customer: Customer = {
   id: "cus-0001",
-  member_code: "charmiss00001234",
+  member_code: "charmiss000000005",
   line_display_name: "Ploy 🌸",
   name: "พลอย",
   surname: "ใจดี",

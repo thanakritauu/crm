@@ -5,6 +5,12 @@ import { PageHeader } from "~/components/layout/page-header";
 import { BalanceBar } from "~/components/ui/balance-bar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
+import { Badge } from "~/components/ui/badge";
+import { Checkbox } from "~/components/ui/checkbox";
+import { FieldError, Input, Label } from "~/components/ui/input";
+import { InfoBox } from "~/components/ui/modal";
+import { ActivityRow } from "~/components/history/activity-row";
+import { IconTicket } from "~/components/ui/icons";
 import { PageLoading } from "~/components/ui/page-loading";
 import { requireMember } from "~/lib/member-gate";
 import { useI18n } from "~/lib/i18n";
@@ -16,7 +22,8 @@ import { formatDate } from "~/lib/utils";
 import { useMemberOnly } from "~/lib/member-gate";
 
 /**
- * /:partner/exchange-point — แลกคะแนนสะสมเป็นคูปองส่วนลด (เมนูในหน้าโปรไฟล์)
+ * /:partner/rewards/points-to-coupon — แลกคะแนนเป็นคูปองส่วนลด (เข้าจากแท็บแลกคูปอง)
+ * UI ใช้ component ของ Design System ทั้งหมด: PageHeader + BalanceBar inline · InfoBox · Label/Input/FieldError · Button (outline icon, chip, link, block) · Card · Checkbox · Badge · ActivityRow
  * ต้นฉบับ: index-f6f0a2ed.js — การ์ดคะแนนสะสม + อัตราแลกเปลี่ยน, ช่องกรอกคะแนน (−/+ ทีละ step, ปุ่มลัด, MAX),
  *   สรุป (คะแนนที่ใช้ / ส่วนลดที่ได้ / คะแนนคงเหลือ), checkbox ยินยอม, ปุ่ม "ยืนยันแลกคูปองส่วนลด ฿x"
  *   → กล่องสำเร็จพร้อมรหัสคูปอง + ประวัติการแลกล่าสุด
@@ -109,210 +116,151 @@ export default function ExchangePointPage() {
 
   return (
     <div class="img-background min-h-screen bg-white bg-cover bg-center">
-      <PageHeader tone="primary" title={t("profile.exchange_points_menu")} backTo="profile">
-        {/* คะแนนของคุณ — BalanceBar (pattern เดียวกับทุกหน้า) + อัตราแลก/คำเตือนในการ์ดถัดไป */}
-        <BalanceBar unit="points" />
-        <Card class="p-4 text-left">
-          <div class="flex items-center justify-between gap-2 rounded-xl bg-primary-surface px-4 py-2">
-            <span class="whitespace-nowrap text-12 font-semibold text-gray">{t("profile.exchange_points_rate_label")}</span>
-            <span class="whitespace-nowrap text-14 font-semibold text-primary">
-              {t("profile.exchange_points_rate_value", { points: n0(cfg.points_per_unit), discount: n0(cfg.discount_per_unit) })}
-            </span>
-          </div>
-          <Show when={balance() < cfg.min_points_per_redemption}>
-            <div class="mt-2 rounded-xl border border-error-surface bg-error-surface px-4 py-2 text-12 font-semibold text-error">
-              {t("profile.exchange_below_min_balance_notice", { min: n0(cfg.min_points_per_redemption) })}
-            </div>
-          </Show>
-        </Card>
+      {/* หัวหน้าแบบเดียวกับแลกรางวัล: ชื่อกึ่งกลาง + คะแนนของคุณ (BalanceBar บรรทัดเดียว) */}
+      <PageHeader tone="primary" align="center" title={t("profile.exchange_points_menu")} backTo="rewards?type=coupons">
+        <BalanceBar unit="points" inline />
       </PageHeader>
 
-      <div class="flex flex-col overflow-y-auto px-4 pt-4">
-        <form class="flex flex-grow flex-col" onSubmit={submit}>
-          <div class="grid grid-cols-1 gap-y-4">
-            <div>
-              <div class="mb-2 flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1">
-                <label for="exchange-points-input" class="block text-left text-16 font-medium text-dark">
-                  <span class="text-error">*</span> {t("profile.exchange_input_label")}
-                </label>
-                <button type="button" onClick={useMax} disabled={submitting()} class="hit-area ml-auto shrink-0 whitespace-nowrap text-14 font-semibold text-primary underline disabled:opacity-40">
-                  {t("profile.exchange_max_btn")} ({n0(maxUsable())})
-                </button>
-              </div>
-              <div class="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => step(-cfg.point_step)}
-                  disabled={amount() <= cfg.min_points_per_redemption || submitting()}
-                  class="flex size-12 flex-none items-center justify-center rounded-xl border border-stroke-strong bg-white text-18 font-semibold text-dark disabled:opacity-40"
-                >
-                  -
-                </button>
-                <div class="relative flex-grow">
-                  <input
-                    id="exchange-points-input"
-                    type="text"
-                    inputmode="numeric"
-                    value={value()}
-                    placeholder={t("profile.exchange_input_placeholder")}
-                    onInput={(e) => setValue(e.currentTarget.value.replace(/\D/g, ""))}
-                    class={cn(
-                      "h-12 w-full rounded-xl border px-4 text-16 font-semibold outline-none transition disabled:opacity-50",
-                      error() ? "border-error bg-error-surface text-error" : "border-stroke-strong bg-white text-dark focus:border-primary",
-                    )}
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={() => step(cfg.point_step)}
-                  disabled={submitting()}
-                  class="flex size-12 flex-none items-center justify-center rounded-xl border border-stroke-strong bg-white text-18 font-semibold text-dark disabled:opacity-40"
-                >
-                  +
-                </button>
-              </div>
-              <div class="mt-2 flex items-center justify-between">
-                <p class="text-12 text-gray">
-                  {t("profile.exchange_points_rule_hint", { min: n0(cfg.min_points_per_redemption), step: n0(cfg.point_step) })}
-                </p>
-              </div>
-              <Show when={error()}>
-                <p role="alert" class="mt-2 flex items-start gap-2 text-left text-14 font-semibold text-error">
-                  <span>{error()}</span>
-                </p>
-              </Show>
-              <div class="mt-2 grid grid-cols-12 gap-x-2">
-                <For each={presets()}>
-                  {(p) => (
-                    <div class="col-span-3">
-                      <button
-                        type="button"
-                        onClick={() => setValue(String(p))}
-                        disabled={submitting()}
-                        class={cn(
-                          "flex h-10 w-full cursor-pointer items-center justify-center whitespace-nowrap rounded-full px-2 text-14 font-semibold transition disabled:opacity-40",
-                          amount() === p ? "border border-primary bg-primary-surface text-primary" : "border border-stroke-strong bg-white text-gray",
-                        )}
-                      >
-                        {n0(p)}
-                      </button>
-                    </div>
-                  )}
-                </For>
-                <div class="col-span-3">
-                  <button
-                    type="button"
-                    onClick={useMax}
-                    disabled={submitting()}
-                    class={cn(
-                      "flex h-10 w-full cursor-pointer items-center justify-center whitespace-nowrap rounded-full px-2 text-14 font-semibold transition disabled:opacity-40",
-                      maxUsable() > 0 && amount() === maxUsable() ? "border border-primary bg-primary-surface text-primary" : "border border-stroke-strong bg-white text-gray",
-                    )}
-                  >
-                    {t("loyalty.max")}
-                  </button>
-                </div>
-              </div>
-            </div>
+      <form class="flex flex-col gap-6 p-4" onSubmit={submit}>
+        {/* อัตราแลก (InfoBox) · คะแนนไม่ถึงขั้นต่ำ = กล่องแดง */}
+        <div class="flex flex-col gap-2">
+          <InfoBox>
+            {t("profile.exchange_points_rate_label")}{" "}
+            <b class="font-semibold text-primary">{t("profile.exchange_points_rate_value", { points: n0(cfg.points_per_unit), discount: n0(cfg.discount_per_unit) })}</b>
+          </InfoBox>
+          <Show when={balance() < cfg.min_points_per_redemption}>
+            <p role="alert" class="rounded-2xl bg-error-surface p-4 text-14 text-error">
+              {t("profile.exchange_below_min_balance_notice", { min: n0(cfg.min_points_per_redemption) })}
+            </p>
+          </Show>
+        </div>
 
-            {/* สรุป */}
-            <div class="space-y-2 rounded-2xl border border-stroke bg-surface-gray p-4 text-left">
-              <div class="flex items-center justify-between gap-2">
-                <span class="min-w-0 text-14 text-gray">{t("profile.exchange_points_to_use_label")}</span>
-                <span class="shrink-0 whitespace-nowrap text-14 font-semibold text-dark">{amount() > 0 ? `${n0(amount())} ${t("common.points")}` : "-"}</span>
-              </div>
-              <div class="flex items-center justify-between gap-2">
-                <span class="min-w-0 text-14 text-gray">{t("profile.exchange_discount_preview_label")}</span>
-                <span class="shrink-0 whitespace-nowrap text-18 font-semibold text-primary">฿{formatNumber(discount(), 2)}</span>
-              </div>
-              <div class="flex items-center justify-between gap-2">
-                <span class="min-w-0 text-14 text-gray">{t("profile.exchange_remaining_points_label")}</span>
-                <span class="shrink-0 whitespace-nowrap text-14 font-semibold text-dark">
-                  {amount() > 0 && amount() <= balance() ? `${formatNumber(balance() - amount(), 2)} ${t("common.points")}` : "-"}
-                </span>
-              </div>
-              <div class="border-t border-stroke pt-2 text-12 text-gray">{t("profile.exchange_validity_hint", { days: cfg.coupon_validity_days })}</div>
-            </div>
-
-            <label class="flex cursor-pointer select-none items-start gap-2 rounded-xl border border-stroke bg-white p-4 text-left">
-              <input
-                type="checkbox"
-                checked={consent()}
-                disabled={submitting()}
-                onChange={(e) => setConsent(e.currentTarget.checked)}
-                class="mt-1 size-4 flex-none rounded accent-[var(--primary-base)]"
-              />
-              <span class="text-14 text-gray">{t("profile.exchange_consent_text")}</span>
-            </label>
-
-            {/* ผลการแลก */}
-            <Show when={result()}>
-              {(r) => (
-                <div class="rounded-2xl border border-success-surface bg-success-surface p-4 text-left">
-                  <div class="text-14 font-semibold text-success">{t("profile.exchange_success_title")}</div>
-                  <div class="mt-2 space-y-2 rounded-xl border border-success-surface bg-white p-4">
-                    <div class="flex items-center justify-between gap-2">
-                      <div class="min-w-0">
-                        <div class="whitespace-nowrap text-12 text-gray">
-                          {t("profile.exchange_success_code_label")} (฿{formatNumber(r().discount, 2)})
-                        </div>
-                        <div class="mt-1 truncate font-mono text-16 font-semibold text-dark">{r().code}</div>
-                      </div>
-                      <Button variant="secondary" size="sm" onClick={() => copy(r().code)}>
-                        {copied() === r().code ? t("profile.exchange_copied") : t("profile.exchange_copy_code")}
-                      </Button>
-                    </div>
-                    <Button size="md" class="w-full bg-success" onClick={goCoupons}>
-                      {t("profile.view_my_coupons")}
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </Show>
-
-            {/* ประวัติการแลกล่าสุด */}
-            <Show when={exchangeState.records.length > 0}>
-              <div class="pt-2 text-left">
-                <div class="mb-2 flex items-center justify-between">
-                  <h3 class="text-16 font-semibold text-dark">{t("profile.exchange_recent_history_title")}</h3>
-                  <button type="button" onClick={goCoupons} class="text-12 font-semibold text-primary underline">
-                    {t("profile.view_my_coupons")}
-                  </button>
-                </div>
-                <div>
-                  <For each={exchangeState.records.slice(0, 5)}>
-                    {(rec) => (
-                      <div class="flex items-center justify-between gap-2 border-b border-stroke py-4">
-                        <div class="min-w-0 flex-1 cursor-pointer" onClick={goCoupons}>
-                          <div class="truncate text-14 font-semibold text-dark">{t("loyalty.discount_coupon_amount", { amount: formatNumber(rec.discount, 2) })}</div>
-                          <div class="mt-1 flex items-center gap-2 text-12 text-gray">
-                            <span class="font-mono font-semibold text-primary">{rec.code}</span>
-                            <span>•</span>
-                            <span>
-                              {formatDate(rec.created_at, true)}
-                              {t("common.time_suffix")}
-                            </span>
-                          </div>
-                        </div>
-                        <Button variant="secondary" size="sm" onClick={() => copy(rec.code)}>
-                          {copied() === rec.code ? t("profile.exchange_copied") : t("profile.exchange_copy_code")}
-                        </Button>
-                      </div>
-                    )}
-                  </For>
-                </div>
-              </div>
-            </Show>
-          </div>
-          <div class="flex-grow pt-4" />
-          <BottomActionBarSpacer />
-          <BottomActionBar>
-            <Button type="submit" size="block" disabled={!canSubmit()}>
-              {submitting() ? t("profile.exchange_submitting") : t("profile.exchange_submit_btn", { discount: formatNumber(discount(), 2) })}
+        {/* จำนวนคะแนน: Label + ปุ่ม − / Input / + (Button outline icon) + คำแนะนำ + FieldError */}
+        <div class="flex flex-col gap-2">
+          <div class="flex items-baseline justify-between gap-2">
+            <Label for="exchange-points-input" required class="mb-0">
+              {t("profile.exchange_input_label")}
+            </Label>
+            <Button variant="link" type="button" onClick={useMax} disabled={submitting()} class="text-14 font-medium">
+              {t("profile.exchange_max_btn")} ({n0(maxUsable())})
             </Button>
-          </BottomActionBar>
-        </form>
-      </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <Button variant="outline" size="icon" type="button" aria-label="-" onClick={() => step(-cfg.point_step)} disabled={amount() <= cfg.min_points_per_redemption || submitting()}>
+              <span class="text-18">−</span>
+            </Button>
+            <Input
+              id="exchange-points-input"
+              class="flex-1"
+              inputmode="numeric"
+              value={value()}
+              invalid={!!error()}
+              placeholder={t("profile.exchange_input_placeholder")}
+              onInput={(e) => setValue(e.currentTarget.value.replace(/\D/g, ""))}
+            />
+            <Button variant="outline" size="icon" type="button" aria-label="+" onClick={() => step(cfg.point_step)} disabled={submitting()}>
+              <span class="text-18">+</span>
+            </Button>
+          </div>
+          <p class="text-12 text-gray">{t("profile.exchange_points_rule_hint", { min: n0(cfg.min_points_per_redemption), step: n0(cfg.point_step) })}</p>
+          <FieldError>{error()}</FieldError>
+          {/* ตัวเลือกจำนวนด่วน = ชิป (Button size chip) แบบเดียวกับชิปตัวกรองทั้งแอป */}
+          <div class="flex flex-wrap gap-2">
+            <For each={presets()}>
+              {(p) => (
+                <Button size="chip" type="button" variant={amount() === p ? "primary" : "outline"} class={cn(amount() !== p && "border-stroke text-gray")} onClick={() => setValue(String(p))} disabled={submitting()}>
+                  {n0(p)}
+                </Button>
+              )}
+            </For>
+            <Button
+              size="chip"
+              type="button"
+              variant={maxUsable() > 0 && amount() === maxUsable() ? "primary" : "outline"}
+              class={cn(!(maxUsable() > 0 && amount() === maxUsable()) && "border-stroke text-gray")}
+              onClick={useMax}
+              disabled={submitting()}
+            >
+              {t("loyalty.max")}
+            </Button>
+          </div>
+        </div>
+
+        {/* สรุป (Card) */}
+        <Card class="flex flex-col gap-2 p-4">
+          <div class="flex items-center justify-between gap-2 text-14">
+            <span class="text-gray">{t("profile.exchange_points_to_use_label")}</span>
+            <span class="font-semibold text-dark">{amount() > 0 ? `${n0(amount())} ${t("common.points")}` : "-"}</span>
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-14 text-gray">{t("profile.exchange_discount_preview_label")}</span>
+            <span class="text-18 font-semibold text-primary">฿{formatNumber(discount(), 2)}</span>
+          </div>
+          <div class="flex items-center justify-between gap-2 text-14">
+            <span class="text-gray">{t("profile.exchange_remaining_points_label")}</span>
+            <span class="font-semibold text-dark">{amount() > 0 && amount() <= balance() ? `${formatNumber(balance() - amount(), 2)} ${t("common.points")}` : "-"}</span>
+          </div>
+          <p class="border-t border-stroke pt-2 text-12 text-gray">{t("profile.exchange_validity_hint", { days: cfg.coupon_validity_days })}</p>
+        </Card>
+
+        {/* ยอมรับเงื่อนไข (Checkbox ของ Design System) */}
+        <Checkbox checked={consent()} onChange={(v) => !submitting() && setConsent(v)}>
+          <span class="text-14 text-gray">{t("profile.exchange_consent_text")}</span>
+        </Checkbox>
+
+        {/* ผลการแลก */}
+        <Show when={result()}>
+          {(r) => (
+            <Card class="flex flex-col gap-4 p-4">
+              <Badge tone="success" class="self-start">{t("profile.exchange_success_title")}</Badge>
+              <div class="flex items-center justify-between gap-2">
+                <div class="min-w-0">
+                  <p class="text-12 text-gray">
+                    {t("profile.exchange_success_code_label")} (฿{formatNumber(r().discount, 2)})
+                  </p>
+                  <p class="truncate font-mono text-16 font-semibold text-dark">{r().code}</p>
+                </div>
+                <Button variant="secondary" size="sm" type="button" onClick={() => copy(r().code)}>
+                  {copied() === r().code ? t("profile.exchange_copied") : t("profile.exchange_copy_code")}
+                </Button>
+              </div>
+              <Button size="md" type="button" class="w-full" onClick={goCoupons}>
+                {t("profile.view_my_coupons")}
+              </Button>
+            </Card>
+          )}
+        </Show>
+
+        {/* ประวัติการแลกล่าสุด — แถว ActivityRow แบบหน้าประวัติ */}
+        <Show when={exchangeState.records.length > 0}>
+          <div class="-mx-4 flex flex-col">
+            <div class="flex items-center justify-between px-4">
+              <h3 class="text-16 font-semibold text-dark">{t("profile.exchange_recent_history_title")}</h3>
+              <Button variant="link" type="button" class="text-14 font-medium" onClick={goCoupons}>
+                {t("profile.view_my_coupons")}
+              </Button>
+            </div>
+            <For each={exchangeState.records.slice(0, 5)}>
+              {(rec) => (
+                <ActivityRow
+                  icon={IconTicket}
+                  title={`${t("loyalty.discount_coupon_amount", { amount: formatNumber(rec.discount, 2) })} · ${rec.code}`}
+                  date={`${formatDate(rec.created_at, true)}${t("common.time_suffix")}`}
+                  amount={{ text: `-${n0(rec.points_used)}`, tone: "error" }}
+                  onClick={() => copy(rec.code)}
+                />
+              )}
+            </For>
+          </div>
+        </Show>
+
+        <BottomActionBarSpacer />
+        <BottomActionBar>
+          <Button type="submit" size="block" disabled={!canSubmit()}>
+            {submitting() ? t("profile.exchange_submitting") : t("profile.exchange_submit_btn", { discount: formatNumber(discount(), 2) })}
+          </Button>
+        </BottomActionBar>
+      </form>
       <PageLoading show={submitting()} message={t("profile.exchange_submitting")} />
     </div>
   );

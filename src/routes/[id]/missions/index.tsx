@@ -58,12 +58,7 @@ export default function MissionList() {
         tone="primary"
         align="center"
         hideBack
-        title={
-          <span class="flex items-center gap-2">
-            {t("mission.mission")}
-            <CoinIcon size={24} />
-          </span>
-        }
+        title={t("mission.mission")}
       >
         {/* คอยน์ของคุณ — BalanceBar (อยู่หน้าภารกิจแล้ว → แตะแถบไม่ไปไหน มีแค่ลิงก์ประวัติ) */}
         <BalanceBar unit="coins" inline />

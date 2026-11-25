@@ -21,9 +21,9 @@ export function InfoTabs(props: { items: InfoTab[]; defaultValue?: string; hideE
           <Show when={current()?.heading}>
             <h2 class="text-14 font-semibold text-dark">{current()!.heading}</h2>
           </Show>
-          <Show when={current() && has(current()!)} fallback={<p class="text-12 text-gray">-</p>}>
-            <Show when={Array.isArray(current()!.content)} fallback={<p class="whitespace-pre-line text-12 text-gray">{current()!.content as string}</p>}>
-              <ol class="list-decimal space-y-1 pl-4 text-12 text-gray">
+          <Show when={current() && has(current()!)} fallback={<p class="text-14 text-gray">-</p>}>
+            <Show when={Array.isArray(current()!.content)} fallback={<p class="whitespace-pre-line text-14 text-gray">{current()!.content as string}</p>}>
+              <ol class="list-decimal space-y-1 pl-4 text-14 text-gray">
                 <For each={current()!.content as string[]}>{(line) => <li>{line}</li>}</For>
               </ol>
             </Show>

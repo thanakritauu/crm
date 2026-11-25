@@ -126,7 +126,7 @@ export default function PersonalInformation() {
       {/* Figma Prosonal Info (871:5312): PageHeader ชมพู สูง 90px + ปุ่มย้อนกลับขาว, รูป 64px + ชื่อ 18/700 ซ้อนขอบล่าง */}
       <PageHeader tone="primary" class="h-[90px]" onBack={leave} />
       <div class="relative z-raised mt-[-34px] flex flex-col items-center gap-1">
-        <Avatar size={64} class="ring-2 ring-white" />
+        <Avatar size={64} />
         <p class="text-18 font-semibold text-dark">{session.customer.name} {session.customer.surname}</p>
       </div>
       <div class="h-4" />

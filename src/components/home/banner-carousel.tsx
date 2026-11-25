@@ -1,4 +1,4 @@
-import { createSignal, For, onCleanup, onMount } from "solid-js";
+import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
 import { useI18n } from "~/lib/i18n";
 import { cn } from "~/lib/utils";
 
@@ -6,6 +6,7 @@ import { cn } from "~/lib/utils";
  * แบนเนอร์หน้าแรกแบบสไลด์ (Figma หน้าแรก: แบนเนอร์ + จุดบอกตำแหน่ง 4 จุด)
  * - กรอบ 2:1 มุม 16 · รูปตัดกึ่งกลางแบบ object-cover
  * - ปัดซ้าย/ขวาได้ (scroll-snap) · เลื่อนเองทุก 4 วินาที · หยุดเลื่อนเองระหว่างผู้ใช้แตะ/ปัด แล้วเริ่มใหม่หลังปล่อย
+ * - รูปเป็น "" = ช่องว่างพื้นเทาบอกขนาดรูป (1200 × 600 px · 2:1) สำหรับงานจริง
  * - จุด: อันที่แสดงอยู่ยาว 16px สีเทา · อันอื่น 8px ขาวโปร่ง (ตาม Figma) · แตะจุดเพื่อไปสไลด์นั้น
  */
 export function BannerCarousel(props: { images: string[]; interval?: number }) {
@@ -47,13 +48,27 @@ export function BannerCarousel(props: { images: string[]; interval?: number }) {
       >
         <For each={props.images}>
           {(src, i) => (
-            <img
-              src={src}
-              alt=""
-              aria-label={t("core.banner_slide", { n: i() + 1, total: props.images.length })}
-              class="size-full shrink-0 snap-center object-cover"
-              draggable={false}
-            />
+            // src ว่าง ("") = ช่องสำหรับรูปจริง: พื้นเทา + บอกขนาดรูปที่ต้องใช้
+            <Show
+              when={src}
+              fallback={
+                <div
+                  class="flex size-full shrink-0 snap-center flex-col items-center justify-center gap-1 bg-surface-gray text-center text-gray"
+                  aria-label={t("core.banner_slide", { n: i() + 1, total: props.images.length })}
+                >
+                  <span class="text-14 font-medium">{t("core.banner_placeholder")}</span>
+                  <span class="text-12">{t("core.banner_size")}</span>
+                </div>
+              }
+            >
+              <img
+                src={src}
+                alt=""
+                aria-label={t("core.banner_slide", { n: i() + 1, total: props.images.length })}
+                class="size-full shrink-0 snap-center object-cover"
+                draggable={false}
+              />
+            </Show>
           )}
         </For>
       </div>

@@ -8,11 +8,15 @@ import { createSignal } from "solid-js";
 const KEY = "charmiss-prototype-settings";
 const [pointsExpire, setPointsExpireSignal] = createSignal(false);
 const [outsideLine, setOutsideLineSignal] = createSignal(false);
-export { outsideLine, pointsExpire };
+/** tierSystem: มีระบบระดับสมาชิก (ปิด = ไม่มีระดับเลย: ไม่มีการ์ดระดับหน้าแรก/เมนูในโปรไฟล์ · หน้าระดับแสดงว่ายังไม่มี) */
+const [tierSystem, setTierSystemSignal] = createSignal(true);
+/** showTierCard: แสดงการ์ด "ระดับของคุณ" ในหน้าแรก (ใช้เมื่อมีระบบระดับ) */
+const [showTierCard, setShowTierCardSignal] = createSignal(true);
+export { outsideLine, pointsExpire, showTierCard, tierSystem };
 
 function save() {
   try {
-    localStorage.setItem(KEY, JSON.stringify({ pointsExpire: pointsExpire(), outsideLine: outsideLine() }));
+    localStorage.setItem(KEY, JSON.stringify({ pointsExpire: pointsExpire(), outsideLine: outsideLine(), tierSystem: tierSystem(), showTierCard: showTierCard() }));
   } catch {
     /* ignore */
   }
@@ -23,6 +27,8 @@ export function restorePrototypeSettings() {
     const s = JSON.parse(localStorage.getItem(KEY) ?? "{}");
     setPointsExpireSignal(!!s.pointsExpire);
     setOutsideLineSignal(!!s.outsideLine);
+    setTierSystemSignal(s.tierSystem !== false);
+    setShowTierCardSignal(s.showTierCard !== false);
   } catch {
     /* ignore */
   }
@@ -35,5 +41,15 @@ export function setPointsExpire(v: boolean) {
 
 export function setOutsideLine(v: boolean) {
   setOutsideLineSignal(v);
+  save();
+}
+
+export function setTierSystem(v: boolean) {
+  setTierSystemSignal(v);
+  save();
+}
+
+export function setShowTierCard(v: boolean) {
+  setShowTierCardSignal(v);
   save();
 }

@@ -15,10 +15,10 @@ export function missionTrack(m: Mission): { key: string; class: string } | undef
 /** ข้อความปุ่มหลักของหน้า detail (ต้นฉบับ: helper gi() ใน mission-capability) */
 export function missionCtaLabel(m: Mission, t: Translate, checkedInToday = false): string {
   // ภารกิจสะสมคอยน์ (Figma): เริ่มภารกิจ → สะสมคะแนน · หมดเวลา = ปุ่มเทา "สะสมคะแนน"
-  if (m.type === "coin") return m.status === "not_started" ? t("mis.start") : t("mis.collect");
+  // ยังไม่เริ่ม → "เริ่มทำภารกิจ" ทุกประเภท (ตัดสินใจ 2026-11-25)
+  if (m.status === "not_started") return t("mis.start_mission_all");
+  if (m.type === "coin") return t("mis.collect");
   switch (m.status) {
-    case "not_started":
-      return m.type === "stamp" ? t("common.start_collecting_stamp") : t("mission.start_mission");
     case "in_progress":
       if (m.type === "checkin") return checkedInToday ? t("mis.checked_in_today") : t("mis.checkin_today");
       return m.type === "quiz" ? t("component.tab_slide_dialog.continue_mission") : t("common.earn_coins_from_mission");
