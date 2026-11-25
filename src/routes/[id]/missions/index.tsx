@@ -29,6 +29,8 @@ import { IconChevronRight, IconSort } from "~/components/ui/icons";
 type TabType = 1 | 2 | 3;
 type SortType = "" | "new" | "mission_success";
 
+const STATUS_ORDER: Record<string, number> = { not_started: 0, in_progress: 1, completed: 2, expired: 3 };
+
 export default function MissionList() {
   const { t } = useI18n();
   const to = usePartnerPath();
@@ -47,7 +49,8 @@ export default function MissionList() {
     // ต้นฉบับ: type 2 = เข้าร่วมแล้วแต่ยังไม่สำเร็จ, type 3 = สำเร็จ
     if (tab() === 2) list = list.filter((m) => m.status === "in_progress");
     if (tab() === 3) list = list.filter((m) => m.status === "completed");
-    if (sort() === "new") list = [...list].sort((a, b) => b.start_date.localeCompare(a.start_date));
+    // ค่าเริ่มต้น: เรียงตามสถานะก่อน — ยังไม่ได้เริ่ม · กำลังทำ · สำเร็จ · หมดเวลา (ตัดสินใจ 2026-11-25) แล้วใหม่ล่าสุดในกลุ่มเดียวกัน
+    if (sort() === "new") list = [...list].sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || b.start_date.localeCompare(a.start_date));
     if (sort() === "mission_success") list = [...list].sort((a, b) => Number(b.status === "completed") - Number(a.status === "completed"));
     return list;
   });

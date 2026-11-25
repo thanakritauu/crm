@@ -217,34 +217,7 @@ export const missions: Mission[] = [
     redeem_end: "2026-12-31",
     image: "/images/missions/m13.jpg",
   },
-  {
-    id: "m-005",
-    title: "9.9 Charmiss Sales!!",
-    subtitle: "ลงทะเบียนรับคูปอง Charmiss 9.9 Sales ทาง SMS ได้เลย",
-    description: "ภารกิจพิเศษช่วงฮาโลวีน",
-    type: "stamp",
-    status: "expired",
-    start_date: "2026-10-15",
-    end_date: "2026-10-31",
-    progress: 1,
-    target: 3,
-    reward_coins: 40,
-    cover: ["#E5E7EB", "#9CA3AF"],
-    conditions: [],
-    reward_ids: [],
-    image: "/images/missions/m15.png",
-  },
-  // ภารกิจจริงที่หมดเวลาแล้ว (ชื่อ/รูปจากหน้า /mission จริง 18 พ.ย. 2569)
-  { id: "m-006", title: "ซื้อครบ 199.- เก็บใบเสร็จแลกส่วนลด!", subtitle: "โปรโมชั่นพิเศษ 15 วัน 200 สิทธิเท่านั้น 🔥", description: "โปรโมชั่นพิเศษ 15 วัน 200 สิทธิเท่านั้น 🔥", type: "receipt", status: "expired", start_date: "2026-09-01", end_date: "2026-10-31", progress: 0, target: 1, reward_coins: 0, cover: ["#E5E7EB", "#9CA3AF"], image: "/images/missions/m02.jpg", conditions: [], reward_ids: [] },
-  { id: "m-007", title: "ลุ้นเป็น 1 ใน Lucky Fans 20 ท่าน กิจกรรม CHARMISS PLAYGROUND with FOURTH at Beautrium", subtitle: "ลุ้นเป็น 1 ใน Lucky Fans 20 ท่าน", description: "ลุ้นเป็น 1 ใน Lucky Fans 20 ท่าน", type: "receipt", status: "expired", start_date: "2026-09-01", end_date: "2026-10-31", progress: 0, target: 1, reward_coins: 0, cover: ["#E5E7EB", "#9CA3AF"], image: "/images/missions/m03.jpg", conditions: [], reward_ids: [] },
-  { id: "m-008", title: "ลุ้นvdo call เป็น 1 ใน 5 ผู้โชคดีในกิจกรรมCharmiss Iconic Glow Video Call with Fourth", subtitle: "ลุ้นเป็น 1 ใน 5 ผู้โชคดีในกิจกรรม Charmiss Iconic Glow Video Call with Fourth", description: "ลุ้นเป็น 1 ใน 5 ผู้โชคดีในกิจกรรม Charmiss Iconic Glow Video Call with Fourth", type: "receipt", status: "expired", start_date: "2026-09-01", end_date: "2026-10-31", progress: 0, target: 1, reward_coins: 0, cover: ["#E5E7EB", "#9CA3AF"], image: "/images/missions/m04.jpg", conditions: [], reward_ids: [] },
-  { id: "m-009", title: "Beautrium - ลุ้นเป็น 1 ใน 25 ผู้โชคดีในกิจกรรม Lovely Island with Thee-Wave ปากฉ่ำติดเกาะกับธีร์-เวฟ", subtitle: "จะเกิดอะไรขึ้น?! เมื่อ 2 หนุ่ม ‘ธีร์ ธีรติ’ และ ‘เวฟ ธนภัทร’ ต้องมาติดเกาะ #CharmissParadiseisland ด้วยกัน! 🏝️💖", description: "จะเกิดอะไรขึ้น?! เมื่อ 2 หนุ่ม ‘ธีร์ ธีรติ’ และ ‘เวฟ ธนภัทร’ ต้องมาติดเกาะ #CharmissParadiseisland ด้วยกัน! 🏝️💖", type: "receipt", status: "expired", start_date: "2026-09-01", end_date: "2026-10-31", progress: 0, target: 1, reward_coins: 0, cover: ["#E5E7EB", "#9CA3AF"], image: "/images/missions/m05.jpg", conditions: [], reward_ids: [] },
-  { id: "m-010", title: "Line Shopping - ลุ้นเป็น 1 ใน 25 ผู้โชคดีในกิจกรรม Lovely Island with Thee-Wave ปากฉ่ำติดเกาะกับธีร์-เวฟ", subtitle: "จะเกิดอะไรขึ้น?! เมื่อ 2 หนุ่ม ‘ธีร์ ธีรติ’ และ ‘เวฟ ธนภัทร’ ต้องมาติดเกาะ #CharmissParadiseisland ด้วยกัน! 🏝️💖", description: "จะเกิดอะไรขึ้น?! เมื่อ 2 หนุ่ม ‘ธีร์ ธีรติ’ และ ‘เวฟ ธนภัทร’ ต้องมาติดเกาะ #CharmissParadiseisland ด้วยกัน! 🏝️💖", type: "receipt", status: "expired", start_date: "2026-09-01", end_date: "2026-10-31", progress: 0, target: 1, reward_coins: 0, cover: ["#E5E7EB", "#9CA3AF"], image: "/images/missions/m06.jpg", conditions: [], reward_ids: [] },
-  { id: "m-011", title: "ร่วมเป็น 1 ใน 20 Super Fans และ 30 Lucky Fans ในกิจกรรม Ormazing Paradise ผิวใสออร่าสวยสะกดทุกสายตา กับ ‘ออม กรณ์นภัส’", subtitle: "🎁 ร่วมเป็น 1 ใน 20 Super Fans ที่ได้โมเมนต์สุด Exclusive ภายในงาน กับ ‘ออม กรณ์นภัส’", description: "🎁 ร่วมเป็น 1 ใน 20 Super Fans ที่ได้โมเมนต์สุด Exclusive ภายในงาน กับ ‘ออม กรณ์นภัส’", type: "receipt", status: "expired", start_date: "2026-09-01", end_date: "2026-10-31", progress: 0, target: 1, reward_coins: 0, cover: ["#E5E7EB", "#9CA3AF"], image: "/images/missions/m07.jpg", conditions: [], reward_ids: [] },
-  { id: "m-012", title: "อัปโหลดใบเสร็จเพื่อลุ้นเข้าร่วมกิจกรรม \"ผิว Win ฟินไนต์เอ้าท์\" กับ วิน เมธวิน", subtitle: "ผิว WIN ฟินไนต์เอ้าท์ กับ วิน เมธวิน!", description: "ผิว WIN ฟินไนต์เอ้าท์ กับ วิน เมธวิน!", type: "receipt", status: "expired", start_date: "2026-09-01", end_date: "2026-10-31", progress: 0, target: 1, reward_coins: 0, cover: ["#E5E7EB", "#9CA3AF"], image: "/images/missions/m08.png", conditions: [], reward_ids: [] },
-  { id: "m-013", title: "ลุ้น VDO call ใบเสร็จในกิจกรรม Charmiss Perfect Heart Perfect Show แมตต์นี้ ผิวพร้อมโชว์ with Tle - Firstone", subtitle: "ขั้นตอนการอัปโหลดใบเสร็จ:", description: "ขั้นตอนการอัปโหลดใบเสร็จ:", type: "receipt", status: "expired", start_date: "2026-09-01", end_date: "2026-10-31", progress: 0, target: 1, reward_coins: 0, cover: ["#E5E7EB", "#9CA3AF"], image: "/images/missions/m09.jpg", conditions: [], reward_ids: [] },
-  { id: "m-014", title: "อัปโหลดใบเสร็จในกิจกรรม Charmiss Perfect Heart Perfect Show แมตต์นี้ ผิวพร้อมโชว์ with Tle - Firstone", subtitle: "ขั้นตอนการอัปโหลดใบเสร็จ:", description: "ขั้นตอนการอัปโหลดใบเสร็จ:", type: "receipt", status: "expired", start_date: "2026-09-01", end_date: "2026-10-31", progress: 0, target: 1, reward_coins: 0, cover: ["#E5E7EB", "#9CA3AF"], image: "/images/missions/m10.jpg", conditions: [], reward_ids: [] },
-  { id: "m-015", title: "ลุ้นเป็น 1 ใน 15 Lucky Fans รับสิทธิ์ใกล้ชิดสุดพิเศษ! จัดดอกไม้กับ “เก่ง-น้ำปิง”", subtitle: "ปลูกหัวใจให้บานสะพรั่งในกิจกรรมสุดพิเศษ “Charmiss Blooming Heart With Keng -Namping”", description: "ปลูกหัวใจให้บานสะพรั่งในกิจกรรมสุดพิเศษ “Charmiss Blooming Heart With Keng -Namping”", type: "receipt", status: "expired", start_date: "2026-09-01", end_date: "2026-10-31", progress: 0, target: 1, reward_coins: 0, cover: ["#E5E7EB", "#9CA3AF"], image: "/images/missions/m11.jpg", conditions: [], reward_ids: [] },
+  // ภารกิจที่หมดเวลา: เหลือไว้แค่ "ภารกิจสะสมคอยน์ เดือนตุลาคม" (cm-202) อันเดียว — เอา m-005…m-015 ออก (ตัดสินใจ 2026-11-25)
 ];
 
 /** โค้ดของรางวัลที่ได้หลังทำภารกิจสำเร็จ (หน้า mission/redeem-detail) */

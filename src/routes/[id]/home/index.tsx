@@ -72,7 +72,8 @@ export default function Home() {
   const missions = createMemo(() =>
     missionService
       .list()
-      .filter((m) => m.status !== "expired" && m.status !== "completed" && (m.type === "coin" || m.reward_coins > 0))
+      // หน้าแรกแสดงเฉพาะภารกิจที่กำลังทำ (ตัดสินใจ 2026-11-25)
+      .filter((m) => m.status === "in_progress" && (m.type === "coin" || m.reward_coins > 0))
       .slice(0, 2),
   );
 
@@ -123,7 +124,8 @@ export default function Home() {
         <BannerCarousel images={[1, 2, 3, 4].map((n) => `/images/home/slide-${n}.jpg`)} />
       </div>
 
-      {/* ภารกิจสะสมคอยน์ (ก่อนส่วนแลกสินค้า) */}
+      {/* ภารกิจสะสมคอยน์ (ก่อนส่วนแลกสินค้า) — เฉพาะที่กำลังทำ · ไม่มีภารกิจที่กำลังทำ (และเป็นสมาชิก) → ซ่อนทั้งส่วน */}
+      <Show when={!session.isMember || missions().length > 0}>
       <section class="relative mt-6 flex flex-col gap-2 px-4">
         <SectionTitle title={t("club.missions_coins")} href={to("missions")} />
         <Show when={!session.isMember}>
@@ -142,6 +144,7 @@ export default function Home() {
           <For each={missions()}>{(m) => <MissionGridCard mission={m} />}</For>
         </div>
       </section>
+      </Show>
 
       {/* ใช้คะแนนแลกสินค้า */}
       <section class="relative mt-6 flex flex-col gap-2 px-4">

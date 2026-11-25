@@ -108,25 +108,22 @@ function BalanceBody(props: {
         {/* ไม่มีบรรทัดวิธีได้ → ">" ประวัติอยู่บรรทัดป้าย · มีบรรทัดวิธีได้ (หน้าแรก/โปรไฟล์) → ">" ไปหน้าสะสม/ภารกิจ ด้านล่าง */}
         <Show when={!props.hint}>{historyLink()}</Show>
       </span>
-      {/* ตัวเลข + บรรทัดวิธีได้ อยู่คอลัมน์ซ้าย · ">" (ไปหน้าสะสมคะแนน / ภารกิจ) อยู่ขวา กึ่งกลางแนวตั้งระหว่างสองบรรทัด (2026-11-25) */}
-      {/* มีบรรทัดวิธีได้: gap-1 + -mr-1 (">" ขยับเข้าขอบการ์ด 4px) → "ซื้อสินค้าเพื่อสะสมคะแนน" ยังเต็มบรรทัดบนจอ 375 */}
-      <span class={cn("flex items-center gap-1", props.hint && "-mr-1")}>
-        <span class="flex min-w-0 flex-1 flex-col gap-1">
-          <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary" : "text-primary")}>
-            <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")}>
-              <Show when={props.countUp} fallback={formatNumber(props.amount)}>
-                <CountUp value={props.amount} id={props.unit} waitFor="home" />
-              </Show>
-            </span>
-            <span class="shrink-0 text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
-          </span>
-          <Show when={props.hint}>
-            {/* ชิดตัวเลขขึ้น (-mt-1) */}
-            <span class={cn("-mt-1 truncate text-12", props.onBrand ? "text-white" : "text-gray")}>{props.hint}</span>
+      <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary" : "text-primary")}>
+        <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")}>
+          <Show when={props.countUp} fallback={formatNumber(props.amount)}>
+            <CountUp value={props.amount} id={props.unit} waitFor="home" />
           </Show>
         </span>
-        <Show when={props.hint}>{earnLink()}</Show>
+        <span class="shrink-0 text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
       </span>
+      <Show when={props.hint}>
+        {/* ชิดตัวเลขขึ้น (-mt-1) · ">" (ไปหน้าสะสมคะแนน / ภารกิจ) อยู่ท้ายบรรทัดนี้ (2026-11-25)
+            gap-1 + -mr-1 (">" ขยับเข้าขอบการ์ด 4px) → "ซื้อสินค้าเพื่อสะสมคะแนน" ยังเต็มบรรทัดบนจอ 375 */}
+        <span class={cn("-mr-1 -mt-1 flex items-center justify-between gap-1 text-12", props.onBrand ? "text-white" : "text-gray")}>
+          <span class="min-w-0 truncate">{props.hint}</span>
+          {earnLink()}
+        </span>
+      </Show>
     </div>
   );
 }
