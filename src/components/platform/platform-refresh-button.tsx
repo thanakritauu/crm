@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { createSignal, onMount, Show } from "solid-js";
 import { IconRefresh } from "~/components/ui/icons";
 import { ResultModal } from "~/components/ui/modal";
 import { PageLoading } from "~/components/ui/page-loading";
@@ -17,20 +17,79 @@ import { earnService } from "~/services/earn-service";
  * variant
  * - header: วงกลมขาว 40px + เงา (มุมขวาบนหน้าเชื่อมต่อแพลตฟอร์ม — แบบเดียวกับกระดิ่งหน้าแรก)
  * - inline: ไอคอน 16px มุมขวาบนของการ์ดคะแนน/คอยน์หน้าแรก แทน ">" (พื้นที่กด 40px · อยู่เหนือลิงก์ของการ์ด)
+ * นับถอยหลัง 5 นาที (2026-11-25 · แบบ production "อัพเดตคะแนนได้อีกครั้งใน 02:36 นาที"):
+ * - กดอัปเดตจุดไหนก็ได้ → ทุกปุ่มอัปเดต (หน้าแรก · สะสมคะแนน · เชื่อมต่อแพลตฟอร์ม) กดไม่ได้ 5 นาที ใช้เวลาร่วมกัน (localStorage)
+ * - ระหว่างรอ: ปุ่มแสดงเวลาที่เหลือ "04:59" แทนไอคอน · ครบเวลาแล้วกลับเป็นไอคอนรีเฟรช
+ * - เมนู prototype › รีเซ็ตข้อมูลจำลอง ล้างเวลานับถอยหลัง (resetRefreshCooldown)
  */
+const COOLDOWN_KEY = "charmiss-refresh-cooldown-until";
+const COOLDOWN_MS = 5 * 60 * 1000;
+const [cooldownUntil, setCooldownUntil] = createSignal(0);
+const [nowMs, setNowMs] = createSignal(0);
+let ticker: ReturnType<typeof setInterval> | undefined;
+
+const tick = () => {
+  if (ticker) return;
+  ticker = setInterval(() => {
+    setNowMs(Date.now());
+    if (Date.now() >= cooldownUntil()) {
+      clearInterval(ticker);
+      ticker = undefined;
+    }
+  }, 1000);
+};
+const loadCooldown = () => {
+  try {
+    setCooldownUntil(Number(localStorage.getItem(COOLDOWN_KEY)) || 0);
+  } catch {
+    /* ignore */
+  }
+  setNowMs(Date.now());
+  if (cooldownUntil() > Date.now()) tick();
+};
+const startCooldown = () => {
+  const until = Date.now() + COOLDOWN_MS;
+  setCooldownUntil(until);
+  setNowMs(Date.now());
+  try {
+    localStorage.setItem(COOLDOWN_KEY, String(until));
+  } catch {
+    /* ignore */
+  }
+  tick();
+};
+/** มิลลิวินาทีที่เหลือก่อนกดอัปเดตได้อีกครั้ง (0 = กดได้) */
+export const refreshRemaining = () => Math.max(0, cooldownUntil() - nowMs());
+export const resetRefreshCooldown = () => {
+  setCooldownUntil(0);
+  try {
+    localStorage.removeItem(COOLDOWN_KEY);
+  } catch {
+    /* ignore */
+  }
+};
+const mmss = (ms: number) => {
+  const sec = Math.ceil(ms / 1000);
+  return `${String(Math.floor(sec / 60)).padStart(2, "0")}:${String(sec % 60).padStart(2, "0")}`;
+};
 export function PlatformRefreshButton(props: { class?: string; unit?: "points" | "coins" | "all"; variant?: "header" | "inline" }) {
   const { t } = useI18n();
   const [loading, setLoading] = createSignal(false);
   const [result, setResult] = createSignal<{ variant: "success" | "error"; title: string; description?: string } | null>(null);
+  onMount(loadCooldown);
+  const waiting = () => refreshRemaining() > 0;
   const coins = () => props.unit === "coins";
 
   const refresh = async (e: MouseEvent) => {
     // อยู่ในการ์ดที่ทั้งใบเป็นลิงก์ → ไม่ให้คลิกทะลุไปเปิดหน้าอื่น
     e.preventDefault();
     e.stopPropagation();
+    if (waiting()) return;
     setLoading(true);
     await delay(900);
     setLoading(false);
+    // เริ่มนับถอยหลัง 5 นาที (ใช้ร่วมทุกปุ่มอัปเดต)
+    startCooldown();
     // หัวข้อผลลัพธ์แยกตามจุดที่กด: คอยน์ (หน้าแรก) · คะแนน (หน้าแรก) · หัวหน้าเชื่อมต่อแพลตฟอร์ม
     if (coins()) return setResult({ variant: "success", title: t("club.coins_is_now"), description: t("mis.coins_amount", { coins: formatNumber(session.customer.coins) }) });
     // ปุ่มเดียวหน้าแรก: อัปเดตทั้งคะแนน (จากแพลตฟอร์ม) และคอยน์ พร้อมกัน
@@ -77,9 +136,21 @@ export function PlatformRefreshButton(props: { class?: string; unit?: "points" |
             : "flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-dark shadow-card",
           props.class,
         )}
-        aria-label={props.unit === "all" ? t("club.refresh_all") : coins() ? t("club.refresh_coins") : t("core.refresh_platform_points")}
+        disabled={waiting()}
+        aria-label={
+          waiting()
+            ? t("club.refresh_again_in", { time: mmss(refreshRemaining()) })
+            : props.unit === "all"
+              ? t("club.refresh_all")
+              : coins()
+                ? t("club.refresh_coins")
+                : t("core.refresh_platform_points")
+        }
       >
-        <IconRefresh size={props.variant === "inline" ? 16 : 24} />
+        {/* ระหว่างนับถอยหลัง: แสดงเวลาที่เหลือแทนไอคอน */}
+        <Show when={waiting()} fallback={<IconRefresh size={props.variant === "inline" ? 16 : 24} />}>
+          <span class="text-12 font-semibold tabular-nums text-gray">{mmss(refreshRemaining())}</span>
+        </Show>
       </button>
       <ResultModal
         open={!!result()}

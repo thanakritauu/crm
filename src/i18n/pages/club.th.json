@@ -25,7 +25,7 @@
   "club.your_points": "คะแนนของคุณ",
   "club.history": "ประวัติ",
   "club.balance": "คงเหลือ",
-  "club.this_mission_coins": "คอยน์ที่สะสมได้",
+  "club.this_mission_coins": "คอยน์ที่สะสมได้จากภารกิจนี้",
   "club.mission_collected_coins": "สะสมแล้ว {{coins}} คอยน์",
   "club.coins_is_now": "คอยน์ของคุณเป็นปัจจุบันแล้ว",
   "club.refresh_coins": "อัปเดตคอยน์",
@@ -39,5 +39,6 @@
   "club.balances_up_to_date": "คะแนนและคอยน์ของคุณเป็นปัจจุบันแล้ว",
   "club.balances_now": "คะแนน {{points}} คะแนน · คอยน์ {{coins}} คอยน์",
   "club.times_progress": "{{progress}}/{{target}} ครั้ง",
-  "club.unlimited_times": "สะสมได้ไม่จำกัดครั้ง"
+  "club.unlimited_times": "สะสมได้ไม่จำกัดครั้ง",
+  "club.refresh_again_in": "อัปเดตคะแนนได้อีกครั้งใน {{time}} นาที"
 }

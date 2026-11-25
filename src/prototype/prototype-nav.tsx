@@ -17,6 +17,7 @@ import { usePartnerPath } from "~/lib/theme";
 import { cn } from "~/lib/utils";
 import { screenGroups } from "./screens";
 import { resetWelcome } from "~/components/home/welcome-popup";
+import { resetRefreshCooldown } from "~/components/platform/platform-refresh-button";
 
 /**
  * เมนู prototype — ปุ่มลอยมุมขวาล่าง เปิด sheet รายการหน้าทั้งหมด
@@ -205,6 +206,7 @@ export function PrototypeNav() {
             class="mt-1 block w-full rounded-xl px-4 py-2 text-left text-14 text-gray hover:bg-surface-gray"
             onClick={() => {
               resetSession();
+              resetRefreshCooldown();
               resetExchangeState();
               platformStoreActions.reset();
               missionService.reset();
