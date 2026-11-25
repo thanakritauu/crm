@@ -15,7 +15,7 @@ import { tierSystem } from "~/prototype/settings";
 import { Avatar } from "~/components/ui/avatar";
 import { takeFlash } from "~/lib/navigation";
 import { UnreadBadge } from "~/components/layout/notification-bell";
-import { IconBell, IconChevronRight, IconCoins, IconCrown, IconHistory, IconLogout, IconMapPin, IconSettings, IconShield, IconSmartphone, IconTicket, IconUser } from "~/components/ui/icons";
+import { IconBell, IconChevronRight, IconCoins, IconCrown, IconGift, IconHistory, IconLogout, IconMapPin, IconSettings, IconShield, IconSmartphone, IconTicket, IconUser } from "~/components/ui/icons";
 
 /**
  * /:partner/profile — โปรไฟล์ + เมนูบัญชี (มี BottomNav)
@@ -41,6 +41,7 @@ const Icons = {
   ticket: () => <IconTicket size={16} />,
   history: () => <IconHistory size={16} />,
   coin: () => <IconCoins size={16} />,
+  gift: () => <IconGift size={16} />,
   link: () => <IconSmartphone size={16} />,
   globe: () => <img src={session.language === "en" ? "/images/figma/flag-en.png" : "/images/figma/flag-th.png"} alt="" width="16" height="16" class="rounded-full" />,
   gear: () => <IconSettings size={16} />,
@@ -78,20 +79,25 @@ export default function Profile() {
    * "แลกคะแนนเป็นคูปอง" ย้ายไปหน้าแลกรางวัล (แท็บคูปอง) เพราะเป็นเรื่องการแลก ไม่ใช่ข้อมูลผู้ใช้
    */
   const groups = (): { group: string; menu: MenuItem[] }[] => [
+    // กลุ่มคูปองและประวัติอยู่บนสุด (ตัดสินใจ 2026-11-25)
+    {
+      group: t("rw.wallet_group"),
+      menu: [
+        // คูปองของฉัน: แสดงเมื่อเคยแลกคูปองแล้ว → แท็บคูปองของฉันในหน้าแลกรางวัล
+        ...(session.myCoupons.length ? [{ name: t("home.my_coupon"), icon: Icons.ticket, path: "rewards?type=mine" }] : []),
+        // การแลกรางวัลของฉัน (แยกจากประวัติคะแนน — แบบ A)
+        { name: t("rw.my_redemptions"), icon: Icons.gift, path: "wallet/redemptions" },
+        // แลกคะแนนเป็นคูปอง (ใต้คูปองของฉัน — แสดงเสมอ)
+        { name: t("profile.exchange_points_menu"), icon: Icons.coin, path: "rewards/points-to-coupon" },
+        { name: t("rw.history_menu"), icon: Icons.history, path: "wallet/history" },
+      ],
+    },
     {
       group: t("profile.profile_group"),
       menu: [
         { name: t("profile.personal_info"), icon: Icons.user, path: "profile/info" },
         ...(tierSystem() ? [{ name: t("tier.title"), icon: Icons.crown, path: "profile/tier" }] : []),
         { name: t("profile.shipping_address"), icon: Icons.pin, path: "profile/addresses" },
-      ],
-    },
-    {
-      group: t("rw.wallet_group"),
-      menu: [
-        // คูปองของฉัน: แสดงเมื่อเคยแลกคูปองแล้ว → แท็บคูปองของฉันในหน้าแลกรางวัล
-        ...(session.myCoupons.length ? [{ name: t("home.my_coupon"), icon: Icons.ticket, path: "rewards?type=mine" }] : []),
-        { name: t("rw.history_menu"), icon: Icons.history, path: "wallet/history" },
       ],
     },
     {

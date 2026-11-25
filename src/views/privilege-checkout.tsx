@@ -44,7 +44,7 @@ export default function PrivilegeSummary() {
   const chooseAddress = () =>
     navigate(to(`profile/addresses?select=1&return=${encodeURIComponent(selfPath())}${address() ? `&selected=${address()!.id}` : ""}`));
   const addAddress = () => navigate(to(`profile/addresses/new?select=1&return=${encodeURIComponent(selfPath())}`));
-  const goHistory = () => navigate(to("wallet/history?type=redemptions"), { replace: true });
+  const goHistory = () => navigate(to("wallet/redemptions"), { replace: true });
 
   const redeem = async () => {
     const a = address();

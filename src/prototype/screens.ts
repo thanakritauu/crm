@@ -57,6 +57,7 @@ export const screenGroups: ScreenGroup[] = [
       { path: "profile", title: "การตั้งค่า", status: "done" },
       { path: "profile/privacy", title: "นโยบายคุ้มครองข้อมูลส่วนบุคคล", status: "done" },
       { path: "wallet/history", title: "ประวัติการแลก", status: "done" },
+      { path: "wallet/redemptions", title: "การแลกรางวัลของฉัน", status: "done" },
       { path: "wallet/history?type=coins", title: "ประวัติคอยน์ / คะแนน", status: "done" },
       { path: "notifications", title: "การแจ้งเตือน", status: "done" },
       { path: "profile/platforms", title: "เชื่อมต่อแพลตฟอร์มออนไลน์", status: "done" },

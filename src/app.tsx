@@ -11,6 +11,7 @@ import { notificationService } from "~/services/notification-service";
 import { ThemeProvider } from "~/lib/theme";
 import { PrototypeNav } from "~/prototype/prototype-nav";
 import { MemberGateModal } from "~/lib/member-gate";
+import { FlyToHome } from "~/components/layout/fly-to-home";
 import "./app.css";
 
 /** หน้าที่ไม่อยู่ในกรอบมือถือ (เครื่องมือของ prototype) */
@@ -35,6 +36,7 @@ function Shell(props: { children: any }) {
         <MobileFrame>{props.children}</MobileFrame>
         <PrototypeNav />
         <MemberGateModal />
+        <FlyToHome />
       </Show>
     </ThemeProvider>
   );

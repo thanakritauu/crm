@@ -1,7 +1,7 @@
 import { A, useNavigate } from "@solidjs/router";
 import { createSignal, For, Show, type JSX } from "solid-js";
 import { RewardGridCard } from "~/components/ui/reward-grid-card";
-import { IconChevronRight, IconTicket } from "~/components/ui/icons";
+import { IconChevronRight, IconCoins } from "~/components/ui/icons";
 import { TicketIcon } from "~/components/reward/icons";
 import { Badge } from "~/components/ui/badge";
 import { buttonVariants } from "~/components/ui/button";
@@ -57,7 +57,8 @@ export function CouponCatalog(props: { extra?: JSX.Element }) {
       <div class="px-4 pt-4">
         <A href={to("rewards/points-to-coupon")} class="flex items-center justify-between gap-2 rounded-2xl bg-primary-surface p-4">
           <span class="flex items-center gap-2 text-14 font-semibold text-dark">
-            <IconTicket size={20} class="text-primary" />
+            {/* ไอคอนเดียวกับเมนู "แลกคะแนนเป็นคูปอง" ในโปรไฟล์ (Solar Coins) */}
+            <IconCoins size={20} class="text-primary" />
             {t("profile.exchange_points_menu")}
           </span>
           <IconChevronRight size={16} class="text-gray" />

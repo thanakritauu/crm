@@ -96,7 +96,7 @@ export default function PrivilegeDetail() {
     else setResult("success");
   };
 
-  const goHistory = () => navigate(to("wallet/history?type=redemptions"));
+  const goHistory = () => navigate(to("wallet/redemptions"));
 
   const confirmTitle = (): JSX.Element => (
     <>

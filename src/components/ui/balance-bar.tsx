@@ -96,7 +96,7 @@ function BalanceBody(props: {
       <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary" : "text-primary")}>
         <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")}>
           <Show when={props.countUp} fallback={formatNumber(props.amount)}>
-            <CountUp value={props.amount} id={props.unit} />
+            <CountUp value={props.amount} id={props.unit} waitFor="home" />
           </Show>
         </span>
         <span class="shrink-0 text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
@@ -134,7 +134,7 @@ function ExpiringLine(props: { onBrand?: boolean }) {
  * แบบบรรทัดเดียว (หน้าแลกรางวัล = คะแนน · หน้าภารกิจ = คอยน์): "คะแนนของคุณ ······ 1,250 คะแนน >"
  * อยู่หน้าที่ใช้สกุลนั้นแล้ว → ทั้งแถบแตะไปประวัติของสกุลนั้น
  */
-function BalanceInline(props: { unit: BalanceUnit; amount: number; label?: string; link?: boolean }) {
+function BalanceInline(props: { unit: BalanceUnit; amount: number; label?: string; link?: boolean; countId?: string }) {
   const { t } = useI18n();
   const to = usePartnerPath();
   const coins = () => props.unit === "coins";
@@ -147,7 +147,12 @@ function BalanceInline(props: { unit: BalanceUnit; amount: number; label?: strin
       </span>
       <span class={cn("flex shrink-0 items-center gap-2", coins() ? "text-teriary" : "text-primary")}>
         <span class="flex items-baseline gap-1">
-          <span class="text-24 font-semibold">{formatNumber(props.amount)}</span>
+          {/* countId: ปลายทางเหรียญปลิว + ตัวเลขนับขึ้น (ยอดคอยน์ของภารกิจ) */}
+          <span class="text-24 font-semibold" data-fly-target={props.countId}>
+            <Show when={props.countId} fallback={formatNumber(props.amount)}>
+              {(id) => <CountUp value={props.amount} id={id()} waitFor={id()} />}
+            </Show>
+          </span>
           <span class="text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
         </span>
         <Show when={props.link !== false}>
@@ -176,6 +181,8 @@ export function BalanceBar(props: {
   href?: string | false;
   history?: boolean;
   class?: string;
+  /** (inline) ปลายทางเหรียญปลิว + ตัวเลขนับขึ้น เช่น "mission-coins:<id>" */
+  countId?: string;
 }) {
   const amount = () => props.amount ?? (props.unit === "coins" ? session.customer.coins : session.customer.points);
   return (
@@ -184,7 +191,7 @@ export function BalanceBar(props: {
         when={props.inline}
         fallback={<BalanceBody unit={props.unit} amount={amount()} label={props.label} size={props.size ?? "md"} href={props.href} history={props.history} />}
       >
-        <BalanceInline unit={props.unit} amount={amount()} label={props.label} link={props.history !== false} />
+        <BalanceInline unit={props.unit} amount={amount()} label={props.label} link={props.history !== false} countId={props.countId} />
       </Show>
       <Show when={props.unit === "points" && props.amount === undefined}>
         <ExpiringLine />

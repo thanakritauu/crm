@@ -37,7 +37,8 @@
   /receipt-example                      ตัวอย่างเลขที่ใบเสร็จ
 /wallet                                 กระเป๋าของฉัน (→ /wallet/coupons)
   /coupons → /rewards?type=mine · /coupons/:id   รายละเอียดคูปองของฉัน
-  /history?type=points|coins|redemptions   ประวัติคะแนน / คอยน์ / การแลก
+  /history?type=points|coins             ประวัติคะแนนและคอยน์
+  /redemptions                          การแลกรางวัลของฉัน (แยกจากประวัติ — ?type=redemptions เดิมพามาที่นี่)
 /notifications                          การแจ้งเตือน
 /profile                                โปรไฟล์
   /info                                 ข้อมูลส่วนตัว

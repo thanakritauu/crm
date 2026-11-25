@@ -1,7 +1,7 @@
 {
   "rw.coins": "Coins",
   "rw.coupons": "Coupons",
-  "rw.history_menu": "Points, coins & redemption history",
+  "rw.history_menu": "Points & coins history",
   "rw.history_title": "History",
   "rw.points": "Points",
   "rw.products": "Products",
@@ -10,5 +10,6 @@
   "rw.wallet_group": "Coupons & history",
   "rw.tab_products": "Products",
   "rw.tab_coupons": "Coupons",
-  "rw.tab_redemptions": "Redemptions"
+  "rw.tab_redemptions": "Redemptions",
+  "rw.my_redemptions": "Reward redemption history"
 }

@@ -3,6 +3,7 @@ import { sessionActions } from "~/lib/session";
 import { rewardService } from "~/services/reward-service";
 import { createStore } from "solid-js/store";
 import { leaderboard, missionCouponCodes, missions, type LeaderboardEntry, type Mission, type MissionStatus } from "~/mocks/missions";
+import { emitEarned } from "~/components/layout/fly-to-home";
 
 /**
  * ต้นฉบับเรียก API (event-service / event-joined-service / customer-event-point-service)
@@ -152,6 +153,8 @@ export const missionService = {
     const n = amount ?? m.coins_per_collect ?? 10;
     setState(id, { ...state[id], coin_balance: (m.coin_balance ?? 0) + n });
     persist();
+    // เหรียญ C ปลิวไปที่ยอด "คอยน์ของภารกิจนี้" ในหน้าภารกิจ (+ นับขึ้น) — ไม่ใช่หน้าแรก เพราะไม่เข้ายอดคอยน์หลัก
+    emitEarned("coins", n, `mission-coins:${id}`);
     sessionActions.logCoins(n, { key: "mis.coin_earned_title", params: { coins: n, mission: m.title } });
     return n;
   },

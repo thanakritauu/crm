@@ -106,7 +106,7 @@ export default function Home() {
           </div>
 
           {/* คะแนน | คอยน์ — BalanceSplit (pattern เดียวกับทุกหน้า) · หน้าแรกพื้นชมพูเข้ม ตัวขาว (แบบ B — เลือกแล้ว 2026-11-25) */}
-          <BalanceSplit size="lg" tone="brand" pointsHref="earn" countUp history={false} />
+          <BalanceSplit size="lg" tone="brand" pointsHref="earn" countUp />
           {/* การ์ดระดับของคุณ — เปิด/ปิดได้จากเมนู prototype (มีระบบระดับ + แสดงการ์ด) */}
           <Show when={tierSystem() && showTierCard()}>
             <TierRow />

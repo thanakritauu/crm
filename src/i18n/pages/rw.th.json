@@ -1,7 +1,7 @@
 {
   "rw.coins": "คอยน์",
   "rw.coupons": "คูปอง",
-  "rw.history_menu": "ประวัติคะแนน คอยน์ และการแลก",
+  "rw.history_menu": "ประวัติคะแนนและคอยน์",
   "rw.history_title": "ประวัติ",
   "rw.points": "คะแนน",
   "rw.products": "ของรางวัล",
@@ -10,5 +10,6 @@
   "rw.wallet_group": "คูปองและประวัติ",
   "rw.tab_products": "แลกสินค้า",
   "rw.tab_coupons": "แลกคูปอง",
-  "rw.tab_redemptions": "การแลกรางวัล"
+  "rw.tab_redemptions": "การแลกรางวัล",
+  "rw.my_redemptions": "ประวัติการแลกของรางวัล"
 }

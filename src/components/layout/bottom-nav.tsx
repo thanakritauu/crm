@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "@solidjs/router";
-import { For } from "solid-js";
+import { For, onMount } from "solid-js";
+import { emitFlyTargetReady } from "~/components/layout/fly-to-home";
 import { Dynamic } from "solid-js/web";
 import { useI18n } from "~/lib/i18n";
 import { useTheme } from "~/lib/theme";
@@ -29,16 +30,19 @@ export function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const isActive = (path: string) => location.pathname.startsWith(`/${partner()}/${path}`);
+  // คะแนน/คอยน์ที่สะสมตอนอยู่หน้าที่ไม่มีเมนูล่าง → ปลิวมาหาปุ่มหน้าแรกตอนเมนูโผล่ (FlyToHome)
+  onMount(emitFlyTargetReady);
 
   return (
-    <nav class="fixed-frame bottom-0 z-bar bg-white px-2 pb-8 drop-shadow-card">
-      {/* 5 ช่องกว้างเท่ากัน (grid) — ระยะห่างเท่ากันทุกขนาดจอ */}
-      <div class="relative mx-auto grid max-w-mobile grid-cols-5 items-end">
+    <nav class="fixed-frame bottom-0 z-bar bg-white pb-8 drop-shadow-card">
+      {/* 5 ช่องกว้างเท่ากันเต็มความกว้าง (ไม่มี padding ซ้ายขวา) — ระยะห่างเท่ากันทุกขนาดจอ */}
+      <div class="relative grid grid-cols-5 items-end">
         <For each={ITEMS}>
           {(item) =>
             item.icon ? (
               <button
                 type="button"
+                data-nav={item.path}
                 onClick={() => navigate(`/${partner()}/${item.path}`)}
                 class="flex min-w-0 flex-col items-center justify-end gap-2 pb-1 pt-2"
               >

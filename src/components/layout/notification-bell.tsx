@@ -6,11 +6,11 @@ import { usePartnerPath } from "~/lib/theme";
 import { cn } from "~/lib/utils";
 import { notificationService } from "~/services/notification-service";
 
-/** ป้ายตัวเลขแจ้งเตือนที่ยังไม่อ่าน (แดง · 9+ เมื่อเกิน 9) */
+/** ป้ายตัวเลขแจ้งเตือนที่ยังไม่อ่าน — วงกลมแดงกว้าง=สูง 20px เสมอ (1 หลัก หรือ "9+") · ขอบขาว */
 export function UnreadBadge(props: { class?: string }) {
   return (
     <Show when={notificationService.unreadCount() > 0}>
-      <span class={cn("flex h-4 min-w-4 items-center justify-center rounded-full border border-white bg-error px-1 text-12 font-medium text-white", props.class)}>
+      <span class={cn("flex size-5 shrink-0 items-center justify-center rounded-full border border-white bg-error text-12 font-medium text-white", props.class)}>
         {notificationService.unreadCount() > 9 ? "9+" : notificationService.unreadCount()}
       </span>
     </Show>

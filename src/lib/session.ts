@@ -1,3 +1,4 @@
+import { emitEarned } from "~/components/layout/fly-to-home";
 import { translate } from "~/lib/i18n";
 import { createStore, produce } from "solid-js/store";
 import { customer as initialCustomer, type Customer } from "~/mocks/customer";
@@ -307,6 +308,7 @@ export const sessionActions = {
       }),
     );
     persist();
+    emitEarned("points", amount);
   },
 
   /** ได้รับคอยน์จากภารกิจ */
@@ -327,5 +329,6 @@ export const sessionActions = {
       }),
     );
     persist();
+    emitEarned("coins", amount);
   },
 };
