@@ -31,6 +31,7 @@ import { expiringPoints } from "~/services/history-service";
 export type BalanceUnit = "points" | "coins";
 
 const SPEND: Record<BalanceUnit, string> = { points: "rewards", coins: "missions" };
+const EARN: Record<BalanceUnit, string> = { points: "earn", coins: "missions" };
 const HISTORY: Record<BalanceUnit, string> = { points: "wallet/history", coins: "wallet/history?type=coins" };
 
 /** ring = ขอบขาวรอบไอคอน (ใช้บนพื้นชมพูเข้ม ไม่ให้ไอคอน P สีชมพูกลืนกับพื้น) */
@@ -69,6 +70,28 @@ function BalanceBody(props: {
   const to = usePartnerPath();
   const coins = () => props.unit === "coins";
   const href = () => (props.href === false ? undefined : to(props.href ?? SPEND[props.unit]));
+  // ">" = ประวัติของสกุลนั้น (ตัวแถบพาไปแลกรางวัล/ภารกิจ) — ตัดสินใจ 2026-11-23
+  const historyLink = () => (
+    <Show when={props.history !== false && !props.refresh}>
+      <A
+        href={to(HISTORY[props.unit])}
+        class={cn("hit-area relative z-raised flex shrink-0 items-center", props.onBrand ? "text-white" : "text-gray")}
+        aria-label={t(coins() ? "club.coins_history" : "club.points_history")}
+      >
+        <IconChevronRight size={16} />
+      </A>
+    </Show>
+  );
+  // การ์ดที่มีบรรทัดวิธีได้ (หน้าแรก/โปรไฟล์): ">" = ไปทำให้ได้เพิ่ม — คะแนน → หน้าสะสมคะแนน · คอยน์ → หน้าภารกิจ (2026-11-25)
+  const earnLink = () => (
+    <A
+      href={to(EARN[props.unit])}
+      class={cn("hit-area relative z-raised flex shrink-0 items-center", props.onBrand ? "text-white" : "text-gray")}
+      aria-label={t(coins() ? "mission.mission" : "component.nav_bottom.collect_points")}
+    >
+      <IconChevronRight size={16} />
+    </A>
+  );
   return (
     <div class="relative flex min-w-0 flex-1 flex-col gap-1 p-4">
       {/* stretched link: ทั้งแถบแตะได้ · ลิงก์ประวัติอยู่ชั้นบน */}
@@ -82,29 +105,28 @@ function BalanceBody(props: {
         <Show when={props.refresh}>
           <PlatformRefreshButton variant="inline" unit={props.unit} class={props.onBrand ? "text-white" : "text-gray"} />
         </Show>
-        <Show when={props.history !== false && !props.refresh}>
-          {/* ">" = ประวัติของสกุลนั้น (ตัวแถบพาไปแลกรางวัล/ภารกิจ) — ตัดสินใจ 2026-11-23 */}
-          <A
-            href={to(HISTORY[props.unit])}
-            class={cn("hit-area relative z-raised flex shrink-0 items-center", props.onBrand ? "text-white" : "text-gray")}
-            aria-label={t(coins() ? "club.coins_history" : "club.points_history")}
-          >
-            <IconChevronRight size={16} />
-          </A>
-        </Show>
+        {/* ไม่มีบรรทัดวิธีได้ → ">" ประวัติอยู่บรรทัดป้าย · มีบรรทัดวิธีได้ (หน้าแรก/โปรไฟล์) → ">" ไปหน้าสะสม/ภารกิจ ด้านล่าง */}
+        <Show when={!props.hint}>{historyLink()}</Show>
       </span>
-      <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary" : "text-primary")}>
-        <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")}>
-          <Show when={props.countUp} fallback={formatNumber(props.amount)}>
-            <CountUp value={props.amount} id={props.unit} waitFor="home" />
+      {/* ตัวเลข + บรรทัดวิธีได้ อยู่คอลัมน์ซ้าย · ">" (ไปหน้าสะสมคะแนน / ภารกิจ) อยู่ขวา กึ่งกลางแนวตั้งระหว่างสองบรรทัด (2026-11-25) */}
+      {/* มีบรรทัดวิธีได้: gap-1 + -mr-1 (">" ขยับเข้าขอบการ์ด 4px) → "ซื้อสินค้าเพื่อสะสมคะแนน" ยังเต็มบรรทัดบนจอ 375 */}
+      <span class={cn("flex items-center gap-1", props.hint && "-mr-1")}>
+        <span class="flex min-w-0 flex-1 flex-col gap-1">
+          <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary" : "text-primary")}>
+            <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")}>
+              <Show when={props.countUp} fallback={formatNumber(props.amount)}>
+                <CountUp value={props.amount} id={props.unit} waitFor="home" />
+              </Show>
+            </span>
+            <span class="shrink-0 text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
+          </span>
+          <Show when={props.hint}>
+            {/* ชิดตัวเลขขึ้น (-mt-1) */}
+            <span class={cn("-mt-1 truncate text-12", props.onBrand ? "text-white" : "text-gray")}>{props.hint}</span>
           </Show>
         </span>
-        <span class="shrink-0 text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
+        <Show when={props.hint}>{earnLink()}</Show>
       </span>
-      <Show when={props.hint}>
-        {/* ชิดตัวเลขขึ้น (-mt-1) */}
-        <span class={cn("-mt-1 text-12", props.onBrand ? "text-white" : "text-gray")}>{props.hint}</span>
-      </Show>
     </div>
   );
 }

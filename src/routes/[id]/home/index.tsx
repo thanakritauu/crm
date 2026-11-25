@@ -2,16 +2,16 @@ import { A, useLocation, useNavigate } from "@solidjs/router";
 import { createMemo, createSignal, For, onMount, Show } from "solid-js";
 import { BannerCarousel } from "~/components/home/banner-carousel";
 import { MemberCard } from "~/components/home/member-card";
-import { WelcomePopup } from "~/components/home/welcome-popup";
+import { shouldShowWelcome, WelcomePopup } from "~/components/home/welcome-popup";
 import { BottomNav, BottomNavSpacer } from "~/components/layout/bottom-nav";
 import { NotificationBell } from "~/components/layout/notification-bell";
 import { PlatformRefreshButton } from "~/components/platform/platform-refresh-button";
 import { BalanceSplit } from "~/components/ui/balance-bar";
+import { cardClass } from "~/components/ui/card";
 import { Avatar } from "~/components/ui/avatar";
 import { MissionGridCard } from "~/components/mission/mission-grid-card";
 import { privilegeState } from "~/components/privilege/privilege-card";
 import { Button } from "~/components/ui/button";
-import { cardClass } from "~/components/ui/card";
 import { IconChevronRight } from "~/components/ui/icons";
 import { RewardGridCard } from "~/components/ui/reward-grid-card";
 import { useI18n } from "~/lib/i18n";
@@ -58,7 +58,8 @@ export default function Home() {
   const location = useLocation<{ new_member?: boolean }>();
   const [welcome, setWelcome] = createSignal(false);
   onMount(() => {
-    setWelcome(!!location.state?.new_member);
+    // สมาชิกใหม่เห็นเสมอ · คนอื่นเห็นครั้งเดียวต่อการเปิดแอป จนกว่าจะติ๊ก "ไม่ต้องแสดงอีก"
+    setWelcome(!!location.state?.new_member || (session.isMember && shouldShowWelcome()));
     missionService.restore();
   });
 
@@ -106,11 +107,13 @@ export default function Home() {
           </div>
 
           {/* คะแนน | คอยน์ — BalanceSplit (pattern เดียวกับทุกหน้า) · หน้าแรกพื้นชมพูเข้ม ตัวขาว (แบบ B — เลือกแล้ว 2026-11-25) */}
-          <BalanceSplit size="lg" tone="brand" pointsHref="earn" countUp />
-          {/* การ์ดระดับของคุณ — เปิด/ปิดได้จากเมนู prototype (มีระบบระดับ + แสดงการ์ด) */}
-          <Show when={tierSystem() && showTierCard()}>
-            <TierRow />
-          </Show>
+          {/* ระดับสมาชิก = การ์ดขาวสอดอยู่ใต้การ์ดชมพู (ชมพูทับขอบบน 16px — ตัดสินใจ 2026-11-25) · เปิด/ปิดได้จากเมนู prototype */}
+          <div class="flex flex-col">
+            <BalanceSplit size="lg" tone="brand" pointsHref="earn" countUp class="relative z-raised" />
+            <Show when={tierSystem() && showTierCard()}>
+              <TierRow />
+            </Show>
+          </div>
         </div>
       </Show>
 
@@ -164,7 +167,7 @@ export default function Home() {
       <BottomNavSpacer />
       <BottomNav />
 
-      {/* ต้อนรับสมาชิกใหม่ (Figma Popup welcome 1346:5123): รูปแบนเนอร์ + "ปิดหน้าต่างนี้" */}
+      {/* popup ต้อนรับ (Figma Popup welcome 1346:5123): รูป + X · ☐ ไม่ต้องแสดงอีก · ปิดหน้าต่างนี้ */}
       <WelcomePopup open={welcome()} onClose={() => setWelcome(false)} />
     </div>
   );
@@ -176,7 +179,8 @@ function TierRow() {
   const to = usePartnerPath();
   const s = () => tierStatus();
   return (
-    <A href={to("profile/tier")} class={cn(cardClass, "flex items-center gap-2 p-4")}>
+    // การ์ดขาวเดิม ดันขึ้นไปใต้การ์ดชมพู (-mt-4) แล้วเติมพื้นที่บน (pt-8) ให้เนื้อหาไม่โดนทับ
+    <A href={to("profile/tier")} class={cn(cardClass, "-mt-4 flex items-center gap-2 rounded-t-none px-4 pb-4 pt-8")}>
       <img src={s().current.mark} alt="" width="40" height="40" class="size-10 shrink-0 object-contain" />
       {/* ชื่อระดับ (ยาว เช่น Charmiss Radiance) บรรทัดบน · แถบความคืบหน้า · ข้อความถึงระดับถัดไปบรรทัดล่าง */}
       <span class="flex min-w-0 flex-1 flex-col gap-1">

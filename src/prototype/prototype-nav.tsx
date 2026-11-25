@@ -16,6 +16,7 @@ import { missionService } from "~/services/mission-service";
 import { usePartnerPath } from "~/lib/theme";
 import { cn } from "~/lib/utils";
 import { screenGroups } from "./screens";
+import { resetWelcome } from "~/components/home/welcome-popup";
 
 /**
  * เมนู prototype — ปุ่มลอยมุมขวาล่าง เปิด sheet รายการหน้าทั้งหมด
@@ -184,6 +185,16 @@ export function PrototypeNav() {
               ))}
             </div>
           </div>
+          <button
+            type="button"
+            class="mt-1 block w-full rounded-xl px-4 py-2 text-left text-14 text-dark hover:bg-surface-gray"
+            onClick={() => {
+              resetWelcome();
+              setOpen(false);
+            }}
+          >
+            แสดง popup ต้อนรับอีกครั้ง (ล้าง "ไม่ต้องแสดงอีก" — เปิดหน้าแรกใหม่เพื่อดู)
+          </button>
           <button
             type="button"
             class="mt-1 block w-full rounded-xl px-4 py-2 text-left text-14 text-gray hover:bg-surface-gray"

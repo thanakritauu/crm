@@ -85,11 +85,10 @@ export default function Profile() {
       menu: [
         // คูปองของฉัน: แสดงเมื่อเคยแลกคูปองแล้ว → แท็บคูปองของฉันในหน้าแลกรางวัล
         ...(session.myCoupons.length ? [{ name: t("home.my_coupon"), icon: Icons.ticket, path: "rewards?type=mine" }] : []),
-        // การแลกรางวัลของฉัน (แยกจากประวัติคะแนน — แบบ A)
-        { name: t("rw.my_redemptions"), icon: Icons.gift, path: "wallet/redemptions" },
-        // แลกคะแนนเป็นคูปอง (ใต้คูปองของฉัน — แสดงเสมอ)
+        // ลำดับ (ตัดสินใจ 2026-11-25): คูปองของฉัน · แลกคะแนนเป็นคูปอง · ประวัติคะแนนและคอยน์ · ประวัติการแลกของรางวัล
         { name: t("profile.exchange_points_menu"), icon: Icons.coin, path: "rewards/points-to-coupon" },
         { name: t("rw.history_menu"), icon: Icons.history, path: "wallet/history" },
+        { name: t("rw.my_redemptions"), icon: Icons.gift, path: "wallet/redemptions" },
       ],
     },
     {

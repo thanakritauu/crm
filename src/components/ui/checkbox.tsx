@@ -8,6 +8,8 @@ export function Checkbox(props: {
   onChange?: (checked: boolean) => void;
   children?: JSX.Element;
   class?: string;
+  /** สีป้าย (เช่น text-white บนพื้นหลังมืดของ popup) */
+  labelClass?: string;
 }) {
   return (
     <CheckboxPrimitive
@@ -23,7 +25,7 @@ export function Checkbox(props: {
           </svg>
         </CheckboxPrimitive.Indicator>
       </CheckboxPrimitive.Control>
-      <CheckboxPrimitive.Label class="text-14 text-dark">{props.children}</CheckboxPrimitive.Label>
+      <CheckboxPrimitive.Label class={cn("text-14 text-dark", props.labelClass)}>{props.children}</CheckboxPrimitive.Label>
     </CheckboxPrimitive>
   );
 }
