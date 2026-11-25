@@ -3,13 +3,14 @@ import { createSignal } from "solid-js";
 import { Checkbox } from "~/components/ui/checkbox";
 import { useI18n } from "~/lib/i18n";
 import { overlayBackdrop, overlayCenter } from "~/components/ui/overlay";
+import { welcomeEnabled } from "~/prototype/settings";
 
 /**
  * Popup ต้อนรับ (Figma "Popup welcome" 1346:5123) — หน้าแรก
  * - แสดงเองเมื่อเปิดหน้าแรก (ครั้งเดียวต่อการเปิดแอป) จนกว่าจะติ๊ก "ไม่ต้องแสดงอีก" · สมาชิกใหม่ (หลังสมัคร/รวมบัญชี) เห็นเสมอ
  * - ปิดได้ 3 ทาง: X สีชมพูในรูป (มุมขวาบน) · "ปิดหน้าต่างนี้" · แตะพื้นหลัง (ติ๊กไว้ → ไม่แสดงอีก)
  * - รูปแบนเนอร์ Charmiss CLUB (สัดส่วน 897:738) · ใต้รูป: ☐ ไม่ต้องแสดงอีก (ซ้าย) · ปิดหน้าต่างนี้ (ขวา) สีขาว
- * - เมนู prototype › "แสดง popup ต้อนรับอีกครั้ง" ล้างค่าที่จำไว้ (resetWelcome)
+ * - เมนู prototype › สวิตช์ "popup ต้อนรับ" — ปิด = ไม่ขึ้นเอง · เปิด = ล้างค่าที่จำไว้ (resetWelcome) แล้วขึ้นตอนเปิดหน้าแรกครั้งถัดไป
  */
 const HIDE_KEY = "charmiss-welcome-hidden"; // localStorage — ติ๊กไม่ต้องแสดงอีก
 const SEEN_KEY = "charmiss-welcome-seen"; // sessionStorage — เห็นแล้วในการเปิดแอปครั้งนี้
@@ -21,7 +22,7 @@ const safe = <T,>(fn: () => T, fallback: T): T => {
     return fallback;
   }
 };
-export const shouldShowWelcome = () => safe(() => !localStorage.getItem(HIDE_KEY) && !sessionStorage.getItem(SEEN_KEY), false);
+export const shouldShowWelcome = () => safe(() => welcomeEnabled() && !localStorage.getItem(HIDE_KEY) && !sessionStorage.getItem(SEEN_KEY), false);
 export const resetWelcome = () =>
   safe(() => {
     localStorage.removeItem(HIDE_KEY);

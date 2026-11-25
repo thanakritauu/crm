@@ -11,6 +11,7 @@ import { sessionActions } from "~/lib/session";
 import { usePartnerPath } from "~/lib/theme";
 import { delay } from "~/lib/utils";
 import { missionService } from "~/services/mission-service";
+import { missionCollectKey } from "~/components/mission/mission-status";
 import { IconAlert } from "~/components/ui/icons";
 
 /**
@@ -35,17 +36,19 @@ export default function FillIn(props: { kind: "receipt" | "product-code" }) {
   const [loading, setLoading] = createSignal(false);
   const [result, setResult] = createSignal<{ variant: "success" | "error"; title: string; description?: string } | null>(null);
 
+  // โหมดภารกิจ: "สะสมคอยน์" / "สะสมแสตมป์" แทน "สะสมคะแนน" (คะแนน = ซื้อสินค้าเท่านั้น)
+  const collectLabel = () => (mission() ? t(missionCollectKey(mission()!)) : t("component.card_member.collect_points"));
   const texts = () =>
     isReceipt()
       ? {
           title: t("core.method_receipt"),
-          info: t("core.fill_receipt_info"),
+          info: mission() ? t("mis.fill_receipt_info", { action: collectLabel() }) : t("core.fill_receipt_info"),
           label: t("core.receipt_number"),
           notFound: t("core.receipt_not_found"),
         }
       : {
           title: t("core.method_code"),
-          info: t("core.fill_code_info"),
+          info: mission() ? t("mis.fill_code_info", { action: collectLabel() }) : t("core.fill_code_info"),
           label: t("core.product_code"),
           notFound: t("core.product_code_not_found"),
         };
@@ -101,7 +104,7 @@ export default function FillIn(props: { kind: "receipt" | "product-code" }) {
       <BottomActionBarSpacer />
       <BottomActionBar class="pb-8">
         <Button size="block" disabled={!value().trim()} onClick={submit}>
-          {t("component.card_member.collect_points")}
+          {collectLabel()}
         </Button>
       </BottomActionBar>
       <ResultModal

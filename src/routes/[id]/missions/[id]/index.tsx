@@ -6,7 +6,7 @@ import { CoinIcon } from "~/components/mission/coin-icon";
 import { BalanceBar } from "~/components/ui/balance-bar";
 import { CountdownTimer } from "~/components/mission/countdown-timer";
 import { InfoTabs } from "~/components/ui/info-tabs";
-import { missionActionPath, missionCtaLabel } from "~/components/mission/mission-status";
+import { isCoinTarget, missionActionPath, missionCtaLabel, missionFull } from "~/components/mission/mission-status";
 import { StampGrid } from "~/components/mission/stamp-grid";
 import { AlertDialog } from "~/components/ui/modal";
 import { Button } from "~/components/ui/button";
@@ -98,6 +98,7 @@ export default function MissionDetail() {
     if (!m) return;
     if (m.status === "not_started") return setConfirmOpen(true);
     if (m.type === "checkin" && m.status === "in_progress") return setCheckinResult(missionService.checkIn(m.id));
+    if (m.status === "in_progress" && missionFull(m)) return;
     if (m.status === "in_progress") return navigate(to(missionActionPath(m)));
     if (m.status === "completed" && m.reward_ids.length) return navigate(to(`missions/${m.id}/rewards/${m.reward_ids[0]}`));
   };
@@ -108,7 +109,9 @@ export default function MissionDetail() {
       !m ||
       m.status === "expired" ||
       (m.status === "completed" && !m.reward_ids.length) ||
-      (m.type === "checkin" && m.status === "in_progress" && missionService.checkedInToday(m))
+      (m.type === "checkin" && m.status === "in_progress" && missionService.checkedInToday(m)) ||
+      // สะสมครบเป้าแล้ว (แสตมป์/ใบเสร็จ/เช็คอิน/สะสมคอยน์แบบมีเป้า) → ปุ่มกดไม่ได้ (ตัดสินใจ 2026-11-25)
+      (m.status === "in_progress" && missionFull(m))
     );
   };
 
@@ -169,8 +172,26 @@ export default function MissionDetail() {
                 </Show>
               }
             >
-              {/* ภารกิจสะสมคอยน์: ไม่มีแถบสถานะ — ยอดคอยน์ของภารกิจแสดงด้วย BalanceBar ในเนื้อหา */}
-              {null}
+              {/* ภารกิจสะสมคอยน์: ยอดคอยน์ของภารกิจแสดงด้วย BalanceBar ในเนื้อหา
+                  แบบมีเป้า (ตาม production: goal > 0 → มีแถบความคืบหน้า): แถบ "2/5 ครั้ง" · ครบแล้ว = แถบเขียว "ภารกิจสำเร็จ" */}
+              <Show when={isCoinTarget(m())}>
+                <Show
+                  when={m().status === "completed" || missionFull(m())}
+                  fallback={
+                    <div class="flex h-10 w-full items-center gap-2 bg-warning-surface px-4">
+                      <div class="relative flex h-1 min-w-0 flex-1 items-center overflow-hidden rounded-full bg-white">
+                        <div class="h-1 rounded-full bg-teriary" style={{ width: `${Math.round((m().progress / Math.max(1, m().target)) * 100)}%` }} />
+                      </div>
+                      <span class="shrink-0 text-12 font-semibold">{t("club.times_progress", { progress: m().progress, target: m().target })}</span>
+                    </div>
+                  }
+                >
+                  <div class="flex h-10 w-full items-center justify-between bg-success px-4">
+                    <span class="text-14 font-semibold text-white">{t("mission.mission_completed")}</span>
+                    <span class="text-14 font-semibold text-white">{t("club.times_progress", { progress: m().target, target: m().target })}</span>
+                  </div>
+                </Show>
+              </Show>
             </Show>
           }
         >

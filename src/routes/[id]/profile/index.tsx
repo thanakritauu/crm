@@ -137,9 +137,9 @@ export default function Profile() {
       </div>
 
       <div class="mt-[-36px] flex flex-col gap-4 px-4">
-        {/* คะแนน | คอยน์ — BalanceSplit เหมือนหน้าแรก (เดิมการ์ดคะแนนอย่างเดียว) */}
+        {/* คะแนน | คอยน์ — ทำงานเหมือนการ์ดหน้าแรกเสมอ (ตัดสินใจ 2026-11-25): กดได้แค่ ">" → ประวัติคะแนน/คอยน์ · ตัวเลขนับขึ้น */}
         <Show when={!isGuest()} fallback={<BalanceBar unit="points" inline history={false} />}>
-          <BalanceSplit />
+          <BalanceSplit countUp />
         </Show>
 
         {/* ยังไม่เป็นสมาชิก (Figma Profile_Guest 871:4904) */}

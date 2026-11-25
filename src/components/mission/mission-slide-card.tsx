@@ -7,7 +7,7 @@ import type { Mission } from "~/mocks/missions";
 import { useI18n } from "~/lib/i18n";
 import { usePartnerPath } from "~/lib/theme";
 import { CoinIcon } from "./coin-icon";
-import { cn, formatDate } from "~/lib/utils";
+import { cn, formatDate, formatNumber } from "~/lib/utils";
 import { cardClass } from "~/components/ui/card";
 
 /**
@@ -36,7 +36,7 @@ export function MissionSlideCard(props: { mission: Mission; class?: string }) {
       >
         <Badge size="md">
           <CoinIcon size={14} />
-          {t("mis.coins_amount", { coins: m().coin_balance ?? 0 })}
+          {t("club.mission_collected_coins", { coins: formatNumber(m().coin_balance ?? 0) })}
         </Badge>
       </Show>
       <div class="mt-2 grid grid-cols-12 items-center">

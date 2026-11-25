@@ -12,11 +12,13 @@ const [outsideLine, setOutsideLineSignal] = createSignal(false);
 const [tierSystem, setTierSystemSignal] = createSignal(true);
 /** showTierCard: แสดงการ์ด "ระดับของคุณ" ในหน้าแรก (ใช้เมื่อมีระบบระดับ) */
 const [showTierCard, setShowTierCardSignal] = createSignal(true);
-export { outsideLine, pointsExpire, showTierCard, tierSystem };
+/** showWelcome: popup ต้อนรับขึ้นเองเมื่อเปิดหน้าแรก (ปิด = ไม่ขึ้น · สมาชิกใหม่หลังสมัครยังเห็น) */
+const [showWelcome, setShowWelcomeSignal] = createSignal(true);
+export { outsideLine, pointsExpire, showTierCard, showWelcome, tierSystem };
 
 function save() {
   try {
-    localStorage.setItem(KEY, JSON.stringify({ pointsExpire: pointsExpire(), outsideLine: outsideLine(), tierSystem: tierSystem(), showTierCard: showTierCard() }));
+    localStorage.setItem(KEY, JSON.stringify({ pointsExpire: pointsExpire(), outsideLine: outsideLine(), tierSystem: tierSystem(), showTierCard: showTierCard(), showWelcome: showWelcome() }));
   } catch {
     /* ignore */
   }
@@ -29,6 +31,7 @@ export function restorePrototypeSettings() {
     setOutsideLineSignal(!!s.outsideLine);
     setTierSystemSignal(s.tierSystem !== false);
     setShowTierCardSignal(s.showTierCard !== false);
+    setShowWelcomeSignal(s.showWelcome !== false);
   } catch {
     /* ignore */
   }
@@ -52,4 +55,18 @@ export function setTierSystem(v: boolean) {
 export function setShowTierCard(v: boolean) {
   setShowTierCardSignal(v);
   save();
+}
+
+export function setShowWelcome(v: boolean) {
+  setShowWelcomeSignal(v);
+  save();
+}
+
+/** อ่านค่าจาก localStorage ตรงๆ — หน้าแรกเช็กตอน mount ซึ่งอาจมาก่อนเมนู prototype จะ restore */
+export function welcomeEnabled() {
+  try {
+    return JSON.parse(localStorage.getItem(KEY) ?? "{}").showWelcome !== false;
+  } catch {
+    return true;
+  }
 }

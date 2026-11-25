@@ -5,8 +5,8 @@ import { Progress } from "~/components/ui/progress";
 import type { Mission } from "~/mocks/missions";
 import { useI18n } from "~/lib/i18n";
 import { usePartnerPath } from "~/lib/theme";
-import { cn } from "~/lib/utils";
-import { missionTrack } from "./mission-status";
+import { cn, formatNumber } from "~/lib/utils";
+import { isCoinWallet, missionTrack } from "./mission-status";
 import { CoinIcon } from "./coin-icon";
 import { cardClass } from "~/components/ui/card";
 
@@ -47,12 +47,21 @@ export function MissionGridCard(props: { mission: Mission }) {
           <h2 class="line-clamp-2 break-words text-left text-14 font-semibold text-dark">{m().title}</h2>
           <p class="line-clamp-1 break-all text-left text-12 font-normal text-gray">{m().subtitle}</p>
         </div>
+        {/* ภารกิจสะสมคอยน์แบบมีเป้า: แถบ + "2/5 ครั้ง" · แบบไม่มีเป้า: "สะสมได้ไม่จำกัดครั้ง" (ไม่มีแถบ) — ให้การ์ดสองแบบต่างกัน (2026-11-25) */}
         <Show when={m().target > 1}>
-          <div class="mt-2">
-            <Progress value={m().progress} max={m().target} />
+          <div class="mt-2 flex items-center gap-2">
+            <div class="min-w-0 flex-1">
+              <Progress value={m().progress} max={m().target} showLabel={m().type !== "coin"} />
+            </div>
+            <Show when={m().type === "coin"}>
+              <span class="shrink-0 text-12 font-semibold text-dark">{t("club.times_progress", { progress: m().progress, target: m().target })}</span>
+            </Show>
           </div>
         </Show>
-        {/* คอยน์: ภารกิจสะสมคอยน์ = คอยน์ของภารกิจนั้น (แยกจากยอดรวม) · ภารกิจอื่น = คอยน์ที่จะได้เมื่อสำเร็จ · ขนาดเท่าราคา "ใช้ X คะแนน" ในการ์ดรางวัล (ไอคอน 16 · 14/Medium) */}
+        <Show when={isCoinWallet(m())}>
+          <p class="mt-2 text-12 text-gray">{t("club.unlimited_times")}</p>
+        </Show>
+        {/* คอยน์: ภารกิจสะสมคอยน์ = "สะสมแล้ว X คอยน์" ของภารกิจนั้น (แยกจากยอดรวม — ไม่มี + เพราะไม่ใช่รางวัล) · ภารกิจอื่น = คอยน์ที่จะได้เมื่อสำเร็จ · ขนาดเท่าราคา "ใช้ X คะแนน" ในการ์ดรางวัล (ไอคอน 16 · 14/Medium) */}
         <Show
           when={m().type === "coin"}
           fallback={
@@ -66,7 +75,7 @@ export function MissionGridCard(props: { mission: Mission }) {
         >
           <p class="mt-2 flex items-center gap-1 text-14 font-medium text-teriary">
             <CoinIcon size={16} />
-            {t("club.mission_reward_coins", { coins: m().coin_balance ?? 0 })}
+            {t("club.mission_collected_coins", { coins: formatNumber(m().coin_balance ?? 0) })}
           </p>
         </Show>
       </div>

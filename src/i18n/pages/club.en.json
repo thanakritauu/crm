@@ -25,7 +25,8 @@
   "club.your_points": "Your points",
   "club.history": "History",
   "club.balance": "Balance",
-  "club.this_mission_coins": "This mission's coins",
+  "club.this_mission_coins": "Coins collected",
+  "club.mission_collected_coins": "{{coins}} coins collected",
   "club.coins_is_now": "Your coins are up to date",
   "club.refresh_coins": "Refresh coins",
   "club.points_is_now": "Your points are up to date",
@@ -36,5 +37,7 @@
   "club.refresh_all": "Refresh points and coins",
   "club.balances_updated": "Points and coins updated",
   "club.balances_up_to_date": "Your points and coins are up to date",
-  "club.balances_now": "{{points}} points · {{coins}} coins"
+  "club.balances_now": "{{points}} points · {{coins}} coins",
+  "club.times_progress": "{{progress}}/{{target}} times",
+  "club.unlimited_times": "No limit on collections"
 }

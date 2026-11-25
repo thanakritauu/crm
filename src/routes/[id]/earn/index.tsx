@@ -4,6 +4,7 @@ import { Dynamic } from "solid-js/web";
 import { AlertDialog, InfoBox, ResultModal } from "~/components/ui/modal";
 import { BottomNav, BottomNavSpacer } from "~/components/layout/bottom-nav";
 import { PageHeader } from "~/components/layout/page-header";
+import { PlatformRefreshButton } from "~/components/platform/platform-refresh-button";
 import { CoinIcon } from "~/components/mission/coin-icon";
 import { QrScannerScreen } from "~/components/point/qr-scanner-screen";
 import { PageLoading } from "~/components/ui/page-loading";
@@ -14,6 +15,7 @@ import { earnService } from "~/services/earn-service";
 import { usePartnerPath } from "~/lib/theme";
 import { delay, formatNumber } from "~/lib/utils";
 import { missionService } from "~/services/mission-service";
+import { missionCollectKey } from "~/components/mission/mission-status";
 import { cardClass } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import { IconCamera, IconEdit, IconReceipt, IconRefresh, IconScanner, IconSmartphone } from "~/components/ui/icons";
@@ -44,6 +46,13 @@ const methods: { id: Method; title: string; icon: typeof IconCamera }[] = [
   { id: "code", title: "core.method_code", icon: IconEdit },
   // คู่กับกรอกรหัสสินค้า (เดิมเป็นแถบชมพูท้ายหน้า) — ไม่แสดงในโหมดภารกิจ
   { id: "missions", title: "common.earn_coins_from_mission", icon: CoinIcon as typeof IconCamera },
+];
+
+/** คำแนะนำหน้าสะสมคะแนน — ข้อความจาก production (ไทย · อังกฤษ · จีน แสดงพร้อมกัน ไม่แปลตามภาษาแอป) */
+const EARN_NOTICE = [
+  "การสะสมคะแนนในส่วนนี้ใช้สำหรับแลกสินค้าเท่านั้น ไม่รวมถึงภารกิจหรือกิจกรรมอื่น ๆ",
+  "Points collected here are for product redemption only and do not include missions or other activities.",
+  "此处积累的积分仅用于兑换商品，不包含任务或其他活动。",
 ];
 
 export default function EarnPoint() {
@@ -108,15 +117,27 @@ export default function EarnPoint() {
     <div class="min-h-screen bg-white">
       <PageLoading show={!!loading()} message={loading() || undefined} />
       {/* โหมดภารกิจมีปุ่มย้อนกลับไปหน้าภารกิจ */}
-      <PageHeader align="center" title={t("component.card_member.collect_points")} hideBack={!mission()} backTo={mission() ? `missions/${mission()!.id}` : undefined} />
+      {/* หน้าสะสมคะแนนปกติ: ชื่อชิดซ้าย + ปุ่มรีเฟรชมุมขวา (ย้ายมาจากหน้าเชื่อมต่อแพลตฟอร์ม — อัปเดตคะแนนและคอยน์เหมือนปุ่มหน้าแรก · 2026-11-25)
+          โหมดภารกิจ: ชื่อกึ่งกลาง + ปุ่มย้อนกลับไปหน้าภารกิจ (ไม่มีรีเฟรช) */}
+      <Show
+        when={mission()}
+        fallback={<PageHeader title={t("component.card_member.collect_points")} hideBack right={<PlatformRefreshButton unit="all" />} />}
+      >
+        {(m) => <PageHeader align="center" title={t(missionCollectKey(m()))} backTo={`missions/${m().id}`} />}
+      </Show>
 
       <div class="px-4 pb-4">
         <InfoBox>
-          {mission()
-            ? mission()!.type === "stamp"
-              ? t("common.notice_earn_stamp")
-              : t("common.notice_earn_coin")
-            : t("common.notice_earn_point")}
+          {/* หน้าสะสมคะแนนปกติ: ข้อความจาก production (club.charmiss.co/charmiss/point-collection — 25 พ.ย. 2569) แสดง 3 ภาษาพร้อมกันทุกภาษาแอป
+              โหมดภารกิจ: ข้อความภารกิจเดิม (สะสมแสตมป์ / คอยน์) */}
+          <Show
+            when={!mission()}
+            fallback={mission()?.type === "stamp" ? t("common.notice_earn_stamp") : t("common.notice_earn_coin")}
+          >
+            <span class="flex flex-col gap-1">
+              <For each={EARN_NOTICE}>{(line) => <span>{line}</span>}</For>
+            </span>
+          </Show>
         </InfoBox>
       </div>
 
@@ -126,13 +147,18 @@ export default function EarnPoint() {
             <A href={to(`missions/${m().id}`)} class={cn(cardClass, "block p-4")}>
               <div class="flex items-center justify-between gap-x-2">
                 <h2 class="line-clamp-1 text-14 font-semibold text-dark">{m().title}</h2>
+                {/* ภารกิจสะสมคอยน์ = คอยน์ที่สะสมได้ในภารกิจ · ภารกิจอื่น = คอยน์ที่จะได้เมื่อสำเร็จ */}
                 <span class="flex shrink-0 items-center gap-x-1 text-12 font-medium text-teriary">
-                  <CoinIcon size={14} />+{m().reward_coins}
+                  <CoinIcon size={14} />
+                  {m().type === "coin" ? t("club.mission_collected_coins", { coins: formatNumber(m().coin_balance ?? 0) }) : `+${m().reward_coins}`}
                 </span>
               </div>
-              <div class="mt-2">
-                <Progress value={m().progress} max={m().target} />
-              </div>
+              {/* แถบความคืบหน้าเฉพาะภารกิจที่มีเป้า (สะสมคอยน์แบบไม่มีเป้า = ไม่มีแถบ) */}
+              <Show when={m().target > 0}>
+                <div class="mt-2">
+                  <Progress value={m().progress} max={m().target} />
+                </div>
+              </Show>
             </A>
           )}
         </Show>
@@ -143,8 +169,12 @@ export default function EarnPoint() {
               <button
                 type="button"
                 onClick={() => choose(m.id)}
-                class={cn(cardClass, "flex min-w-0 flex-col items-center justify-center gap-2 px-4 py-8 transition active:scale-[0.98]")}
+                class={cn(cardClass, "relative flex min-w-0 flex-col items-center justify-center gap-2 px-4 py-8 transition active:scale-[0.98]")}
               >
+                {/* เชื่อมต่อแพลตฟอร์มออนไลน์ = ช่องทางแนะนำ — ป้ายแบบเดียวกับสถานะบนการ์ดภารกิจ (มุมซ้ายบน ติดขอบ) สีเขียว (2026-11-25) */}
+                <Show when={m.id === "platform"}>
+                  <span class="absolute left-0 top-0 rounded-r-lg rounded-tl-2xl bg-success px-2 py-1 text-12 font-medium text-white">{t("core.recommended")}</span>
+                </Show>
                 {/* สะสมคอยน์ = เหรียญ C สีเหลืองเต็มวง 40px (ไม่มีวงชมพู) · การ์ดอื่น = ไอคอนชมพูในวงชมพูอ่อน */}
                 <Show
                   when={m.id === "missions"}

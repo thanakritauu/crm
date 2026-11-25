@@ -113,6 +113,18 @@ export const missionService = {
     if (m0.status === "completed") return { variant: "error", title: t("mis.collect_completed_title"), description: t("mis.collect_closed_desc") };
     missionService.start(id);
     const m = missionService.get(id)!;
+    // สะสมคอยน์แบบมีเป้า (ตาม production: mission_type "coin" + goal > 0): ได้คอยน์ทุกครั้งเข้าคอยน์ของภารกิจ (event_point) เหมือนแบบไม่มีเป้า
+    // + นับครั้ง · ครบเป้า = สำเร็จ (ปุ่ม "ภารกิจสำเร็จ" กดไม่ได้) · ยังใช้คอยน์แลกของรางวัลของภารกิจได้
+    if (m.type === "coin" && m.target > 0) {
+      const n = missionService.addMissionCoins(id);
+      const done = missionService.addProgress(id, 1);
+      const after = missionService.get(id)!;
+      return {
+        variant: "success",
+        title: t("mis.coin_target_collected", { coins: n }),
+        description: done ? t("mis.coin_target_done", { target: after.target, total: after.coin_balance ?? 0 }) : t("mis.coin_target_progress", { progress: after.progress, target: after.target }),
+      };
+    }
     if (m.type === "coin") {
       const n = missionService.addMissionCoins(id);
       const total = missionService.get(id)?.coin_balance ?? 0;

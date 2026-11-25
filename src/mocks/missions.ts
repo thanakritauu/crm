@@ -80,6 +80,35 @@ export const missions: Mission[] = [
     redeem_end: "2027-01-15",
     important: true,
   },
+  // ภารกิจสะสมคอยน์ "แบบมีเป้า" (2026-11-25 · ตาม production: mission_type "coin" + goal > 0)
+  // สะสมได้ target ครั้ง · ได้ coins_per_collect คอยน์ทุกครั้ง เข้าคอยน์ของภารกิจ (แบบเดียวกับไม่มีเป้า ไม่มีโบนัส) · ครบแล้ว = สำเร็จ ปุ่มกดไม่ได้ · ยังแลกของรางวัลด้วยคอยน์ที่สะสมได้
+  // (cm-201 = แบบไม่มีเป้า target 0: สะสมได้ไม่จำกัด ไม่มีวันสำเร็จ)
+  {
+    id: "cm-203",
+    title: "ซื้อ Glow Setting Powder 5 ครั้ง รับครั้งละ 10 คอยน์",
+    subtitle: "สะสมได้สูงสุด 5 ครั้ง ได้คอยน์ทุกครั้งที่สะสม",
+    description: "อัปโหลดใบเสร็จที่มี Glow Setting Powder ได้ 10 คอยน์ต่อครั้ง สูงสุด 5 ครั้ง",
+    type: "coin",
+    status: "in_progress",
+    start_date: "2026-11-15",
+    end_date: "2026-12-31",
+    progress: 2,
+    target: 5,
+    reward_coins: 0,
+    cover: ["#FFE9CC", "#FF9300"],
+    image: "/images/missions/m02.jpg",
+    conditions: ["คอยน์ใช้ได้เฉพาะภารกิจนี้", "สะสมได้สูงสุด 5 ครั้งต่อสมาชิก", "1 ใบเสร็จสะสมได้ 1 ครั้ง"],
+    reward_ids: [],
+    coin_rules: ["อัปโหลดใบเสร็จที่มี Glow Setting Powder 1 ครั้ง ได้รับ 10 คอยน์ (สูงสุด 5 ครั้ง)"],
+    coin_rewards: [
+      { reward_id: "r-003", coins: 30 },
+      { reward_id: "r-004", coins: 50 },
+    ],
+    coins_per_collect: 10,
+    coin_balance: 20,
+    redeem_start: "2026-11-15",
+    redeem_end: "2027-01-15",
+  },
   {
     id: "cm-202",
     title: "ภารกิจสะสมคอยน์ เดือนตุลาคม",

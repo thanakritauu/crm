@@ -13,7 +13,7 @@
   "mis.coin_used_title": "You used {{coins}} coins to redeem {{reward}}",
   "mis.coins_amount": "{{coins}} coins",
   "mis.coins_collected": "Coins collected",
-  "mis.collect": "Earn points",
+  "mis.collect": "Collect coins",
   "mis.collect_closed_desc": "You can't collect more for this mission. Try another one.",
   "mis.collect_completed_title": "You've already completed this mission",
   "mis.collect_expired_title": "This mission has ended",
@@ -35,5 +35,11 @@
   "mis.start_question": "Start the mission now?",
   "mis.start_question_desc": "Buy participating products and collect coins to redeem rewards!",
   "mis.use_coins": "Use {{coins}} coins",
-  "mis.start_mission_all": "Start mission"
+  "mis.start_mission_all": "Start mission",
+  "mis.coin_target_collected": "You got {{coins}} coins",
+  "mis.coin_target_progress": "Collected {{progress}}/{{target}} times",
+  "mis.coin_target_done": "All {{target}}/{{target}} done — {{total}} coins in total",
+  "mis.collect_stamps": "Collect stamps",
+  "mis.fill_receipt_info": "Enter the receipt number to {{action}} for this mission, then tap {{action}}",
+  "mis.fill_code_info": "Enter the product code to {{action}} for this mission, then tap {{action}}"
 }

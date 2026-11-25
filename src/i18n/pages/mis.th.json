@@ -13,7 +13,7 @@
   "mis.coin_used_title": "คุณใช้ {{coins}} คอยน์ แลก {{reward}}",
   "mis.coins_amount": "{{coins}}คอยน์",
   "mis.coins_collected": "จำนวนคอยน์ที่สะสมได้",
-  "mis.collect": "สะสมคะแนน",
+  "mis.collect": "สะสมคอยน์",
   "mis.collect_closed_desc": "ไม่สามารถสะสมเพิ่มให้ภารกิจนี้ได้ ลองเลือกภารกิจอื่น",
   "mis.collect_completed_title": "คุณทำภารกิจนี้สำเร็จแล้ว",
   "mis.collect_expired_title": "ภารกิจนี้หมดเวลาแล้ว",
@@ -35,5 +35,11 @@
   "mis.start_question": "เริ่มภารกิจเลยไหม?",
   "mis.start_question_desc": "ซื้อสินค้าที่ร่วมรายการ แล้วสะสมคอยน์ เพื่อใช้แลกรางวัลได้เลย!",
   "mis.use_coins": "ใช้ {{coins}} คอยน์",
-  "mis.start_mission_all": "เริ่มทำภารกิจ"
+  "mis.start_mission_all": "เริ่มทำภารกิจ",
+  "mis.coin_target_collected": "ได้รับ {{coins}} คอยน์",
+  "mis.coin_target_progress": "สะสมแล้ว {{progress}}/{{target}} ครั้ง",
+  "mis.coin_target_done": "ครบ {{target}}/{{target}} ครั้งแล้ว รวม {{total}} คอยน์",
+  "mis.collect_stamps": "สะสมแสตมป์",
+  "mis.fill_receipt_info": "กรอกเลขที่ใบเสร็จเพื่อ{{action}}ให้ภารกิจนี้ หากกรอกเรียบร้อยแล้ว กดปุ่ม {{action}}",
+  "mis.fill_code_info": "กรอกโค้ดสินค้าบนผลิตภัณฑ์ เพื่อ{{action}}ให้ภารกิจนี้ หากกรอกเรียบร้อยแล้ว กดปุ่ม {{action}}"
 }

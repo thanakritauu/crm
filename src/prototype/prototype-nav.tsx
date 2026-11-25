@@ -1,7 +1,7 @@
 import { A, useLocation } from "@solidjs/router";
 import { createSignal, For, onMount, Show } from "solid-js";
 import { applyFrameMode } from "~/components/layout/mobile-frame";
-import { outsideLine, pointsExpire, restorePrototypeSettings, setOutsideLine, setPointsExpire, setShowTierCard, setTierSystem, showTierCard, tierSystem } from "./settings";
+import { outsideLine, pointsExpire, restorePrototypeSettings, setOutsideLine, setPointsExpire, setShowTierCard, setShowWelcome, setTierSystem, showTierCard, showWelcome, tierSystem } from "./settings";
 import { Dialog as DialogPrimitive } from "@kobalte/core/dialog";
 import { resetSession, session, sessionActions } from "~/lib/session";
 import { customer as mockCustomer } from "~/mocks/customer";
@@ -137,6 +137,21 @@ export function PrototypeNav() {
           <button
             type="button"
             class="mt-1 flex w-full items-center justify-between rounded-xl px-4 py-2 text-left text-14 text-dark hover:bg-surface-gray"
+            onClick={() => {
+              const on = !showWelcome();
+              setShowWelcome(on);
+              // เปิด → ล้าง "ไม่ต้องแสดงอีก"/เห็นแล้ว ให้ขึ้นตอนเปิดหน้าแรกครั้งถัดไป
+              if (on) resetWelcome();
+            }}
+          >
+            <span>แสดง popup ต้อนรับเมื่อเปิดหน้าแรก</span>
+            <span class={cn("h-5 w-9 shrink-0 rounded-full p-1 transition", showWelcome() ? "bg-primary" : "bg-stroke-strong")}>
+              <span class={cn("block h-4 w-4 rounded-full bg-white transition", showWelcome() && "translate-x-4")} />
+            </span>
+          </button>
+          <button
+            type="button"
+            class="mt-1 flex w-full items-center justify-between rounded-xl px-4 py-2 text-left text-14 text-dark hover:bg-surface-gray"
             onClick={() => sessionActions.updateCustomer({ profile_image: session.customer.profile_image ? "" : DEFAULT_PHOTO })}
           >
             <span>ผู้ใช้ไม่มีรูปโปรไฟล์ (หน้าแรก / โปรไฟล์แสดงไอคอนผู้ใช้แทน)</span>
@@ -185,16 +200,6 @@ export function PrototypeNav() {
               ))}
             </div>
           </div>
-          <button
-            type="button"
-            class="mt-1 block w-full rounded-xl px-4 py-2 text-left text-14 text-dark hover:bg-surface-gray"
-            onClick={() => {
-              resetWelcome();
-              setOpen(false);
-            }}
-          >
-            แสดง popup ต้อนรับอีกครั้ง (ล้าง "ไม่ต้องแสดงอีก" — เปิดหน้าแรกใหม่เพื่อดู)
-          </button>
           <button
             type="button"
             class="mt-1 block w-full rounded-xl px-4 py-2 text-left text-14 text-gray hover:bg-surface-gray"
