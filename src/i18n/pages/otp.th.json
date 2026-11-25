@@ -1,0 +1,23 @@
+{
+  "otp.expired_description": "ระยะเวลาการใช้งานรหัส OTP สิ้นสุดลงแล้ว กรุณาขอรหัสใหม่เพื่อดำเนินการต่อ",
+  "otp.expired_title": "รหัส OTP หมดอายุ",
+  "otp.invalid_inline": "รหัส OTP ไม่ถูกต้อง",
+  "otp.locked_description": "คุณกรอกรหัส OTP ไม่ถูกต้องครบ 3 ครั้ง กรุณาทำรายการใหม่อีกครั้ง",
+  "otp.locked_title": "ยืนยันตัวตนไม่สำเร็จ",
+  "otp.merge_cancel": "ยกเลิก",
+  "otp.merge_confirm": "ยืนยันการรวม",
+  "otp.merge_description": "ต้องการรวมบัญชีที่ใช้เบอร์ {{phone}} กับบัญชี LINE นี้หรือไม่?",
+  "otp.merge_guest_cancel": "ไม่ต้องการ",
+  "otp.merge_guest_confirm": "ล็อคอิน",
+  "otp.merge_guest_description": "คุณต้องการล็อคอินด้วยบัญชี LINE หรือไม่",
+  "otp.merge_guest_title": "พบบัญชี LINE ที่เคยสมัครไว้แล้ว",
+  "otp.merge_title": "พบบัญชี LINE ที่เคยสมัครไว้แล้ว",
+  "otp.otp_mock_hint": "OTP จำลอง: 000000 = ผิด (3 ครั้ง = ล็อก), 111111 = หมดอายุ, อื่นๆ = ผ่าน",
+  "otp.phone_mock_hint": "เบอร์จำลอง: 0900000000 = ส่ง OTP ไม่สำเร็จครั้งแรก, 0811111111 = เบอร์ถูกใช้สมัครแล้ว (สมัครสมาชิก), 0000000000 = ยังไม่เป็นสมาชิก (เข้าสู่ระบบ)",
+  "otp.phone_not_member": "เบอร์นี้ยังไม่เคยเป็นสมาชิก",
+  "otp.phone_registered_description": "เบอร์โทรศัพท์นี้ถูกใช้ลงทะเบียนไว้แล้ว กรุณาเข้าสู่ระบบ หรือใช้เบอร์อื่นในการสมัครใหม่",
+  "otp.phone_registered_title": "เบอร์นี้ถูกใช้สมัครแล้ว",
+  "otp.request_again": "ขอรหัสอีกครั้ง",
+  "otp.send_failed_description": "กรุณากดขอรหัส OTP ใหม่อีกครั้ง",
+  "otp.send_failed_title": "ระบบส่งรหัส OTP ไม่สำเร็จ"
+}

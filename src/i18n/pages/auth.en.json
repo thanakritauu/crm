@@ -1,0 +1,15 @@
+{
+  "auth.available": "Available",
+  "auth.close_popup": "Close this window",
+  "auth.guest_mission_desc": "Log in or sign up to collect points and redeem rewards",
+  "auth.guest_mission_title": "Get member-only privileges 🎁",
+  "auth.guest_vs_member_link": "Guest vs Member",
+  "auth.hello_guest": "Hello, welcome",
+  "auth.later": "Later",
+  "auth.member_only_desc": "Sign up to redeem rewards, use coupons, connect online platforms and get many more privileges",
+  "auth.member_only_title": "Members only",
+  "auth.mobile_number": "Mobile number",
+  "auth.not_available": "Not available",
+  "auth.select_method": "Choose how to log in or sign up",
+  "auth.sign_up_now": "Sign up"
+}

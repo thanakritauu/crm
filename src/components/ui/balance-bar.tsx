@@ -1,0 +1,218 @@
+import { A } from "@solidjs/router";
+import { Show } from "solid-js";
+import { CoinIcon } from "~/components/mission/coin-icon";
+import { cardClass } from "~/components/ui/card";
+import { IconChevronRight, IconClock } from "~/components/ui/icons";
+import { useI18n } from "~/lib/i18n";
+import { session } from "~/lib/session";
+import { usePartnerPath } from "~/lib/theme";
+import { cn, formatNumber } from "~/lib/utils";
+import { pointsExpire } from "~/prototype/settings";
+import { expiringPoints } from "~/services/history-service";
+
+/**
+ * แสดงคะแนน / คอยน์ — pattern เดียวทั้งแอป (ตัดสินใจ 2026-11-23: Option A + กฎ)
+ *
+ * กฎ
+ * - ไอคอนซ้ายตัวเลขเสมอ (P = คะแนน, C = คอยน์) · หน่วยต่อท้ายตัวเลข · คะแนน = ชมพู, คอยน์ = ส้ม
+ * - ขนาดตัวเลข: lg 24 (หน้าแรก) · md 18 (หน้าอื่น) · แถวสรุปตอนแลก 14 (RedeemSummary)
+ * - แตะตัวแถบ → หน้าที่ใช้สกุลนั้น (คะแนน → แลกรางวัล · คอยน์ → ภารกิจ) · แตะ ">" มุมขวาบน → ประวัติของสกุลนั้น
+ * - คะแนนใกล้หมดอายุ (โหมด "คะแนนมีวันหมดอายุ") → บรรทัดท้ายแถบคะแนน → แท็บหมดอายุ
+ *
+ * มี 2 รูปแบบ (ตัดสินใจ 2026-11-23)
+ *   1. การ์ด 2 บรรทัด (ป้าย + ">" / ตัวเลข / วิธีได้) — หน้าแรก, โปรไฟล์ (BalanceSplit) และหน้าอื่น (ประวัติ, แลกคะแนนเป็นคูปอง, คอยน์ของภารกิจ)
+ *   2. บรรทัดเดียว `inline` "คะแนนของคุณ ··· 1,250 คะแนน >" — เฉพาะหน้าแลกรางวัล (คะแนน) และหน้าภารกิจ (คอยน์)
+ *      หลักการ: ใช้ UI/ขนาด/น้ำหนักเดียวกับการ์ดหน้าแรก แค่จัดให้อยู่บรรทัดเดียว
+ * BalanceBar — แถบเดียว
+ * BalanceSplit — สองแถบคู่กัน คะแนน | คอยน์ (หน้าแรก, โปรไฟล์) + บรรทัดวิธีได้ "ซื้อสินค้าเพื่อสะสม" / "ทำภารกิจเพื่อสะสม"
+ */
+export type BalanceUnit = "points" | "coins";
+
+const SPEND: Record<BalanceUnit, string> = { points: "rewards", coins: "missions" };
+const HISTORY: Record<BalanceUnit, string> = { points: "wallet/history", coins: "wallet/history?type=coins" };
+
+/** ring = ขอบขาวรอบไอคอน (ใช้บนพื้นชมพูเข้ม ไม่ให้ไอคอน P สีชมพูกลืนกับพื้น) */
+export function BalanceIcon(props: { unit: BalanceUnit; size: number; ring?: boolean }) {
+  const cls = () => (props.ring ? "rounded-full ring-1 ring-white" : undefined);
+  return (
+    <Show
+      when={props.unit === "coins"}
+      fallback={<img src="/images/icons/point.png" alt="" width={props.size} height={props.size} class={cls()} style={{ width: `${props.size}px`, height: `${props.size}px` }} />}
+    >
+      <CoinIcon size={props.size} class={cls()} />
+    </Show>
+  );
+}
+
+/** เนื้อในของแถบ (ใช้ทั้งแบบเดี่ยวและแบบคู่) */
+function BalanceBody(props: {
+  unit: BalanceUnit;
+  amount: number;
+  label?: string;
+  size: "lg" | "md";
+  /** ปลายทางเมื่อแตะแถบ (ค่าเริ่มต้น: หน้าที่ใช้สกุลนั้น) · false = แตะไม่ได้ (เช่นอยู่หน้านั้นอยู่แล้ว) */
+  href?: string | false;
+  /** false = ไม่แสดงลิงก์ประวัติ (เช่นอยู่หน้าประวัติ / คอยน์ของภารกิจ) */
+  history?: boolean;
+  /** บรรทัดบอกวิธีได้ใต้ตัวเลข (12 เทา) — การ์ดคู่หน้าแรก/โปรไฟล์ */
+  hint?: string;
+  /** อยู่บนพื้นชมพูเข้ม (แบบ B) → ตัวอักษรทั้งหมดสีขาว */
+  onBrand?: boolean;
+}) {
+  const { t } = useI18n();
+  const to = usePartnerPath();
+  const coins = () => props.unit === "coins";
+  const href = () => (props.href === false ? undefined : to(props.href ?? SPEND[props.unit]));
+  return (
+    <div class="relative flex min-w-0 flex-1 flex-col gap-1 p-4">
+      {/* stretched link: ทั้งแถบแตะได้ · ลิงก์ประวัติอยู่ชั้นบน */}
+      <Show when={href()}>{(h) => <A href={h()} class="absolute inset-0" aria-label={props.label ?? t(coins() ? "club.your_coins" : "club.your_points")} />}</Show>
+      <span class="flex items-center justify-between gap-2">
+        <span class="flex min-w-0 items-center gap-1">
+          <BalanceIcon unit={props.unit} size={16} />
+          <span class={cn("truncate text-12", props.onBrand ? "text-white" : "text-gray")}>{props.label ?? t(coins() ? "club.your_coins" : "club.your_points")}</span>
+        </span>
+        <Show when={props.history !== false}>
+          {/* ">" = ประวัติของสกุลนั้น (ตัวแถบพาไปแลกรางวัล/ภารกิจ) — ตัดสินใจ 2026-11-23 */}
+          <A
+            href={to(HISTORY[props.unit])}
+            class={cn("hit-area relative z-raised flex shrink-0 items-center", props.onBrand ? "text-white" : "text-gray")}
+            aria-label={t(coins() ? "club.coins_history" : "club.points_history")}
+          >
+            <IconChevronRight size={16} />
+          </A>
+        </Show>
+      </span>
+      <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary" : "text-primary")}>
+        <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")}>{formatNumber(props.amount)}</span>
+        <span class="shrink-0 text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
+      </span>
+      <Show when={props.hint}>
+        <span class={cn("text-12", props.onBrand ? "text-white" : "text-gray")}>{props.hint}</span>
+      </Show>
+    </div>
+  );
+}
+
+/** บรรทัดคะแนนใกล้หมดอายุ (ท้ายแถบคะแนน) */
+function ExpiringLine(props: { onBrand?: boolean }) {
+  const to = usePartnerPath();
+  // ก้อนที่ใกล้หมดอายุที่สุดที่ยังไม่หมด (id = "exp-<วันหมดอายุ YYYY-MM-DD>")
+  const next = () => (pointsExpire() ? expiringPoints().find((e) => new Date(e.id.slice(4)).getTime() >= Date.now()) : undefined);
+  return (
+    <Show when={next()}>
+      {(e) => (
+        <A
+          href={to("wallet/history?filter=expired")}
+          class={cn("flex items-center gap-2 border-t px-4 py-2 text-12", props.onBrand ? "border-white/30 text-white" : "border-stroke text-warning")}
+        >
+          <IconClock size={16} class="shrink-0" />
+          <span class="min-w-0 flex-1 truncate">{e().title}</span>
+          <IconChevronRight size={16} class={cn("shrink-0", props.onBrand ? "text-white" : "text-gray")} />
+        </A>
+      )}
+    </Show>
+  );
+}
+
+/**
+ * แบบบรรทัดเดียว (หน้าแลกรางวัล = คะแนน · หน้าภารกิจ = คอยน์): "คะแนนของคุณ ······ 1,250 คะแนน >"
+ * อยู่หน้าที่ใช้สกุลนั้นแล้ว → ทั้งแถบแตะไปประวัติของสกุลนั้น
+ */
+function BalanceInline(props: { unit: BalanceUnit; amount: number; label?: string }) {
+  const { t } = useI18n();
+  const to = usePartnerPath();
+  const coins = () => props.unit === "coins";
+  return (
+    <A href={to(HISTORY[props.unit])} class="flex items-center justify-between gap-2 p-4" aria-label={t(coins() ? "club.coins_history" : "club.points_history")}>
+      <span class="flex min-w-0 items-center gap-1">
+        <BalanceIcon unit={props.unit} size={16} />
+        <span class="truncate text-12 text-gray">{props.label ?? t(coins() ? "club.your_coins" : "club.your_points")}</span>
+      </span>
+      {/* ตัวอักษรเหมือนการ์ดหน้าแรกทุกอย่าง (ป้าย 12 เทา · ตัวเลข 24 Semibold · หน่วย 14 Medium · > 16) แค่อยู่บรรทัดเดียว */}
+      <span class={cn("flex shrink-0 items-center gap-1", coins() ? "text-teriary" : "text-primary")}>
+        <span class="flex items-baseline gap-1">
+          <span class="text-24 font-semibold">{formatNumber(props.amount)}</span>
+          <span class="text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
+        </span>
+        <IconChevronRight size={16} class="text-gray" />
+      </span>
+    </A>
+  );
+}
+
+export function BalanceBar(props: {
+  unit: BalanceUnit;
+  /** บรรทัดเดียว (หน้าแลกรางวัล/ภารกิจ) */
+  inline?: boolean;
+  /** ค่าเริ่มต้น: ยอดของผู้ใช้ (session) */
+  amount?: number;
+  label?: string;
+  size?: "lg" | "md";
+  href?: string | false;
+  history?: boolean;
+  class?: string;
+}) {
+  const amount = () => props.amount ?? (props.unit === "coins" ? session.customer.coins : session.customer.points);
+  return (
+    <div class={cn(cardClass, "flex flex-col text-left", props.class)}>
+      <Show
+        when={props.inline}
+        fallback={<BalanceBody unit={props.unit} amount={amount()} label={props.label} size={props.size ?? "md"} href={props.href} history={props.history} />}
+      >
+        <BalanceInline unit={props.unit} amount={amount()} label={props.label} />
+      </Show>
+      <Show when={props.unit === "points" && props.amount === undefined}>
+        <ExpiringLine />
+      </Show>
+    </div>
+  );
+}
+
+export function BalanceSplit(props: {
+  size?: "lg" | "md";
+  class?: string;
+  /** pink = พื้นชมพูอ่อน (แบบ A) · brand = พื้นชมพูเข้มทึบ ตัวอักษรขาว (แบบ B — สีคะแนน/คอยน์เหมือนกัน เหลือไอคอน P/C แยก) */
+  tone?: "white" | "pink" | "brand";
+}) {
+  const { t } = useI18n();
+  const pink = () => props.tone === "pink";
+  const brand = () => props.tone === "brand";
+  // ป้าย "คะแนนของคุณ" / "คอยน์ของคุณ" (ขอให้ชัดว่าเป็นยอดของผู้ใช้ — ลิงก์ประวัติเหลือแค่ ">" จึงพอดีครึ่งความกว้าง)
+  // สีตัวอักษรคงเดิมทั้งสองโทน: คะแนนชมพู · คอยน์ส้ม · ป้าย/วิธีได้สีเทา → ยังแยกสองสกุลได้ชัด
+  return (
+    <div class={cn(cardClass, "flex flex-col text-left", pink() && "bg-primary-surface", brand() && "bg-primary", props.class)}>
+      <div class={cn("grid grid-cols-2 divide-x", pink() ? "divide-white" : brand() ? "divide-white/30" : "divide-stroke")}>
+        <BalanceBody unit="points" amount={session.customer.points} label={t("club.your_points")} hint={t("club.points_how")} size={props.size ?? "md"} onBrand={brand()} />
+        <BalanceBody unit="coins" amount={session.customer.coins} label={t("club.your_coins")} hint={t("club.coins_how")} size={props.size ?? "md"} onBrand={brand()} />
+      </div>
+      <ExpiringLine onBrand={brand()} />
+    </div>
+  );
+}
+
+/**
+ * แถวสรุปตอนแลก (บนปุ่มล่างของหน้ารายละเอียด / สรุปการแลก / แลกรางวัลของภารกิจ)
+ * ซ้าย "ใช้ X คะแนน" (ไม่พอ = "ขาดอีก X คะแนน" สีแดง) · ขวา "คงเหลือ (P) 1,250" · ตัวเลข 14
+ */
+export function RedeemSummary(props: { unit: BalanceUnit; cost: number; balance?: number }) {
+  const { t } = useI18n();
+  const coins = () => props.unit === "coins";
+  const balance = () => props.balance ?? (coins() ? session.customer.coins : session.customer.points);
+  const short = () => props.cost - balance();
+  return (
+    <div class="flex items-center justify-between gap-2 text-14">
+      <Show
+        when={short() > 0}
+        fallback={<span class="font-semibold text-dark">{coins() ? t("mis.use_coins", { coins: formatNumber(props.cost) }) : t("core.use_points", { points: formatNumber(props.cost) })}</span>}
+      >
+        <span class="font-semibold text-error">{t(coins() ? "club.short_coins" : "club.short_points", { amount: formatNumber(short()) })}</span>
+      </Show>
+      <span class="flex shrink-0 items-center gap-1 text-gray">
+        {t("club.balance")}
+        <BalanceIcon unit={props.unit} size={16} />
+        <span class={cn("font-semibold", coins() ? "text-teriary" : "text-primary")}>{formatNumber(balance())}</span>
+      </span>
+    </div>
+  );
+}

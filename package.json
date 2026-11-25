@@ -1,0 +1,38 @@
+{
+  "name": "charmiss-club-prototype",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev --port 3000",
+    "build": "vinxi build",
+    "start": "vinxi start",
+    "typecheck": "tsc --noEmit",
+    "lint:ds": "node scripts/check-design-system.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@kobalte/core": "^0.13.14",
+    "@solar-icons/solid": "^2.7.0",
+    "@solidjs/meta": "^0.29.8",
+    "@solidjs/router": "^0.15.4",
+    "@solidjs/start": "^1.5.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "marked": "^15.0.12",
+    "qr-scanner": "^1.4.2",
+    "qrcode": "^1.5.4",
+    "solid-js": "^1.9.19",
+    "tailwind-merge": "^2.6.1",
+    "vinxi": "^0.5.11"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.6",
+    "autoprefixer": "^10.6.2",
+    "postcss": "^8.5.33",
+    "tailwindcss": "^3.4.19",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^5.9.3"
+  }
+}

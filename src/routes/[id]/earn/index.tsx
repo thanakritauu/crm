@@ -1,0 +1,197 @@
+import { A, useNavigate, useSearchParams } from "@solidjs/router";
+import { createMemo, createSignal, For, onMount, Show } from "solid-js";
+import { Dynamic } from "solid-js/web";
+import { AlertDialog, InfoBox, ResultModal } from "~/components/ui/modal";
+import { BottomNav, BottomNavSpacer } from "~/components/layout/bottom-nav";
+import { PageHeader } from "~/components/layout/page-header";
+import { CoinIcon } from "~/components/mission/coin-icon";
+import { QrScannerScreen } from "~/components/point/qr-scanner-screen";
+import { PageLoading } from "~/components/ui/page-loading";
+import { Progress } from "~/components/ui/progress";
+import { useI18n } from "~/lib/i18n";
+import { session, sessionActions } from "~/lib/session";
+import { earnService } from "~/services/earn-service";
+import { usePartnerPath } from "~/lib/theme";
+import { delay, formatNumber } from "~/lib/utils";
+import { missionService } from "~/services/mission-service";
+import { cardClass } from "~/components/ui/card";
+import { cn } from "~/lib/utils";
+import { IconCamera, IconEdit, IconReceipt, IconRefresh, IconScanner, IconSmartphone } from "~/components/ui/icons";
+
+/**
+ * /:partner/point-collection — สะสมคะแนน (Figma "Earn Point" 589:3670)
+ * - หัวข้อ "สะสมคะแนน" 18/700 + กล่องแจ้งข้อมูล
+ * - การ์ด 2x2: ถ่ายรูปใบเสร็จ / แสกนคิวอาร์โค้ด / กรอกเลขที่ใบเสร็จ / กรอกรหัสสินค้า (เปิดใช้ครบตาม Figma)
+ * - (การ์ด "กดเพื่ออัปเดตคะแนนจากแพลตฟอร์มออนไลน์" ย้ายไปล่างสุดของหน้าเชื่อมต่อแพลตฟอร์มออนไลน์)
+ * - การ์ดแรกใน grid "เชื่อมต่อแพลตฟอร์มออนไลน์" (คู่กับถ่ายรูปใบเสร็จ) → /profile/platforms (LINE Shopping บนสุด)
+ * Flow ตาม Figma:
+ *   ถ่ายรูป → เลือกรูป → "ส่งตรวจสอบการสะสมคะแนน เรียบร้อยแล้ว / ใช้เวลาตรวจสอบประมาณ 48 ชั่วโมง" (ยังไม่ได้คะแนน)
+ *   สแกน QR (กล้องจริง / อ่านจากรูป) → ผลตามรหัสใน QR (ดู services/earn-service.ts):
+ *     สำเร็จ "สะสม 150คะแนน เรียบร้อยแล้ว" · "ไม่พบคิวอาร์โค้ดนี้ในระบบ" · "คิวอาร์โค้ดนี้ถูกใช้งานแล้ว"
+ *   อัปเดตคะแนนจากแพลตฟอร์ม → ยังไม่เชื่อมต่อ: ชวนไปเชื่อมต่อ · มีคำสั่งซื้อใหม่: เพิ่มคะแนน · ไม่มี: คะแนนเป็นปัจจุบันแล้ว
+ *   กรอกเลขที่ใบเสร็จ / รหัสสินค้า → หน้า earn/receipt | earn/product-code
+ * ?mission=<id> (มาจากหน้าภารกิจ): สะสมแสตมป์/ความคืบหน้าให้ภารกิจแทนคะแนน
+ */
+type Method = "platform" | "photo" | "scan" | "receipt" | "code" | "missions";
+
+/** title = key คำแปล */
+/** การ์ดแรก = เชื่อมต่อแพลตฟอร์มออนไลน์ (คู่กับถ่ายรูปใบเสร็จ) — ไม่แสดงในโหมดภารกิจ */
+const methods: { id: Method; title: string; icon: typeof IconCamera }[] = [
+  { id: "platform", title: "platform.connect_platform", icon: IconSmartphone }, // ไอคอนเดียวกับเมนูในโปรไฟล์
+  { id: "photo", title: "core.method_photo", icon: IconCamera },
+  { id: "scan", title: "core.method_scan", icon: IconScanner },
+  { id: "receipt", title: "core.method_receipt", icon: IconReceipt },
+  { id: "code", title: "core.method_code", icon: IconEdit },
+  // คู่กับกรอกรหัสสินค้า (เดิมเป็นแถบชมพูท้ายหน้า) — ไม่แสดงในโหมดภารกิจ
+  { id: "missions", title: "common.earn_coins_from_mission", icon: CoinIcon as typeof IconCamera },
+];
+
+export default function EarnPoint() {
+  const { t } = useI18n();
+  const to = usePartnerPath();
+  const navigate = useNavigate();
+  const [search] = useSearchParams<{ mission?: string }>();
+  onMount(() => {
+    missionService.restore();
+    earnService.restore();
+  });
+
+  const mission = createMemo(() => (search.mission ? missionService.get(search.mission) : undefined));
+  const [loading, setLoading] = createSignal<string | false>(false);
+  const [scanOpen, setScanOpen] = createSignal(false);
+  const [result, setResult] = createSignal<{ variant: "success" | "error"; title: string; description?: string } | null>(null);
+  let fileInput: HTMLInputElement | undefined;
+
+  /** โหมดภารกิจ: สะสมให้ภารกิจ แล้วแจ้งผล (missionService.collect ใช้ร่วมกับหน้ากรอกเลข) */
+  const collectForMission = () => setResult(missionService.collect(mission()!.id));
+
+  const choose = (id: Method) => {
+    if (id === "platform") return navigate(to("profile/platforms"));
+    if (id === "missions") return navigate(to("missions"));
+    if (id === "photo") return fileInput?.click();
+    if (id === "scan") return setScanOpen(true);
+    navigate(to(`earn/${id === "receipt" ? "receipt" : "product-code"}${mission() ? `?mission=${mission()!.id}` : ""}`));
+  };
+
+  const onPhoto = async () => {
+    setScanOpen(false);
+    setLoading(t("core.uploading_receipt"));
+    await delay(1200);
+    setLoading(false);
+    if (mission()) return collectForMission();
+    setResult({ variant: "success", title: t("core.receipt_submitted_title"), description: t("core.receipt_review_time") });
+  };
+
+  const QR_ERROR = {
+    not_found: "common.qr_not_found_title",
+    used: "common.qr_already_used_title",
+  } as const;
+
+  /** ผลจากหน้าสแกน: data = ข้อความใน QR หรือ null ถ้าอ่านไม่ได้ */
+  const onScanned = async (data: string | null) => {
+    setScanOpen(false);
+    setLoading(t("common.in_progress_wait_a_moment"));
+    await delay(900);
+    setLoading(false);
+    const m = mission();
+    const r = m ? earnService.checkQr(data) : earnService.redeemQr(data);
+    if (r.status !== "success") return setResult({ variant: "error", title: t(QR_ERROR[r.status]), description: t("core.check_or_retry") });
+    if (m) {
+      earnService.markQrUsed(r.code);
+      return collectForMission();
+    }
+    setResult({ variant: "success", title: t("core.earned_points_done", { points: r.points }), description: t("common.points_history_hint") });
+  };
+
+
+  return (
+    <div class="min-h-screen bg-white">
+      <PageLoading show={!!loading()} message={loading() || undefined} />
+      {/* โหมดภารกิจมีปุ่มย้อนกลับไปหน้าภารกิจ */}
+      <PageHeader align="center" title={t("component.card_member.collect_points")} hideBack={!mission()} backTo={mission() ? `missions/${mission()!.id}` : undefined} />
+
+      <div class="px-4 pb-4">
+        <InfoBox>
+          {mission()
+            ? mission()!.type === "stamp"
+              ? t("common.notice_earn_stamp")
+              : t("common.notice_earn_coin")
+            : t("common.notice_earn_point")}
+        </InfoBox>
+      </div>
+
+      <div class="flex flex-col gap-4 px-4">
+        <Show when={mission()}>
+          {(m) => (
+            <A href={to(`missions/${m().id}`)} class={cn(cardClass, "block p-4")}>
+              <div class="flex items-center justify-between gap-x-2">
+                <h2 class="line-clamp-1 text-14 font-semibold text-dark">{m().title}</h2>
+                <span class="flex shrink-0 items-center gap-x-1 text-12 font-medium text-teriary">
+                  <CoinIcon size={14} />+{m().reward_coins}
+                </span>
+              </div>
+              <div class="mt-2">
+                <Progress value={m().progress} max={m().target} />
+              </div>
+            </A>
+          )}
+        </Show>
+
+        <div class="grid grid-cols-2 gap-4">
+          <For each={methods.filter((m) => !mission() || (m.id !== "platform" && m.id !== "missions"))}>
+            {(m) => (
+              <button
+                type="button"
+                onClick={() => choose(m.id)}
+                class={cn(cardClass, "flex min-w-0 flex-col items-center justify-center gap-2 px-4 py-8 transition active:scale-[0.98]")}
+              >
+                {/* สะสมคอยน์ = เหรียญ C สีเหลืองเต็มวง 40px (ไม่มีวงชมพู) · การ์ดอื่น = ไอคอนชมพูในวงชมพูอ่อน */}
+                <Show
+                  when={m.id === "missions"}
+                  fallback={
+                    <span class="flex size-10 items-center justify-center rounded-full bg-primary-surface">
+                      <Dynamic component={m.icon} size={24} class="text-primary" />
+                    </span>
+                  }
+                >
+                  <CoinIcon size={40} />
+                </Show>
+                <span class="line-clamp-2 max-w-full text-center text-14 font-medium text-dark">{t(m.title)}</span>
+              </button>
+            )}
+          </For>
+        </div>
+
+      </div>
+
+      <input
+        ref={fileInput}
+        type="file"
+        accept="image/*"
+        class="hidden"
+        onChange={(e) => {
+          if (e.currentTarget.files?.[0]) onPhoto();
+          e.currentTarget.value = "";
+        }}
+      />
+
+      <BottomNavSpacer />
+      <BottomNav />
+
+      <QrScannerScreen open={scanOpen()} onClose={() => setScanOpen(false)} onResult={onScanned} />
+
+
+      <ResultModal
+        open={!!result()}
+        onOpenChange={(o) => !o && setResult(null)}
+        variant={result()?.variant}
+        title={result()?.title}
+        description={result()?.description}
+        onButton={() => {
+          const m = mission();
+          if (m && result()?.variant !== "error") navigate(to(`missions/${m.id}`));
+        }}
+      />
+    </div>
+  );
+}

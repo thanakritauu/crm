@@ -1,0 +1,16 @@
+{
+  "noti.preparing": "You redeemed {{name}} for {{points}} points. We're preparing it for delivery.",
+  "noti.shipping": "Your {{name}} is out for delivery.",
+  "noti.delivered": "You've received 1 × {{name}} from your points redemption.",
+  "noti.redeem_pickup": "You redeemed {{name}} for {{points}} points. Show your code at the store to collect it.",
+  "noti.redeem_coupon": "You redeemed {{name}} for {{points}} points. Find it in My Coupons.",
+  "noti.redeem_reward": "You redeemed {{name}} for {{points}} points.",
+  "noti.seed_mission_done": "You completed the mission {{mission}}. Check your points now.",
+  "noti.seed_platform_connected": "Your {{platform}} account is connected. Earn points on every {{platform}} order.",
+  "noti.seed_welcome": "Welcome, {{name}}! You're now a Charmiss Club member. Connect an online platform to get started.",
+  "noti.seed_welcome_coupon": "You got 100 THB off your next order. Use code '{{code}}' at checkout.",
+  "noti.seed_campaign": "You joined '{{campaign}}' and earned {{points}} bonus points. See details in the app.",
+  "noti.seed_level_up": "You've been upgraded to {{level}}. Enjoy extra perks on every order.",
+  "noti.unread": "Unread",
+  "noti.platform_bind_failed": "Your {{platform}} account could not be connected"
+}

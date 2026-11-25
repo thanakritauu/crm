@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Charmiss Style Guide</title>
+<!-- Tailwind v3 (เวอร์ชันเดียวกับต้นฉบับ) ผ่าน CDN — เฉพาะหน้า style guide; ในโปรเจคจริงจะใช้ tailwind.config แบบเดียวกันนี้ -->
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      container: { center: true, padding: '1rem', screens: { '2xl': '1400px' } },
+      extend: {
+        fontFamily: { sans: ['IBMPlexSansThai', 'sans-serif'] },
+        colors: {
+          primary: { DEFAULT: 'var(--primary-base)', light: 'var(--primary-light)', dark: 'var(--primary-dark)' },
+          secondary: { DEFAULT: 'var(--secondary-base)', light: 'var(--secondary-light)', dark: 'var(--secondary-dark)' },
+          teriary: { DEFAULT: 'var(--teriary-base)', light: 'var(--teriary-light)', dark: 'var(--teriary-dark)' },
+          light: 'var(--color-light)', dark: 'var(--color-dark)', gray: { DEFAULT: 'var(--color-gray)' },
+        },
+      },
+    },
+  }
+</script>
+<style>
+  @font-face { font-family: IBMPlexSansThai; src: url(fonts/IBMPlexSansThai-Light.ttf); font-weight: 300; font-display: swap }
+  @font-face { font-family: IBMPlexSansThai; src: url(fonts/IBMPlexSansThai-Regular.ttf); font-weight: 400; font-display: swap }
+  @font-face { font-family: IBMPlexSansThai; src: url(fonts/IBMPlexSansThai-Medium.ttf); font-weight: 500; font-display: swap }
+  @font-face { font-family: IBMPlexSansThai; src: url(fonts/IBMPlexSansThai-SemiBold.ttf); font-weight: 600; font-display: swap }
+  @font-face { font-family: IBMPlexSansThai; src: url(fonts/IBMPlexSansThai-Bold.ttf); font-weight: 700; font-display: swap }
+  :root {
+    /* ธีม charmiss จาก /api/theme?partner=charmiss */
+    --primary-base: #F1336E; --primary-light: #fcd6e2; --primary-dark: #480f21;
+    --secondary-base: #7650FF; --secondary-light: #e4dcff; --secondary-dark: #23184d;
+    --teriary-base: #FF9300; --teriary-light: #ffe9cc; --teriary-dark: #4d2c00;
+    /* ค่าคงที่ใน :root ของต้นฉบับ */
+    --color-light: #ffffff; --color-dark: #1E3146; --color-gray: #5a6a85;
+    --color-success: #00c763; --color-success-light: #e6fbf0; --color-error: #fb2c36;
+    --color-inprogress: #ff9300; --color-inprogress-light: #fff4e4d6;
+  }
+  html { font-family: IBMPlexSansThai, sans-serif; }
+  body { color: #09090b; background: #f4f5f7; }
+  .hide-scrollbar::-webkit-scrollbar { display: none } .hide-scrollbar { scrollbar-width: none }
+  /* การ์ดคูปองมุมเว้า (ต้นฉบับใช้ CSS mask แบบเดียวกัน) */
+  .coupon-notch {
+    -webkit-mask: radial-gradient(circle at 0 100%, transparent 12px, #000 12.5px) left/51% 100% no-repeat,
+                  radial-gradient(circle at 100% 100%, transparent 12px, #000 12.5px) right/51% 100% no-repeat;
+            mask: radial-gradient(circle at 0 100%, transparent 12px, #000 12.5px) left/51% 100% no-repeat,
+                  radial-gradient(circle at 100% 100%, transparent 12px, #000 12.5px) right/51% 100% no-repeat;
+  }
+  .sg-code { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: #5a6a85; word-break: break-all }
+</style>
+</head>
+<body class="min-h-screen">
+<div class="max-w-[1100px] mx-auto px-4 py-8 space-y-10">
+
+  <header class="flex items-center gap-4">
+    <img src="images/logo.png" alt="Charmiss" class="w-14 h-14 rounded-full border-[3px] border-white shadow">
+    <div>
+      <h1 class="text-[24px] font-[700] text-dark">Charmiss Club — Style Guide</h1>
+      <p class="text-[14px] text-gray">ดึงจาก club.charmiss.co (SolidStart + Tailwind v3 + Kobalte) · ช่วงที่ 2</p>
+    </div>
+  </header>
+
+  <!-- ===== COLORS ===== -->
+  <section class="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_#5A6A851A]">
+    <h2 class="text-[18px] font-[700] text-dark mb-1">1. สี</h2>
+    <p class="text-[12px] text-gray mb-4">สีธีมดึงจาก API ตาม partner แล้วใส่เป็น CSS variable · class: <code>bg-primary</code>, <code>bg-primary-light</code>, <code>bg-primary-dark</code></p>
+    <div class="grid sm:grid-cols-3 gap-4" id="theme-colors"></div>
+    <h3 class="text-[14px] font-[600] text-dark mt-6 mb-3">สีกลาง / สถานะ</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3" id="neutral-colors"></div>
+  </section>
+
+  <!-- ===== TYPOGRAPHY ===== -->
+  <section class="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_#5A6A851A]">
+    <h2 class="text-[18px] font-[700] text-dark mb-1">2. ตัวอักษร</h2>
+    <p class="text-[12px] text-gray mb-4">IBM Plex Sans Thai · 300 / 400 / 500 / 600 / 700 · line-height 1.5</p>
+    <div class="divide-y divide-gray-100" id="type-scale"></div>
+    <div class="flex flex-wrap gap-6 mt-5 text-[16px]">
+      <span class="font-[300]">Light 300 ยินดีต้อนรับ</span><span class="font-[400]">Regular 400 ยินดีต้อนรับ</span>
+      <span class="font-[500]">Medium 500 ยินดีต้อนรับ</span><span class="font-[600]">SemiBold 600 ยินดีต้อนรับ</span>
+      <span class="font-[700]">Bold 700 ยินดีต้อนรับ</span>
+    </div>
+  </section>
+
+  <!-- ===== SPACING / RADIUS / SHADOW ===== -->
+  <section class="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_#5A6A851A]">
+    <h2 class="text-[18px] font-[700] text-dark mb-4">3. ระยะห่าง · มุมโค้ง · เงา</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-[14px] font-[600] mb-3">ระยะห่าง (ช่วง 4px)</h3>
+        <div class="space-y-2" id="spacing"></div>
+        <p class="text-[12px] text-gray mt-3">ขอบหน้า <code>.container</code> = 16px · ระหว่าง section <code>py-[16px]</code> · grid <code>gap-[16px]</code></p>
+      </div>
+      <div>
+        <h3 class="text-[14px] font-[600] mb-3">มุมโค้ง</h3>
+        <div class="grid grid-cols-3 gap-3 text-center text-[11px] text-gray">
+          <div><div class="h-14 bg-primary-light rounded-lg"></div>8 · input เก่า</div>
+          <div><div class="h-14 bg-primary-light rounded-[12px]"></div>12 · input</div>
+          <div><div class="h-14 bg-primary-light rounded-[16px]"></div>16 · การ์ด</div>
+          <div><div class="h-14 bg-primary-light rounded-[24px]"></div>24 · dialog</div>
+          <div><div class="h-14 bg-primary-light rounded-b-[16px]"></div>b-16 · header</div>
+          <div><div class="h-14 bg-primary-light rounded-full"></div>full · ปุ่ม</div>
+        </div>
+      </div>
+      <div>
+        <h3 class="text-[14px] font-[600] mb-3">เงา</h3>
+        <div class="space-y-4 text-[11px] text-gray">
+          <div class="h-12 bg-white rounded-[16px] shadow-[0_2px_12px_#5A6A851A] flex items-center px-3">การ์ด · 0 2px 12px #5A6A851A</div>
+          <div class="h-12 bg-white rounded-[16px] shadow-[0px_-4px_8px_rgba(0,0,0,.1)] flex items-center px-3">แถบล่าง · 0 -4px 8px</div>
+          <div class="h-12 bg-white rounded-full shadow-[0_2px_8px_rgba(241,51,110,.25)] flex items-center px-3">ปุ่ม primary · 0 2px 8px</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BUTTONS ===== -->
+  <section class="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_#5A6A851A]">
+    <h2 class="text-[18px] font-[700] text-dark mb-4">4. ปุ่ม</h2>
+    <div class="grid md:grid-cols-2 gap-x-10 gap-y-6">
+      <div class="space-y-2">
+        <p class="text-[12px] font-[600] text-gray">Primary (หน้า user-verification)</p>
+        <button class="flex items-center justify-center w-full max-w-xs py-3 bg-primary text-white font-semibold rounded-full transition hover:opacity-90">เคยแล้ว</button>
+        <p class="sg-code">w-full max-w-xs py-3 bg-primary text-white font-semibold rounded-full</p>
+      </div>
+      <div class="space-y-2">
+        <p class="text-[12px] font-[600] text-gray">LINE login (หน้า landing)</p>
+        <button class="flex items-center justify-center gap-2 w-full max-w-xs py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-full transition">
+          <span class="w-6 h-6 rounded-full bg-white text-green-500 text-[8px] font-[700] flex items-center justify-center">LINE</span> LINE</button>
+        <p class="sg-code">py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-full</p>
+      </div>
+      <div class="space-y-2">
+        <p class="text-[12px] font-[600] text-gray">ปุ่มคู่ใน dialog (h-44)</p>
+        <div class="flex gap-2 max-w-xs">
+          <button class="text-primary bg-primary-light h-[44px] px-[16px] py-[10px] rounded-full font-[700] w-full">ยกเลิก</button>
+          <button class="bg-primary text-light h-[44px] px-[16px] py-[10px] rounded-full font-[700] hover:bg-primary-dark w-full">ยืนยัน</button>
+        </div>
+        <p class="sg-code">h-[44px] px-[16px] rounded-full font-[700] · bg-primary / bg-primary-light text-primary</p>
+      </div>
+      <div class="space-y-2">
+        <p class="text-[12px] font-[600] text-gray">Chip (บนการ์ดคอยน์) · Disabled</p>
+        <div class="flex items-center gap-3">
+          <button class="bg-primary-light h-[33px] text-[14px] font-[700] text-primary rounded-[100px] py-[2px] px-[8px]">ประวัติคอยน์</button>
+          <button class="bg-[#E3E3E5] text-[#475467] h-[50px] px-6 text-[18px] rounded-full" disabled>ยังแลกไม่ได้</button>
+        </div>
+        <p class="sg-code">bg-primary-light h-[33px] text-[14px] font-[700] text-primary rounded-[100px] px-[8px]</p>
+      </div>
+      <div class="md:col-span-2 space-y-2">
+        <p class="text-[12px] font-[600] text-gray">Button component (solid-ui · cva) — variant / size</p>
+        <div class="flex flex-wrap items-center gap-2 text-[14px] font-[500]">
+          <button class="h-10 px-4 py-2 rounded-md bg-primary text-white">default</button>
+          <button class="h-10 px-4 py-2 rounded-md bg-black text-white">destructive</button>
+          <button class="h-10 px-4 py-2 rounded-md border border-gray-200 hover:bg-gray-100">outline</button>
+          <button class="h-10 px-4 py-2 rounded-md bg-secondary text-white">secondary</button>
+          <button class="h-10 px-4 py-2 rounded-md hover:bg-gray-100">ghost</button>
+          <button class="h-10 px-4 py-2 text-primary underline-offset-4 hover:underline">link</button>
+          <span class="text-gray-300">|</span>
+          <button class="h-9 px-3 rounded-md bg-primary text-white">sm</button>
+          <button class="h-11 px-8 rounded-md bg-primary text-white">lg</button>
+          <button class="size-10 rounded-md bg-primary text-white">+</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FORMS ===== -->
+  <section class="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_#5A6A851A]">
+    <h2 class="text-[18px] font-[700] text-dark mb-4">5. ฟอร์ม</h2>
+    <div class="grid md:grid-cols-2 gap-x-10 gap-y-5 max-w-[800px]">
+      <div>
+        <label class="block mb-1 text-left text-[16px] font-[600]">ชื่อ <span class="text-[#FB2C36]">*</span></label>
+        <input class="rounded-[12px] py-[14px] px-[16px] text-[14px] font-[400] placeholder:text-[14px] border border-[#D2D8E0] w-full focus:outline-none focus:border-primary" placeholder="กรอกชื่อ">
+        <p class="sg-code mt-1">rounded-[12px] py-[14px] px-[16px] text-[14px] border</p>
+      </div>
+      <div>
+        <label class="block mb-1 text-left text-[16px] font-[600]">เบอร์โทรศัพท์</label>
+        <div class="flex items-center h-12 border border-gray-200 rounded-xl bg-white overflow-hidden focus-within:border-[#ff5f91] focus-within:ring-2 focus-within:ring-pink-100 transition">
+          <span class="pl-3.5 text-gray-400 text-[14px]">+66</span>
+          <input class="w-full h-full px-3.5 text-base text-gray-800 bg-transparent focus:outline-none" placeholder="08x-xxx-xxxx">
+        </div>
+        <p class="sg-code mt-1">h-12 border rounded-xl focus-within:border-[#ff5f91] focus-within:ring-pink-100</p>
+      </div>
+      <div>
+        <label class="block mb-1 text-left text-[16px] font-[600]">มีข้อผิดพลาด</label>
+        <input class="rounded-[12px] py-[14px] px-[16px] text-[14px] border border-[#FB2C36] w-full" value="0812">
+        <p class="text-[12px] text-[#FB2C36] mt-1">กรุณากรอกเบอร์โทรศัพท์ให้ครบ 10 หลัก</p>
+      </div>
+      <div class="space-y-3">
+        <label class="flex items-center gap-2 text-[14px]">
+          <span class="w-5 h-5 rounded-[6px] border border-primary bg-primary text-white flex items-center justify-center text-[12px]">✓</span>
+          ข้าพเจ้ายินยอมตาม <a class="text-primary underline">ข้อตกลงและเงื่อนไข</a></label>
+        <label class="flex items-center gap-2 text-[14px]"><span class="w-5 h-5 rounded-[6px] border border-[#D2D8E0] bg-white"></span>ยังไม่เลือก</label>
+        <div class="flex gap-2">
+          <span class="px-4 py-2 rounded-full border border-primary text-primary bg-primary-light text-[14px]">หญิง</span>
+          <span class="px-4 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-500 text-[14px]">ชาย</span>
+          <span class="px-4 py-2 rounded-full border border-gray-300 bg-gray-100 text-gray-500 text-[14px]">ไม่ระบุ</span>
+        </div>
+      </div>
+      <div class="md:col-span-2">
+        <div class="p-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert"><span class="font-medium">ต้องกรอกข้อมูล!</span> กรุณากรอกข้อมูลให้ครบถ้วน</div>
+      </div>
+      <div>
+        <label class="block mb-2 text-left text-[16px] font-[600]">รหัส OTP</label>
+        <div class="flex gap-2">
+          <input maxlength="1" value="4" class="w-11 h-12 text-center text-[20px] font-[700] rounded-[12px] border border-primary">
+          <input maxlength="1" value="2" class="w-11 h-12 text-center text-[20px] font-[700] rounded-[12px] border border-primary">
+          <input maxlength="1" class="w-11 h-12 text-center text-[20px] rounded-[12px] border border-[#D2D8E0]">
+          <input maxlength="1" class="w-11 h-12 text-center text-[20px] rounded-[12px] border border-[#D2D8E0]">
+          <input maxlength="1" class="w-11 h-12 text-center text-[20px] rounded-[12px] border border-[#D2D8E0]">
+          <input maxlength="1" class="w-11 h-12 text-center text-[20px] rounded-[12px] border border-[#D2D8E0]">
+        </div>
+        <p class="text-[12px] text-gray mt-2">ขอรหัส OTP ใหม่อีกครั้งในอีก 0:59 นาที</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CARDS & PATTERNS (mobile frame) ===== -->
+  <section class="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_#5A6A851A]">
+    <h2 class="text-[18px] font-[700] text-dark mb-1">6. การ์ด · Badge · Navigation</h2>
+    <p class="text-[12px] text-gray mb-5">แสดงในกรอบมือถือ 375px · หน้า home/mission จริงต้องล็อกอิน จึงประกอบจาก template ใน bundle และใส่ข้อมูลจำลอง</p>
+    <div class="flex flex-wrap gap-8 items-start">
+
+      <!-- frame 1: header + top bar + coin card -->
+      <div class="w-[375px] max-w-full rounded-[24px] overflow-hidden border border-gray-200 bg-white relative">
+        <div class="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 p-4 absolute z-30 w-full">
+          <button class="flex items-center justify-center w-8 h-8 rounded-full bg-black/10 text-white">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+          <span class="text-[18px] font-[700] text-light">Top bar (โปร่งใสบน header)</span><div class="w-0"></div>
+        </div>
+        <div class="w-full h-[120px] rounded-b-[16px] bg-primary flex items-center justify-center flex-col">
+          <div class="w-[100px] h-[100px] shrink-0 overflow-hidden rounded-full mt-28 border-[3px] border-white bg-white relative z-10">
+            <img src="images/logo.png" class="w-full h-full object-cover" alt=""></div>
+        </div>
+        <div class="text-center mt-16 px-4">
+          <p class="text-[18px] font-[700] text-black">ยินดีต้อนรับสู่</p>
+          <p class="text-[24px] font-[700] text-primary">charmiss club</p>
+        </div>
+        <div class="p-4">
+          <div class="w-full bg-primary rounded-[24px] border-[3px] border-[var(--primary-light)] p-[24px]">
+            <div class="flex justify-between items-end gap-x-2">
+              <div class="min-w-0"><h2 class="text-[14px] text-light font-[600]">คอยน์ของฉัน</h2><h2 class="text-[26px] text-light font-[700]">1,250</h2></div>
+              <button class="bg-primary-light h-[33px] text-[14px] font-[700] text-primary rounded-[100px] px-[8px] mb-[8px]">ประวัติ</button>
+            </div>
+            <div class="mt-4 py-[10px] px-[4px] bg-white/[0.08] border border-white/[0.08] rounded-[16px] grid grid-cols-3 gap-x-1 text-center">
+              <div class="py-1"><div class="text-[18px] font-[700] text-light leading-none">3</div><div class="text-[10px] font-[500] text-light mt-1.5">ภารกิจสำเร็จ</div></div>
+              <div class="py-1 border-l border-white/[0.12]"><div class="text-[18px] font-[700] text-light leading-none">2</div><div class="text-[10px] font-[500] text-light mt-1.5">คูปอง</div></div>
+              <div class="py-1 border-l border-white/[0.12]"><div class="text-[18px] font-[700] text-light leading-none">#12</div><div class="text-[10px] font-[500] text-light mt-1.5">อันดับ</div></div>
+            </div>
+          </div>
+        </div>
+        <!-- quick menu -->
+        <div class="px-4 pb-4">
+          <h2 class="text-[18px] font-[700] text-dark mb-2">เมนูการทำงาน</h2>
+          <div class="grid grid-cols-3 gap-y-[8px]">
+            <div class="text-center"><div class="mx-auto w-12 h-12 rounded-full bg-secondary-light flex items-center justify-center"><span class="w-5 h-5 rounded bg-secondary"></span></div><h2 class="text-[14px] font-[500] mt-[4px]">ภารกิจ</h2></div>
+            <div class="text-center relative"><span class="absolute right-3 top-0 bg-[#F23030] font-[600] text-[10px] text-white rounded-[100px] px-[4px] py-[1px]">NEW</span><div class="mx-auto w-12 h-12 rounded-full bg-secondary-light flex items-center justify-center"><span class="w-5 h-5 rounded-full bg-secondary"></span></div><h2 class="text-[14px] font-[500] mt-[4px]">คูปองของฉัน</h2></div>
+            <div class="text-center"><div class="mx-auto w-12 h-12 rounded-full bg-secondary-light flex items-center justify-center"><span class="w-5 h-5 rotate-45 bg-secondary"></span></div><h2 class="text-[14px] font-[500] mt-[4px]">สิทธิพิเศษ</h2></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- frame 2: mission card, coupon, badge, progress, empty, bottom bar -->
+      <div class="w-[375px] max-w-full rounded-[24px] overflow-hidden border border-gray-200 bg-[#f5f5f5] relative pb-[96px]">
+        <div class="p-4 space-y-4">
+          <h2 class="text-[18px] font-[700] text-dark">ภารกิจ</h2>
+          <div class="grid grid-cols-12 gap-[16px]">
+            <div class="col-span-6 drop-shadow-[0_2px_12px_rgba(90,106,133,0.16)]">
+              <div class="h-[120px] rounded-t-[16px] bg-gradient-to-br from-primary-light to-secondary-light"></div>
+              <div class="p-[8px] min-h-[80px] rounded-b-[16px] bg-white flex flex-col justify-between">
+                <div><h2 class="text-[14px] font-[600] line-clamp-1">สะสมแสตมป์ครบ 5 ดวง</h2><h2 class="text-[12px] font-[500] text-gray line-clamp-1">ถึง 31 ธ.ค. 2026</h2></div>
+                <span class="self-start bg-teriary-light inline-flex items-center py-[2.5px] px-[6px] rounded-[24px] text-teriary text-[10px] font-[600]">+50 คอยน์</span>
+              </div>
+            </div>
+            <div class="col-span-6 drop-shadow-[0_2px_12px_rgba(90,106,133,0.16)]">
+              <div class="coupon-notch rounded-t-[16px] bg-white overflow-hidden">
+                <div class="h-[96px] bg-gradient-to-br from-teriary-light to-primary-light flex items-center justify-center text-[22px] font-[700] text-primary">-15%</div>
+                <div class="p-[8px] h-[44px]"><h2 class="text-[14px] font-[600] line-clamp-1">คูปองส่วนลด</h2></div>
+              </div>
+              <div class="bg-white rounded-b-[16px] border-t border-dashed border-gray-200 px-[8px] py-[6px] text-[12px] text-gray">หมดอายุ 30/12/26</div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-[16px] p-4 shadow-[0_2px_12px_#5A6A851A]">
+            <span class="bg-teriary-light inline-flex items-center py-[1px] px-[6px] rounded-[100px] text-teriary text-[12px] font-[600]">กำลังดำเนินการ</span>
+            <h2 class="text-[14px] font-[700] text-dark mt-2">ซื้อครบ 3 ชิ้น รับฟรี Lip Tint</h2>
+            <div class="flex items-center gap-x-[8px] mt-2">
+              <div class="flex-grow bg-gray-200 rounded-full h-[4px] overflow-hidden"><div class="bg-teriary h-[4px] rounded-full w-2/3"></div></div>
+              <span class="font-[500] text-[12px]">2/3</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2 flex-wrap">
+            <span class="bg-teriary-light text-teriary text-[12px] font-[700] px-3 py-[3px] rounded-full">Teriary</span>
+            <span class="bg-[var(--color-success-light)] text-[var(--color-success)] text-[12px] font-[700] px-3 py-[3px] rounded-full">สำเร็จ</span>
+            <span class="bg-red-50 text-[var(--color-error)] text-[12px] font-[700] px-3 py-[3px] rounded-full">หมดอายุ</span>
+            <span class="bg-secondary-light text-secondary text-[12px] font-[700] px-3 py-[3px] rounded-full">Secondary</span>
+            <span class="bg-[#F23030] text-white text-[10px] font-[600] px-[4px] py-[1px] rounded-full">NEW</span>
+          </div>
+
+          <div class="bg-white rounded-[16px] py-6 text-center">
+            <img src="images/empty-image.png" class="w-[100px] h-[100px] mx-auto" alt="">
+            <h2 class="text-[14px] font-[700]">ไม่พบข้อมูล</h2>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="w-[48px] h-[48px] bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse rounded-full"></div>
+            <div class="flex-1 space-y-2"><div class="h-3 w-2/3 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse rounded"></div><div class="h-3 w-1/3 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse rounded"></div></div>
+          </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[16px] shadow-[0_2px_12px_#5A6A851A] p-4">
+          <button class="w-full py-3 bg-primary text-white font-semibold rounded-full">แลกรางวัล</button>
+        </div>
+      </div>
+
+      <!-- frame 3: dialog -->
+      <div class="w-[375px] max-w-full rounded-[24px] overflow-hidden border border-gray-200 bg-black/50 h-[520px] flex items-center justify-center">
+        <div class="flex w-[343px] p-[24px] flex-col items-center gap-[24px] bg-white rounded-[24px]">
+          <span class="p-[12px] bg-primary-light rounded-full inline-flex"><span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-[700]">✓</span></span>
+          <div class="text-center">
+            <h2 class="text-[18px] font-[700] text-dark">แลกคูปองสำเร็จ</h2>
+            <p class="text-[14px] text-gray mt-1">เราเก็บคูปองที่แลกไว้ที่เมนูคูปอง</p>
+          </div>
+          <div class="flex gap-2 w-full">
+            <button class="text-primary bg-primary-light h-[44px] px-[16px] rounded-full font-[700] w-full">ปิด</button>
+            <button class="bg-primary text-light h-[44px] px-[16px] rounded-full font-[700] w-full">ดูคูปอง</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BREAKPOINTS ===== -->
+  <section class="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_#5A6A851A]">
+    <h2 class="text-[18px] font-[700] text-dark mb-4">7. Breakpoint</h2>
+    <table class="w-full text-[14px] text-left">
+      <thead class="text-gray text-[12px]"><tr><th class="py-2">ชื่อ</th><th>เงื่อนไข</th><th>ใช้ทำอะไร</th></tr></thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr><td class="py-2 font-[600]">base</td><td>&lt; 640px</td><td>เลย์เอาต์หลัก (มือถือ / LINE in-app browser)</td></tr>
+        <tr><td class="py-2 font-[600]">sm</td><td>≥ 640px</td><td>dialog จัดกลางจอ, <code>sm:max-w-[425px]</code></td></tr>
+        <tr><td class="py-2 font-[600]">md</td><td>≥ 768px</td><td>ปรับ padding เล็กน้อย</td></tr>
+        <tr><td class="py-2 font-[600]">2xl</td><td>1400px</td><td>max-width ของ <code>.container</code></td></tr>
+        <tr><td class="py-2 font-[600]">custom</td><td>max-width 350 / 361 / 375 / 400px</td><td>ย่อข้อความ/การ์ดบนจอเล็ก</td></tr>
+        <tr><td class="py-2 font-[600]">custom</td><td>max-height 380–670px</td><td>ย่อ layout บนจอเตี้ย</td></tr>
+      </tbody>
+    </table>
+    <p class="text-[12px] text-gray mt-3">ตอนนี้ความกว้างหน้าต่าง: <span id="vw" class="font-[600] text-dark"></span></p>
+  </section>
+</div>
+
+<script>
+  const swatch = (name, varName, cls) => {
+    const v = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    return `<div><div class="h-14 rounded-[12px] border border-black/5" style="background:var(${varName})"></div>
+      <div class="text-[12px] font-[600] mt-1">${name}</div><div class="sg-code">${cls} · ${v.toUpperCase()}</div></div>`;
+  };
+  document.getElementById('theme-colors').innerHTML = ['primary', 'secondary', 'teriary'].map(n =>
+    `<div class="grid grid-cols-3 gap-2">${swatch(n, `--${n}-base`, `bg-${n}`)}${swatch('light', `--${n}-light`, `-light`)}${swatch('dark', `--${n}-dark`, `-dark`)}</div>`).join('');
+  document.getElementById('neutral-colors').innerHTML = [
+    ['dark', '--color-dark', 'text-dark'], ['gray', '--color-gray', 'text-gray'], ['light', '--color-light', 'text-light'],
+    ['success', '--color-success', '--color-success'], ['success light', '--color-success-light', ''],
+    ['error', '--color-error', '--color-error'], ['in progress', '--color-inprogress', ''], ['in progress light', '--color-inprogress-light', ''],
+  ].map(a => swatch(...a)).join('') +
+    `<div><div class="h-14 rounded-[12px] bg-[#D2D8E0]"></div><div class="text-[12px] font-[600] mt-1">border</div><div class="sg-code">#D2D8E0</div></div>
+     <div><div class="h-14 rounded-[12px] bg-green-500"></div><div class="text-[12px] font-[600] mt-1">LINE</div><div class="sg-code">bg-green-500 · #22C55E</div></div>`;
+  document.getElementById('type-scale').innerHTML = [
+    ['26 / 700', 'text-[26px] font-[700]', '1,250 คอยน์'], ['24 / 700', 'text-[24px] font-[700]', 'หัวข้อหน้า charmiss club'],
+    ['18 / 700', 'text-[18px] font-[700] text-dark', 'หัวข้อ section · ภารกิจ'], ['16 / 700', 'text-[16px] font-[700]', 'หัวข้อการ์ด'],
+    ['16 / 600', 'text-[16px] font-semibold', 'ข้อความปุ่ม · ป้ายกำกับฟอร์ม'], ['14 / 600', 'text-[14px] font-[600]', 'ชื่อรายการ'],
+    ['14 / 400', 'text-[14px] font-[400]', 'ข้อความทั่วไป ข้าพเจ้ายินยอมตามข้อตกลงและเงื่อนไข'],
+    ['12 / 400', 'text-[12px] font-[400] text-gray', 'คำอธิบาย · ระยะเวลาการใช้คูปอง'], ['10 / 600', 'text-[10px] font-[600]', 'BADGE · ป้ายเล็ก'],
+  ].map(([s, c, t]) => `<div class="flex items-baseline gap-4 py-2"><span class="w-16 shrink-0 text-[11px] text-gray">${s}</span><span class="${c} flex-1">${t}</span><span class="sg-code hidden md:block w-64 text-right">${c}</span></div>`).join('');
+  document.getElementById('spacing').innerHTML = [4, 8, 12, 16, 24, 32].map(n =>
+    `<div class="flex items-center gap-3 text-[12px]"><span class="w-10 text-gray">${n}px</span><span class="h-3 bg-secondary rounded-sm" style="width:${n * 3}px"></span></div>`).join('');
+  const vw = () => document.getElementById('vw').textContent = innerWidth + 'px';
+  vw(); addEventListener('resize', vw);
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "hist.earned_platform": "คุณได้รับ {{points}} คะแนน จากการซื้อ {{product}} ผ่าน {{platform}}\nเลขที่คำสั่งซื้อ {{order}}",
+  "hist.earned_product_code": "คุณได้รับ {{points}} คะแนน จากรหัสสินค้า {{code}}",
+  "hist.earned_qr": "คุณได้รับ {{points}} คะแนน จากการสแกนคิวอาร์โค้ด {{code}}",
+  "hist.earned_receipt": "คุณได้รับ {{points}} คะแนน จากเลขที่ใบเสร็จ {{code}}",
+  "hist.src_coupon": "คูปอง",
+  "hist.src_mission": "ภารกิจ",
+  "hist.src_privilege": "สิทธิพิเศษ",
+  "hist.src_product_code": "รหัสสินค้า",
+  "hist.src_receipt": "ใบเสร็จ",
+  "hist.src_reward": "แลกรางวัล",
+  "hist.used_points": "คุณใช้ {{points}} คะแนน แลก {{name}}",
+  "hist.used_points_discount": "คุณใช้ {{points}} คะแนน แลก คูปองส่วนลด ฿{{discount}}"
+}

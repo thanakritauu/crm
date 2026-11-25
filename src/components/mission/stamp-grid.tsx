@@ -1,0 +1,30 @@
+import { For } from "solid-js";
+import { cn } from "~/lib/utils";
+import { IconCheck } from "~/components/ui/icons";
+
+/** ตารางแสตมป์ของภารกิจแบบ stamp — ดวงที่ได้แล้วเป็นสี primary พร้อมเครื่องหมายถูก */
+export function StampGrid(props: { progress: number; target: number }) {
+  const slots = () => Array.from({ length: props.target }, (_, i) => i < props.progress);
+  return (
+    <div class="grid grid-cols-5 gap-2 rounded-2xl bg-primary-surface/50 p-4">
+      <For each={slots()}>
+        {(filled, i) => (
+          <div class="flex flex-col items-center gap-y-1">
+            <div
+              class={cn(
+                "flex aspect-square w-full max-w-[52px] items-center justify-center rounded-full border-2 text-14 font-semibold",
+                filled ? "border-primary bg-primary text-white" : "border-dashed border-primary/40 bg-white text-primary/50",
+              )}
+            >
+              {filled ? (
+                <IconCheck size={20} strokeWidth={2.5} />
+              ) : (
+                i() + 1
+              )}
+            </div>
+          </div>
+        )}
+      </For>
+    </div>
+  );
+}

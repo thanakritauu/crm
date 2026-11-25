@@ -1,0 +1,23 @@
+{
+  "otp.expired_description": "This OTP is no longer valid. Please request a new code to continue.",
+  "otp.expired_title": "OTP expired",
+  "otp.invalid_inline": "Incorrect OTP",
+  "otp.locked_description": "You have entered an incorrect OTP 3 times. Please start again.",
+  "otp.locked_title": "Verification failed",
+  "otp.merge_cancel": "Cancel",
+  "otp.merge_confirm": "Merge accounts",
+  "otp.merge_description": "Do you want to merge the account using {{phone}} with this LINE account?",
+  "otp.merge_guest_cancel": "No thanks",
+  "otp.merge_guest_confirm": "Log in",
+  "otp.merge_guest_description": "Do you want to log in with your LINE account?",
+  "otp.merge_guest_title": "Existing LINE account found",
+  "otp.merge_title": "Existing LINE account found",
+  "otp.otp_mock_hint": "Mock OTP: 000000 = wrong (3 times = locked), 111111 = expired, others = pass",
+  "otp.phone_mock_hint": "Mock phones: 0900000000 = first OTP send fails, 0811111111 = already registered (register), 0000000000 = not a member (sign in)",
+  "otp.phone_not_member": "This number is not a member yet",
+  "otp.phone_registered_description": "This phone number is already registered. Please sign in or use a different number to register.",
+  "otp.phone_registered_title": "Number already registered",
+  "otp.request_again": "Request a new code",
+  "otp.send_failed_description": "Please tap to request a new OTP.",
+  "otp.send_failed_title": "Failed to send OTP"
+}

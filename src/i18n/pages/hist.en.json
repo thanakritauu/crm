@@ -1,0 +1,14 @@
+{
+  "hist.earned_platform": "Earned {{points}} points for buying {{product}} on {{platform}}\nOrder number {{order}}",
+  "hist.earned_product_code": "Earned {{points}} points from product code {{code}}",
+  "hist.earned_qr": "Earned {{points}} points from QR code {{code}}",
+  "hist.earned_receipt": "Earned {{points}} points from receipt number {{code}}",
+  "hist.src_coupon": "Coupon",
+  "hist.src_mission": "Mission",
+  "hist.src_privilege": "Privilege",
+  "hist.src_product_code": "Product code",
+  "hist.src_receipt": "Receipt",
+  "hist.src_reward": "Reward",
+  "hist.used_points": "Used {{points}} points for {{name}}",
+  "hist.used_points_discount": "Used {{points}} points for a ฿{{discount}} discount coupon"
+}

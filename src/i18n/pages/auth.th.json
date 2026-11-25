@@ -1,0 +1,15 @@
+{
+  "auth.available": "ใช้ได้",
+  "auth.close_popup": "ปิดหน้าต่างนี้",
+  "auth.guest_mission_desc": "เข้าสู่ระบบหรือลงทะเบียนเพื่อสะสมแต้มแลกรางวัล",
+  "auth.guest_mission_title": "รับสิทธิพิเศษเฉพาะสมาชิก 🎁",
+  "auth.guest_vs_member_link": "ความต่างระหว่าง Guest กับ Member",
+  "auth.hello_guest": "สวัสดี ยินดีต้อนรับ",
+  "auth.later": "ไว้ภายหลัง",
+  "auth.member_only_desc": "สมัครสมาชิกเพื่อแลกของรางวัล ใช้คูปอง เชื่อมต่อแพลตฟอร์มออนไลน์ และรับสิทธิพิเศษอีกมากมาย",
+  "auth.member_only_title": "สิทธิพิเศษเฉพาะสมาชิก",
+  "auth.mobile_number": "เบอร์มือถือ",
+  "auth.not_available": "ใช้ไม่ได้",
+  "auth.select_method": "เลือกวิธีการเข้าสู่ระบบ/สมัครสมาชิก",
+  "auth.sign_up_now": "สมัครเลย"
+}

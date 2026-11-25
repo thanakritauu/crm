@@ -1,0 +1,11 @@
+node_modules
+dist
+.vinxi
+.output
+.DS_Store
+
+# env / local settings
+.env
+.env.*
+.claude/settings.local.json
+.vercel

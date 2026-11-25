@@ -1,0 +1,37 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "prototype",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "styleguide-static",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4100",
+        "--directory",
+        "docs/styleguide"
+      ],
+      "port": 4100
+    },
+    {
+      "name": "prototype-3100",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "vinxi",
+        "dev",
+        "--port",
+        "3100"
+      ],
+      "port": 3100
+    }
+  ]
+}
