@@ -116,8 +116,8 @@ export default function Home() {
 
       {/* แบนเนอร์ */}
       <div class="relative mt-6 px-4">
-        {/* สไลด์แบนเนอร์ 2:1 · รูปจริงจากเจ้าของ (2400×1200 → ย่อ 1200×600 jpg) public/images/home/slide-1..4.jpg — 2026-11-25 · slide-2 (Playground) ขึ้นก่อน */}
-        <BannerCarousel images={[2, 1, 3, 4].map((n) => `/images/home/slide-${n}.jpg`)} />
+        {/* สไลด์แบนเนอร์ 2:1 · รูปจริงจากเจ้าของ (2400×1200 → ย่อ 1200×600 jpg) public/images/home/slide-1..4.jpg — 2026-11-25 */}
+        <BannerCarousel images={[1, 2, 3, 4].map((n) => `/images/home/slide-${n}.jpg`)} />
       </div>
 
       {/* ภารกิจสะสมคอยน์ (ก่อนส่วนแลกสินค้า) */}
