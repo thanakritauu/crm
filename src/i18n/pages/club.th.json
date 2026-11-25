@@ -25,5 +25,12 @@
   "club.your_points": "คะแนนของคุณ",
   "club.history": "ประวัติ",
   "club.balance": "คงเหลือ",
-  "club.this_mission_coins": "คอยน์ของภารกิจนี้"
+  "club.this_mission_coins": "คอยน์ของภารกิจนี้",
+  "club.coins_is_now": "คอยน์ของคุณเป็นปัจจุบันแล้ว",
+  "club.refresh_coins": "อัปเดตคอยน์",
+  "club.points_is_now": "คะแนนของคุณเป็นปัจจุบันแล้ว",
+  "club.points_updated": "อัปเดตคะแนนสำเร็จ",
+  "club.connect_for_auto_points": "เชื่อมต่อแพลตฟอร์มออนไลน์ เพื่อรับคะแนนจากคำสั่งซื้ออัตโนมัติ",
+  "club.no_new_platform_orders": "ไม่มีคำสั่งซื้อใหม่จากแพลตฟอร์มออนไลน์",
+  "club.new_platform_orders": "พบคำสั่งซื้อใหม่ {{count}} รายการ"
 }

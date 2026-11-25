@@ -8,26 +8,44 @@ import { cn, delay, formatNumber } from "~/lib/utils";
 import { earnService } from "~/services/earn-service";
 
 /**
- * ปุ่มไอคอน "กดเพื่ออัปเดตคะแนนจากแพลตฟอร์มออนไลน์" — มุมขวาบนของหน้าเชื่อมต่อแพลตฟอร์มออนไลน์ บรรทัดเดียวกับชื่อหน้า
- * (เดิมการ์ดในหน้าสะสมคะแนน → การ์ดล่างสุดหน้านี้ → ไอคอนบนหัวหน้า)
- * ผล: มีคำสั่งซื้อใหม่ = ได้คะแนน · ไม่มี = คะแนนเป็นปัจจุบันแล้ว · ยังไม่เชื่อมต่อ = แจ้งให้เชื่อมต่อจากการ์ดด้านบน
+ * ปุ่มอัปเดตยอด — ใช้ร่วมกัน
+ * - unit "points" (ค่าเริ่มต้น): อัปเดตคะแนนจากแพลตฟอร์มออนไลน์ — หัวข้อผลลัพธ์ต่างกันตามจุดที่กด
+ *     หน้าแรก (inline): "อัปเดตคะแนนสำเร็จ คุณได้รับ X" · "คะแนนของคุณเป็นปัจจุบันแล้ว" (ยังไม่เชื่อมต่อ = ชวนเชื่อมต่อในคำอธิบาย)
+ *     หน้าเชื่อมต่อแพลตฟอร์ม (header): "พบคำสั่งซื้อใหม่ N รายการ คุณได้รับ X" · "ไม่มีคำสั่งซื้อใหม่จากแพลตฟอร์มออนไลน์" · ยังไม่เชื่อมต่อ = error
+ * - unit "coins": ดึงยอดคอยน์ล่าสุด → "คอยน์ของท่านเป็นปัจจุบันแล้ว · X คอยน์" (คอยน์ได้จากภารกิจ ไม่มีแหล่งให้ซิงค์)
+ * variant
+ * - header: วงกลมขาว 40px + เงา (มุมขวาบนหน้าเชื่อมต่อแพลตฟอร์ม — แบบเดียวกับกระดิ่งหน้าแรก)
+ * - inline: ไอคอน 16px มุมขวาบนของการ์ดคะแนน/คอยน์หน้าแรก แทน ">" (พื้นที่กด 40px · อยู่เหนือลิงก์ของการ์ด)
  */
-export function PlatformRefreshButton(props: { class?: string }) {
+export function PlatformRefreshButton(props: { class?: string; unit?: "points" | "coins"; variant?: "header" | "inline" }) {
   const { t } = useI18n();
   const [loading, setLoading] = createSignal(false);
   const [result, setResult] = createSignal<{ variant: "success" | "error"; title: string; description?: string } | null>(null);
+  const coins = () => props.unit === "coins";
 
-  const refresh = async () => {
+  const refresh = async (e: MouseEvent) => {
+    // อยู่ในการ์ดที่ทั้งใบเป็นลิงก์ → ไม่ให้คลิกทะลุไปเปิดหน้าอื่น
+    e.preventDefault();
+    e.stopPropagation();
     setLoading(true);
     await delay(900);
     setLoading(false);
+    // หัวข้อผลลัพธ์แยกตามจุดที่กด: คอยน์ (หน้าแรก) · คะแนน (หน้าแรก) · หัวหน้าเชื่อมต่อแพลตฟอร์ม
+    if (coins()) return setResult({ variant: "success", title: t("club.coins_is_now"), description: t("mis.coins_amount", { coins: formatNumber(session.customer.coins) }) });
+    const home = props.variant === "inline";
+    const total = t("core.total_points_amount", { points: formatNumber(session.customer.points) });
     const r = earnService.syncPlatforms();
-    if (r.status === "not_connected") return setResult({ variant: "error", title: t("core.platform_not_connected_title"), description: t("core.platform_not_connected_desc") });
+    if (r.status === "not_connected")
+      return home
+        ? setResult({ variant: "success", title: t("club.points_is_now"), description: `${total}\n${t("club.connect_for_auto_points")}` })
+        : setResult({ variant: "error", title: t("core.platform_not_connected_title"), description: t("core.platform_not_connected_desc") });
     if (r.status === "up_to_date")
-      return setResult({ variant: "success", title: t("dialog.refresh_point.points_is_now"), description: t("core.total_points_amount", { points: formatNumber(session.customer.points) }) });
+      return setResult({ variant: "success", title: home ? t("club.points_is_now") : t("club.no_new_platform_orders"), description: total });
     setResult({
       variant: "success",
-      title: `${t("dialog.refresh_point.update_point_success")}\n${t("dialog.refresh_point.you_received")} ${t("core.points_amount", { points: r.points })}`,
+      title: home
+        ? `${t("club.points_updated")}\n${t("dialog.refresh_point.you_received")} ${t("core.points_amount", { points: r.points })}`
+        : `${t("club.new_platform_orders", { count: r.orders.length })}\n${t("dialog.refresh_point.you_received")} ${t("core.points_amount", { points: r.points })}`,
       description: t("core.from_orders_total", {
         count: r.orders.length,
         platforms: r.orders.map((o) => o.platform).join(", "),
@@ -39,9 +57,18 @@ export function PlatformRefreshButton(props: { class?: string }) {
   return (
     <>
       <PageLoading show={loading()} message={t("common.loading")} />
-      {/* ไอคอนรีเฟรชมุมขวาบน — วงกลมขาว 40px + เงา แบบเดียวกับกระดิ่งแจ้งเตือนหน้าแรก (NotificationBell) */}
-      <button type="button" onClick={refresh} class={cn("flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-dark shadow-card", props.class)} aria-label={t("core.refresh_platform_points")}>
-        <IconRefresh size={24} />
+      <button
+        type="button"
+        onClick={refresh}
+        class={cn(
+          props.variant === "inline"
+            ? "hit-area relative z-raised flex shrink-0 items-center justify-center"
+            : "flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-dark shadow-card",
+          props.class,
+        )}
+        aria-label={coins() ? t("club.refresh_coins") : t("core.refresh_platform_points")}
+      >
+        <IconRefresh size={props.variant === "inline" ? 16 : 24} />
       </button>
       <ResultModal
         open={!!result()}

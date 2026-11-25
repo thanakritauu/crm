@@ -25,5 +25,12 @@
   "club.your_points": "Your points",
   "club.history": "History",
   "club.balance": "Balance",
-  "club.this_mission_coins": "This mission's coins"
+  "club.this_mission_coins": "This mission's coins",
+  "club.coins_is_now": "Your coins are up to date",
+  "club.refresh_coins": "Refresh coins",
+  "club.points_is_now": "Your points are up to date",
+  "club.points_updated": "Points updated",
+  "club.connect_for_auto_points": "Connect an online platform to earn points from orders automatically",
+  "club.no_new_platform_orders": "No new orders from online platforms",
+  "club.new_platform_orders": "{{count}} new orders found"
 }

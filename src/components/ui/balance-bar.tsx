@@ -8,6 +8,7 @@ import { session } from "~/lib/session";
 import { usePartnerPath } from "~/lib/theme";
 import { cn, formatNumber } from "~/lib/utils";
 import { pointsExpire } from "~/prototype/settings";
+import { PlatformRefreshButton } from "~/components/platform/platform-refresh-button";
 import { expiringPoints } from "~/services/history-service";
 
 /**
@@ -58,6 +59,8 @@ function BalanceBody(props: {
   hint?: string;
   /** อยู่บนพื้นชมพูเข้ม (แบบ B) → ตัวอักษรทั้งหมดสีขาว */
   onBrand?: boolean;
+  /** ไอคอนรีเฟรชแทน ">" มุมขวา (การ์ดหน้าแรก) — ไม่มีลิงก์ประวัติ */
+  refresh?: boolean;
 }) {
   const { t } = useI18n();
   const to = usePartnerPath();
@@ -72,7 +75,11 @@ function BalanceBody(props: {
           <BalanceIcon unit={props.unit} size={16} />
           <span class={cn("truncate text-12", props.onBrand ? "text-white" : "text-gray")}>{props.label ?? t(coins() ? "club.your_coins" : "club.your_points")}</span>
         </span>
-        <Show when={props.history !== false}>
+        {/* การ์ดหน้าแรก: ไอคอนรีเฟรชแทน ">" ตำแหน่งเดียวกัน (กดแล้วอัปเดตยอดทันที) · อื่นๆ: ">" = ประวัติ */}
+        <Show when={props.refresh}>
+          <PlatformRefreshButton variant="inline" unit={props.unit} class={props.onBrand ? "text-white" : "text-gray"} />
+        </Show>
+        <Show when={props.history !== false && !props.refresh}>
           {/* ">" = ประวัติของสกุลนั้น (ตัวแถบพาไปแลกรางวัล/ภารกิจ) — ตัดสินใจ 2026-11-23 */}
           <A
             href={to(HISTORY[props.unit])}
@@ -174,6 +181,10 @@ export function BalanceSplit(props: {
   class?: string;
   /** pink = พื้นชมพูอ่อน (แบบ A) · brand = พื้นชมพูเข้มทึบ ตัวอักษรขาว (แบบ B — สีคะแนน/คอยน์เหมือนกัน เหลือไอคอน P/C แยก) */
   tone?: "white" | "pink" | "brand";
+  /** ไอคอนรีเฟรชแทน ">" ทั้งคะแนนและคอยน์ (หน้าแรก) */
+  refresh?: boolean;
+  /** ปลายทางเมื่อแตะฝั่งคะแนน (ค่าเริ่มต้น: แลกรางวัล) — หน้าแรกใช้ "earn" (สะสมคะแนน) */
+  pointsHref?: string;
 }) {
   const { t } = useI18n();
   const pink = () => props.tone === "pink";
@@ -183,8 +194,8 @@ export function BalanceSplit(props: {
   return (
     <div class={cn(cardClass, "flex flex-col text-left", pink() && "bg-primary-surface", brand() && "bg-primary", props.class)}>
       <div class={cn("grid grid-cols-2 divide-x", pink() ? "divide-white" : brand() ? "divide-white/30" : "divide-stroke")}>
-        <BalanceBody unit="points" amount={session.customer.points} label={t("club.your_points")} hint={t("club.points_how")} size={props.size ?? "md"} onBrand={brand()} />
-        <BalanceBody unit="coins" amount={session.customer.coins} label={t("club.your_coins")} hint={t("club.coins_how")} size={props.size ?? "md"} onBrand={brand()} />
+        <BalanceBody unit="points" amount={session.customer.points} label={t("club.your_points")} hint={t("club.points_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} href={props.pointsHref} />
+        <BalanceBody unit="coins" amount={session.customer.coins} label={t("club.your_coins")} hint={t("club.coins_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} />
       </div>
       <ExpiringLine onBrand={brand()} />
     </div>

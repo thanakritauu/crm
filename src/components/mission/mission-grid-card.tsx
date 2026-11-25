@@ -52,20 +52,20 @@ export function MissionGridCard(props: { mission: Mission }) {
             <Progress value={m().progress} max={m().target} />
           </div>
         </Show>
-        {/* คอยน์: ภารกิจสะสมคอยน์ = คอยน์ของภารกิจนั้น (แยกจากยอดรวม) · ภารกิจอื่น = คอยน์ที่จะได้เมื่อสำเร็จ */}
+        {/* คอยน์: ภารกิจสะสมคอยน์ = คอยน์ของภารกิจนั้น (แยกจากยอดรวม) · ภารกิจอื่น = คอยน์ที่จะได้เมื่อสำเร็จ · ขนาดเท่าราคา "ใช้ X คะแนน" ในการ์ดรางวัล (ไอคอน 16 · 14/Medium) */}
         <Show
           when={m().type === "coin"}
           fallback={
             <Show when={m().reward_coins > 0}>
-              <p class="mt-2 flex items-center gap-1 text-12 font-medium text-teriary">
-                <CoinIcon size={14} />
+              <p class="mt-2 flex items-center gap-1 text-14 font-medium text-teriary">
+                <CoinIcon size={16} />
                 {t("club.mission_reward_coins", { coins: m().reward_coins })}
               </p>
             </Show>
           }
         >
-          <p class="mt-2 flex items-center gap-1 text-12 font-medium text-teriary">
-            <CoinIcon size={14} />
+          <p class="mt-2 flex items-center gap-1 text-14 font-medium text-teriary">
+            <CoinIcon size={16} />
             {t("club.mission_reward_coins", { coins: m().coin_balance ?? 0 })}
           </p>
         </Show>
