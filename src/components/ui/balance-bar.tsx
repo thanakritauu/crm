@@ -90,7 +90,8 @@ function BalanceBody(props: {
       <span class="flex items-center justify-between gap-2">
         <span class="flex min-w-0 items-center gap-1">
           <BalanceIcon unit={props.unit} size={16} />
-          <span class={cn("truncate text-12 font-medium", props.onBrand ? "text-white" : "text-gray")}>{props.label ?? t(coins() ? "club.your_coins" : "club.your_points")}</span>
+          {/* "คะแนนของคุณ / คอยน์ของคุณ" สีดำ ขนาดเท่าคำว่า "คะแนน" ข้างตัวเลข (14/Medium — 2026-11-26) */}
+          <span class={cn("truncate text-14 font-medium", props.onBrand ? "text-white" : "text-dark")}>{props.label ?? t(coins() ? "club.your_coins" : "club.your_points")}</span>
         </span>
         {/* การ์ดหน้าแรก: ไอคอนรีเฟรชแทน ">" ตำแหน่งเดียวกัน (กดแล้วอัปเดตยอดทันที) · อื่นๆ: ">" = ประวัติ */}
         <Show when={props.refresh}>

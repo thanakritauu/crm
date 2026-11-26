@@ -19,7 +19,7 @@ import { missionService } from "~/services/mission-service";
 import { missionCollectKey } from "~/components/mission/mission-status";
 import { cardClass } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
-import { IconCamera, IconChevronRight, IconEdit, IconReceipt, IconRefresh, IconScanner, IconSmartphone } from "~/components/ui/icons";
+import { IconCamera, IconEdit, IconReceipt, IconRefresh, IconScanner, IconSmartphone } from "~/components/ui/icons";
 
 /**
  * /:partner/point-collection — สะสมคะแนน (Figma "Earn Point" 589:3670)
@@ -165,28 +165,25 @@ export default function EarnPoint() {
           )}
         </Show>
 
-        {/* เชื่อมต่อแพลตฟอร์มออนไลน์ = ช่องทางแนะนำ → การ์ดเต็มความกว้างบนสุด (2026-11-26 · เดิมเป็นช่องแรกในตาราง)
-            ป้าย "แนะนำ" สีเขียวมุมซ้ายบนติดขอบ (แบบป้ายสถานะการ์ดภารกิจ) · พื้นชมพูอ่อน ตัวเข้ม/เทา · ไอคอนวงขาว + ชื่อ 14/Medium + คำอธิบาย 14 + ">" · ไม่แสดงในโหมดภารกิจ */}
+        {/* เชื่อมต่อแพลตฟอร์มออนไลน์ = ช่องทางแนะนำ → การ์ดเต็มความกว้างบนสุด (2026-11-26)
+            DSL เดียวกับการ์ด LINE Shopping ในหน้าเชื่อมต่อแพลตฟอร์ม: การ์ดขาว ขอบชมพู 2px · ริบบิ้นชมพูเต็มความกว้างบนสุด (14/Medium ตัวขาว)
+            · ไอคอน + หัวข้อ 14/Semibold + รายละเอียด 14 สีเทา บรรทัดเดียวกัน (ไม่มีปุ่ม) · ไม่แสดงในโหมดภารกิจ */}
         <Show when={!mission()}>
           <button
             type="button"
             onClick={() => choose("platform")}
-            class="relative flex w-full items-center gap-4 rounded-2xl bg-primary-surface px-4 pb-4 pt-8 text-left transition active:scale-[0.98]"
+            class={cn(cardClass, "flex w-full flex-col gap-4 overflow-hidden border-2 border-primary p-4 text-left transition active:scale-[0.98]")}
           >
-            {/* ป้าย "แนะนำ" สีเขียว (ลองพื้นชมพูอ่อน + ป้ายเขียว — 2026-11-26) */}
-            <span class="absolute left-0 top-0 rounded-r-lg rounded-tl-2xl bg-success px-2 py-1 text-12 font-medium text-white">{t("core.recommended")}</span>
-            <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-white">
-              <IconSmartphone size={24} class="text-primary" />
-            </span>
-            <span class="flex min-w-0 flex-1 flex-col gap-1">
-              {/* ขนาดตัวอักษรเท่าการ์ดช่องทางอื่นในหน้านี้ (14/Medium) */}
-              {/* ">" อยู่บรรทัดเดียวกับชื่อ (ชิดขวา) — 2026-11-26 */}
-              <span class="flex items-center justify-between gap-2">
-                <span class="text-14 font-medium text-dark">{t("platform.connect_platform")}</span>
-                <IconChevronRight size={16} class="shrink-0 text-gray" />
+            <span class="-mx-4 -mt-4 block bg-primary px-4 py-2 text-14 font-medium text-white">{t("club.connect_card_ribbon")}</span>
+            {/* ไอคอน + ข้อความบรรทัดเดียวกัน (ไม่มีปุ่ม "เชื่อมต่อ" — ทั้งการ์ดกดได้ · 2026-11-26) */}
+            <span class="flex items-start gap-4">
+              <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-surface">
+                <IconSmartphone size={24} class="text-primary" />
               </span>
-              {/* 14 เท่าคำอธิบายในหน้าเชื่อมต่อแพลตฟอร์ม ("เชื่อมต่อบัญชี Shopee ของคุณ…") */}
-              <span class="text-14 text-gray">{t("club.connect_card_desc")}</span>
+              <span class="flex min-w-0 flex-1 flex-col gap-1">
+                <span class="text-14 font-semibold text-dark">{t("platform.connect_platform")}</span>
+                <span class="text-14 text-gray">{t("club.connect_card_desc")}</span>
+              </span>
             </span>
           </button>
         </Show>
