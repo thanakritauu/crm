@@ -16,11 +16,14 @@ const [showTierCard, setShowTierCardSignal] = createSignal(true);
 const [showWelcome, setShowWelcomeSignal] = createSignal(true);
 /** homeDark: หน้าแรกพื้นหลังชมพูเข้ม + การ์ดคะแนน|คอยน์สีขาว (ปิด = พื้นชมพูอ่อน + การ์ดชมพูเข้มแบบเดิม) — ทดลอง 2026-11-26 */
 const [homeDark, setHomeDarkSignal] = createSignal(true);
-export { homeDark, outsideLine, pointsExpire, showTierCard, showWelcome, tierSystem };
+/** homeBalance: การ์ดยอดหน้าแรกแสดง ทั้งคะแนนและคอยน์ (both) / คะแนนอย่างเดียว / คอยน์อย่างเดียว — 2026-11-26 */
+export type HomeBalance = "both" | "points" | "coins";
+const [homeBalance, setHomeBalanceSignal] = createSignal<HomeBalance>("both");
+export { homeBalance, homeDark, outsideLine, pointsExpire, showTierCard, showWelcome, tierSystem };
 
 function save() {
   try {
-    localStorage.setItem(KEY, JSON.stringify({ pointsExpire: pointsExpire(), outsideLine: outsideLine(), tierSystem: tierSystem(), showTierCard: showTierCard(), showWelcome: showWelcome(), homeDark: homeDark() }));
+    localStorage.setItem(KEY, JSON.stringify({ pointsExpire: pointsExpire(), outsideLine: outsideLine(), tierSystem: tierSystem(), showTierCard: showTierCard(), showWelcome: showWelcome(), homeDark: homeDark(), homeBalance: homeBalance() }));
   } catch {
     /* ignore */
   }
@@ -36,6 +39,7 @@ export function restorePrototypeSettings() {
     setShowTierCardSignal(s.showTierCard !== false);
     setShowWelcomeSignal(s.showWelcome !== false);
     setHomeDarkSignal(s.homeDark !== false);
+    setHomeBalanceSignal(s.homeBalance === "points" || s.homeBalance === "coins" ? s.homeBalance : "both");
   } catch {
     /* ignore */
   }
@@ -77,5 +81,10 @@ export function welcomeEnabled() {
 
 export function setHomeDark(v: boolean) {
   setHomeDarkSignal(v);
+  save();
+}
+
+export function setHomeBalance(v: HomeBalance) {
+  setHomeBalanceSignal(v);
   save();
 }

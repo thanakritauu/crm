@@ -220,6 +220,8 @@ export function BalanceSplit(props: {
   countUp?: boolean;
   /** false = ไม่มี ">" ประวัติ (หน้าแรก: อัปเดตด้วยปุ่มรีเฟรชข้างกระดิ่งแทน) */
   history?: boolean;
+  /** แสดงสกุลเดียว (หน้าแรก — ตัวเลือก prototype) · ไม่ใส่ = ทั้งคะแนนและคอยน์ */
+  only?: "points" | "coins";
 }) {
   const { t } = useI18n();
   const pink = () => props.tone === "pink";
@@ -228,11 +230,18 @@ export function BalanceSplit(props: {
   // สีตัวอักษรคงเดิมทั้งสองโทน: คะแนนชมพู · คอยน์ส้ม · ป้าย/วิธีได้สีเทา → ยังแยกสองสกุลได้ชัด
   return (
     <div class={cn(cardClass, "flex flex-col text-left", pink() && "bg-primary-surface", brand() && "bg-primary", props.class)}>
-      <div class={cn("grid grid-cols-2 divide-x", pink() ? "divide-white" : brand() ? "divide-white/30" : "divide-stroke")}>
-        <BalanceBody unit="points" amount={session.customer.points} label={t("club.your_points")} hint={t("club.points_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} href={props.pointsHref} countUp={props.countUp} history={props.history} />
-        <BalanceBody unit="coins" amount={session.customer.coins} label={t("club.your_coins")} hint={t("club.coins_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} countUp={props.countUp} history={props.history} />
+      {/* only = สกุลเดียวเต็มความกว้าง · ไม่ใส่ = 2 คอลัมน์ คะแนน | คอยน์ */}
+      <div class={cn("grid divide-x", props.only ? "grid-cols-1" : "grid-cols-2", pink() ? "divide-white" : brand() ? "divide-white/30" : "divide-stroke")}>
+        <Show when={props.only !== "coins"}>
+          <BalanceBody unit="points" amount={session.customer.points} label={t("club.your_points")} hint={t("club.points_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} href={props.pointsHref} countUp={props.countUp} history={props.history} />
+        </Show>
+        <Show when={props.only !== "points"}>
+          <BalanceBody unit="coins" amount={session.customer.coins} label={t("club.your_coins")} hint={t("club.coins_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} countUp={props.countUp} history={props.history} />
+        </Show>
       </div>
-      <ExpiringLine onBrand={brand()} />
+      <Show when={props.only !== "coins"}>
+        <ExpiringLine onBrand={brand()} />
+      </Show>
     </div>
   );
 }

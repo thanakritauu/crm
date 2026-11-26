@@ -23,7 +23,7 @@ import type { Privilege } from "~/mocks/privileges";
 import { missionService } from "~/services/mission-service";
 import { privilegeService } from "~/services/privilege-service";
 import { tierStatus } from "~/services/tier-service";
-import { homeDark, showTierCard, tierSystem } from "~/prototype/settings";
+import { homeBalance, homeDark, showTierCard, tierSystem } from "~/prototype/settings";
 
 /**
  * /:partner/home — หน้าแรกสมาชิก (โครงแบบ Okya · token ตาม Figma Charmiss)
@@ -72,6 +72,11 @@ export default function Home() {
   const [welcome, setWelcome] = createSignal(false);
   // ทดลองดีไซน์ (2026-11-26): พื้นชมพูเข้ม + การ์ดขาว — สลับได้จากเมนู prototype
   const isDark = () => homeDark();
+  // การ์ดยอด: "both" = คะแนน | คอยน์ · "points" / "coins" = สกุลเดียว (เมนู prototype)
+  const balanceOnly = () => {
+    const v = homeBalance();
+    return v === "both" ? undefined : v;
+  };
   onMount(() => {
     // สมาชิกใหม่เห็นเสมอ · คนอื่นเห็นครั้งเดียวต่อการเปิดแอป จนกว่าจะติ๊ก "ไม่ต้องแสดงอีก"
     setWelcome(!!location.state?.new_member || (session.isMember && shouldShowWelcome()));
@@ -138,7 +143,8 @@ export default function Home() {
           {/* ระดับสมาชิก = การ์ดขาวสอดอยู่ใต้การ์ดชมพู (ชมพูทับขอบบน 16px — ตัดสินใจ 2026-11-25) · เปิด/ปิดได้จากเมนู prototype */}
           <div class="flex flex-col">
             {/* พื้นชมพูเข้ม → การ์ดขาว (tone white) · พื้นชมพูอ่อน → การ์ดชมพูเข้ม (tone brand) */}
-            <BalanceSplit size="lg" tone={isDark() ? "white" : "brand"} countUp class="relative z-raised" />
+            {/* แสดงทั้งคะแนน|คอยน์ หรือสกุลเดียว — สลับได้จากเมนู prototype (homeBalance) */}
+            <BalanceSplit size="lg" tone={isDark() ? "white" : "brand"} countUp only={balanceOnly()} class="relative z-raised" />
             <Show when={tierSystem() && showTierCard()}>
               <TierRow />
             </Show>

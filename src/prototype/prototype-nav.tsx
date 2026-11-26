@@ -1,7 +1,7 @@
 import { A, useLocation } from "@solidjs/router";
 import { createSignal, For, onMount, Show } from "solid-js";
 import { applyFrameMode } from "~/components/layout/mobile-frame";
-import { outsideLine, pointsExpire, restorePrototypeSettings, setOutsideLine, setPointsExpire, setShowTierCard, setShowWelcome, showTierCard, showWelcome, homeDark, setHomeDark } from "./settings";
+import { outsideLine, pointsExpire, restorePrototypeSettings, setOutsideLine, setPointsExpire, setShowTierCard, setShowWelcome, showTierCard, showWelcome, homeDark, setHomeDark, homeBalance, setHomeBalance } from "./settings";
 import { Dialog as DialogPrimitive } from "@kobalte/core/dialog";
 import { resetSession, session, sessionActions } from "~/lib/session";
 import { customer as mockCustomer } from "~/mocks/customer";
@@ -146,6 +146,30 @@ export function PrototypeNav() {
             <span>ผู้ใช้ไม่มีรูปโปรไฟล์ (หน้าแรก / โปรไฟล์แสดงไอคอนผู้ใช้แทน)</span>
             <ToggleSwitch on={!session.customer.profile_image} />
           </button>
+          {/* การ์ดยอดหน้าแรก: ทั้งคู่ / คะแนน / คอยน์ (2026-11-26) */}
+          <div class="mt-1 rounded-xl px-4 py-2">
+            <p class="text-14 text-dark">การ์ดยอดหน้าแรก</p>
+            <div class="mt-2 flex flex-wrap gap-2">
+              {(
+                [
+                  ["both", "คะแนน + คอยน์"],
+                  ["points", "คะแนนอย่างเดียว"],
+                  ["coins", "คอยน์อย่างเดียว"],
+                ] as const
+              ).map(([value, label]) => (
+                <button
+                  type="button"
+                  class={cn(
+                    "rounded-full border px-4 py-1 text-12 font-medium",
+                    homeBalance() === value ? "border-primary bg-primary text-white" : "border-stroke-strong text-dark hover:border-primary hover:text-primary",
+                  )}
+                  onClick={() => setHomeBalance(value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
           <div class="mt-1 rounded-xl px-4 py-2">
             <p class="text-14 text-dark">คูปองของฉัน (ดู 3 สถานะในหน้าแรก)</p>
             <div class="mt-2 flex flex-wrap gap-2">
