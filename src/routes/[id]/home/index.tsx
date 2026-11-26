@@ -1,6 +1,7 @@
 import { A, useLocation, useNavigate } from "@solidjs/router";
 import { createMemo, createSignal, For, onMount, Show } from "solid-js";
 import { BannerCarousel, type BannerSlide } from "~/components/home/banner-carousel";
+import { CouponExpiringAlert, HomeQuickActions } from "~/components/home/home-shortcuts";
 import { MemberCard } from "~/components/home/member-card";
 import { shouldShowWelcome, WelcomePopup } from "~/components/home/welcome-popup";
 import { BottomNav, BottomNavSpacer } from "~/components/layout/bottom-nav";
@@ -142,6 +143,11 @@ export default function Home() {
               <TierRow />
             </Show>
           </div>
+        </div>
+        {/* ทางลัด (คูปองของฉัน · เชื่อมต่อแพลตฟอร์ม · แลกคะแนนเป็นคูปอง · ประวัติคะแนน) + เตือนคูปองใกล้หมดอายุ (2026-11-26 · การ์ดชวนเชื่อมต่อแพลตฟอร์มเอาออกแล้ว) */}
+        <div class="mt-4 flex flex-col gap-4 px-4">
+          <HomeQuickActions />
+          <CouponExpiringAlert />
         </div>
       </Show>
 

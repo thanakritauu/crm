@@ -13,6 +13,7 @@ import { delay } from "~/lib/utils";
 import { missionService } from "~/services/mission-service";
 import { missionCollectKey } from "~/components/mission/mission-status";
 import { IconAlert } from "~/components/ui/icons";
+import { ConnectPlatformHint } from "~/components/platform/connect-platform-hint";
 
 /**
  * /:partner/point-collection/fill-in/:id — 0 = กรอกเลขที่ใบเสร็จ, 1 = กรอกรหัสสินค้า
@@ -113,6 +114,8 @@ export default function FillIn(props: { kind: "receipt" | "product-code" }) {
         variant={result()?.variant}
         title={result()?.title}
         description={result()?.description}
+        // สะสมคะแนนสำเร็จ (ไม่ใช่โหมดภารกิจ) → ชวนเชื่อมต่อแพลตฟอร์ม
+        extra={result()?.variant === "success" && !mission() ? <ConnectPlatformHint /> : undefined}
         onButton={() => {
           if (result()?.variant === "error") return;
           const m = mission();

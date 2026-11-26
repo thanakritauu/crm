@@ -5,6 +5,7 @@ import { AlertDialog, InfoBox, ResultModal } from "~/components/ui/modal";
 import { BottomNav, BottomNavSpacer } from "~/components/layout/bottom-nav";
 import { PageHeader } from "~/components/layout/page-header";
 import { PlatformRefreshButton } from "~/components/platform/platform-refresh-button";
+import { ConnectPlatformHint } from "~/components/platform/connect-platform-hint";
 import { CoinIcon } from "~/components/mission/coin-icon";
 import { QrScannerScreen } from "~/components/point/qr-scanner-screen";
 import { PageLoading } from "~/components/ui/page-loading";
@@ -18,7 +19,7 @@ import { missionService } from "~/services/mission-service";
 import { missionCollectKey } from "~/components/mission/mission-status";
 import { cardClass } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
-import { IconCamera, IconEdit, IconReceipt, IconRefresh, IconScanner, IconSmartphone } from "~/components/ui/icons";
+import { IconCamera, IconChevronRight, IconEdit, IconReceipt, IconRefresh, IconScanner, IconSmartphone } from "~/components/ui/icons";
 
 /**
  * /:partner/point-collection — สะสมคะแนน (Figma "Earn Point" 589:3670)
@@ -68,7 +69,8 @@ export default function EarnPoint() {
   const mission = createMemo(() => (search.mission ? missionService.get(search.mission) : undefined));
   const [loading, setLoading] = createSignal<string | false>(false);
   const [scanOpen, setScanOpen] = createSignal(false);
-  const [result, setResult] = createSignal<{ variant: "success" | "error"; title: string; description?: string } | null>(null);
+  // connectHint: ส่งใบเสร็จ (ถ่ายรูป) สำเร็จ → ชวนเชื่อมต่อแพลตฟอร์มในป๊อปอัป
+  const [result, setResult] = createSignal<{ variant: "success" | "error"; title: string; description?: string; connectHint?: boolean } | null>(null);
   let fileInput: HTMLInputElement | undefined;
 
   /** โหมดภารกิจ: สะสมให้ภารกิจ แล้วแจ้งผล (missionService.collect ใช้ร่วมกับหน้ากรอกเลข) */
@@ -88,7 +90,7 @@ export default function EarnPoint() {
     await delay(1200);
     setLoading(false);
     if (mission()) return collectForMission();
-    setResult({ variant: "success", title: t("core.receipt_submitted_title"), description: t("core.receipt_review_time") });
+    setResult({ variant: "success", title: t("core.receipt_submitted_title"), description: t("core.receipt_review_time"), connectHint: true });
   };
 
   const QR_ERROR = {
@@ -163,18 +165,40 @@ export default function EarnPoint() {
           )}
         </Show>
 
+        {/* เชื่อมต่อแพลตฟอร์มออนไลน์ = ช่องทางแนะนำ → การ์ดเต็มความกว้างบนสุด (2026-11-26 · เดิมเป็นช่องแรกในตาราง)
+            ป้าย "แนะนำ" สีเหลืองมุมซ้ายบนติดขอบ (แบบป้ายสถานะการ์ดภารกิจ) · พื้นชมพูเข้ม ตัวขาว · ไอคอนวงขาว + ชื่อ 14/Medium + คำอธิบาย 14 + ">" · ไม่แสดงในโหมดภารกิจ */}
+        <Show when={!mission()}>
+          <button
+            type="button"
+            onClick={() => choose("platform")}
+            class="relative flex w-full items-center gap-4 rounded-2xl bg-primary px-4 pb-4 pt-8 text-left transition active:scale-[0.98]"
+          >
+            {/* ป้าย "แนะนำ" สีเหลือง (teriary = Yellow-500 ของ design system) — 2026-11-26 */}
+            <span class="absolute left-0 top-0 rounded-r-lg rounded-tl-2xl bg-teriary px-2 py-1 text-12 font-medium text-white">{t("core.recommended")}</span>
+            <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-white">
+              <IconSmartphone size={24} class="text-primary" />
+            </span>
+            <span class="flex min-w-0 flex-1 flex-col gap-1">
+              {/* ขนาดตัวอักษรเท่าการ์ดช่องทางอื่นในหน้านี้ (14/Medium) */}
+              {/* ">" อยู่บรรทัดเดียวกับชื่อ (ชิดขวา) — 2026-11-26 */}
+              <span class="flex items-center justify-between gap-2">
+                <span class="text-14 font-medium text-white">{t("platform.connect_platform")}</span>
+                <IconChevronRight size={16} class="shrink-0 text-white" />
+              </span>
+              {/* 14 เท่าคำอธิบายในหน้าเชื่อมต่อแพลตฟอร์ม ("เชื่อมต่อบัญชี Shopee ของคุณ…") */}
+              <span class="text-14 text-white">{t("club.connect_card_desc")}</span>
+            </span>
+          </button>
+        </Show>
+
         <div class="grid grid-cols-2 gap-4">
-          <For each={methods.filter((m) => !mission() || (m.id !== "platform" && m.id !== "missions"))}>
+          <For each={methods.filter((m) => m.id !== "platform" && (!mission() || m.id !== "missions"))}>
             {(m) => (
               <button
                 type="button"
                 onClick={() => choose(m.id)}
                 class={cn(cardClass, "relative flex min-w-0 flex-col items-center justify-center gap-2 px-4 py-8 transition active:scale-[0.98]")}
               >
-                {/* เชื่อมต่อแพลตฟอร์มออนไลน์ = ช่องทางแนะนำ — ป้ายแบบเดียวกับสถานะบนการ์ดภารกิจ (มุมซ้ายบน ติดขอบ) สีเขียว (2026-11-25) */}
-                <Show when={m.id === "platform"}>
-                  <span class="absolute left-0 top-0 rounded-r-lg rounded-tl-2xl bg-success px-2 py-1 text-12 font-medium text-white">{t("core.recommended")}</span>
-                </Show>
                 {/* สะสมคอยน์ = เหรียญ C สีเหลืองเต็มวง 40px (ไม่มีวงชมพู) · การ์ดอื่น = ไอคอนชมพูในวงชมพูอ่อน */}
                 <Show
                   when={m.id === "missions"}
@@ -217,6 +241,7 @@ export default function EarnPoint() {
         variant={result()?.variant}
         title={result()?.title}
         description={result()?.description}
+        extra={result()?.connectHint ? <ConnectPlatformHint /> : undefined}
         onButton={() => {
           const m = mission();
           if (m && result()?.variant !== "error") navigate(to(`missions/${m.id}`));

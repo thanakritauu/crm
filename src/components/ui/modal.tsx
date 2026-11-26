@@ -56,6 +56,8 @@ export function ResultModal(props: {
   onButton?: () => void;
   /** ไอคอนแทนเครื่องหมายถูก/กากบาท (เช่น ของขวัญตาม Figma) */
   icon?: JSX.Element;
+  /** เนื้อหาเพิ่มใต้คำอธิบาย เหนือปุ่ม (เช่น ชวนเชื่อมต่อแพลตฟอร์ม) */
+  extra?: JSX.Element;
 }) {
   const ok = () => props.variant !== "error";
   return (
@@ -66,6 +68,7 @@ export function ResultModal(props: {
         title={props.title}
         description={props.description}
       />
+      {props.extra}
       <Button
         size="block"
         onClick={() => {

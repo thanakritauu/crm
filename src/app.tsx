@@ -5,6 +5,7 @@ import { onCleanup, onMount, Show, Suspense } from "solid-js";
 import { applyFrameMode, MobileFrame } from "~/components/layout/mobile-frame";
 import { I18nProvider } from "~/lib/i18n";
 import { restoreSession } from "~/lib/session";
+import { restorePlatformState } from "~/mocks/platforms";
 import { markEntryDepth } from "~/lib/navigation";
 import { missionService } from "~/services/mission-service";
 import { notificationService } from "~/services/notification-service";
@@ -24,6 +25,8 @@ function Shell(props: { children: any }) {
     markEntryDepth();
     applyFrameMode();
     restoreSession();
+    // สถานะการเชื่อมต่อแพลตฟอร์ม — ทางลัดหน้าแรก (ป้ายเขียวจำนวนที่เชื่อมแล้ว) ต้องรู้ตั้งแต่เปิดแอป ไม่ใช่แค่ตอนเข้าหน้าเชื่อมต่อ
+    restorePlatformState();
     missionService.restore();
     // สถานะจัดส่งเดินเองตามเวลา → เติมแจ้งเตือนขั้นที่ถึงแล้ว
     notificationService.syncDelivery();
