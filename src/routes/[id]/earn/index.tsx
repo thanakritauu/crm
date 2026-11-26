@@ -166,15 +166,15 @@ export default function EarnPoint() {
         </Show>
 
         {/* เชื่อมต่อแพลตฟอร์มออนไลน์ = ช่องทางแนะนำ → การ์ดเต็มความกว้างบนสุด (2026-11-26 · เดิมเป็นช่องแรกในตาราง)
-            ป้าย "แนะนำ" สีเหลืองมุมซ้ายบนติดขอบ (แบบป้ายสถานะการ์ดภารกิจ) · พื้นชมพูเข้ม ตัวขาว · ไอคอนวงขาว + ชื่อ 14/Medium + คำอธิบาย 14 + ">" · ไม่แสดงในโหมดภารกิจ */}
+            ป้าย "แนะนำ" สีเขียวมุมซ้ายบนติดขอบ (แบบป้ายสถานะการ์ดภารกิจ) · พื้นชมพูอ่อน ตัวเข้ม/เทา · ไอคอนวงขาว + ชื่อ 14/Medium + คำอธิบาย 14 + ">" · ไม่แสดงในโหมดภารกิจ */}
         <Show when={!mission()}>
           <button
             type="button"
             onClick={() => choose("platform")}
-            class="relative flex w-full items-center gap-4 rounded-2xl bg-primary px-4 pb-4 pt-8 text-left transition active:scale-[0.98]"
+            class="relative flex w-full items-center gap-4 rounded-2xl bg-primary-surface px-4 pb-4 pt-8 text-left transition active:scale-[0.98]"
           >
-            {/* ป้าย "แนะนำ" สีเหลือง (teriary = Yellow-500 ของ design system) — 2026-11-26 */}
-            <span class="absolute left-0 top-0 rounded-r-lg rounded-tl-2xl bg-teriary px-2 py-1 text-12 font-medium text-white">{t("core.recommended")}</span>
+            {/* ป้าย "แนะนำ" สีเขียว (ลองพื้นชมพูอ่อน + ป้ายเขียว — 2026-11-26) */}
+            <span class="absolute left-0 top-0 rounded-r-lg rounded-tl-2xl bg-success px-2 py-1 text-12 font-medium text-white">{t("core.recommended")}</span>
             <span class="flex size-12 shrink-0 items-center justify-center rounded-full bg-white">
               <IconSmartphone size={24} class="text-primary" />
             </span>
@@ -182,11 +182,11 @@ export default function EarnPoint() {
               {/* ขนาดตัวอักษรเท่าการ์ดช่องทางอื่นในหน้านี้ (14/Medium) */}
               {/* ">" อยู่บรรทัดเดียวกับชื่อ (ชิดขวา) — 2026-11-26 */}
               <span class="flex items-center justify-between gap-2">
-                <span class="text-14 font-medium text-white">{t("platform.connect_platform")}</span>
-                <IconChevronRight size={16} class="shrink-0 text-white" />
+                <span class="text-14 font-medium text-dark">{t("platform.connect_platform")}</span>
+                <IconChevronRight size={16} class="shrink-0 text-gray" />
               </span>
               {/* 14 เท่าคำอธิบายในหน้าเชื่อมต่อแพลตฟอร์ม ("เชื่อมต่อบัญชี Shopee ของคุณ…") */}
-              <span class="text-14 text-white">{t("club.connect_card_desc")}</span>
+              <span class="text-14 text-gray">{t("club.connect_card_desc")}</span>
             </span>
           </button>
         </Show>

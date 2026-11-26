@@ -599,7 +599,7 @@
   "platform.by_platform_name_between_date_for_n_orders": "ที่ซื้อผ่าน {{platform}} ของร้านค้า ระหว่างวันที่ {{datefrom}} <span class=\"mr-1 text-primary\" style=\"font-weight: bold\">ถึง</span> {{dateto}} จำนวน 1 รายการ",
   "platform.cancel": "ยกเลิก",
   "platform.choose_connect_platform": "เลือกช่องทางในการเชื่อมต่อ",
-  "platform.choose_platform_to_connect_for_order_point": "เลือกแพลตฟอร์มที่คุณต้องการเชื่อมต่อ เพื่อไม่ให้พลาดคะแนนจากทุกออเดอร์! เชื่อมต่อเลยตอนนี้",
+  "platform.choose_platform_to_connect_for_order_point": "เลือกแพลตฟอร์มที่คุณสั่งซื้อ แล้วรับคะแนนอัตโนมัติจากทุกออเดอร์ ไม่ต้องกรอกเองทุกครั้ง",
   "platform.close": "ปิด",
   "platform.confirm": "ยืนยัน",
   "platform.connect": "เชื่อมต่อ",

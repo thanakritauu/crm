@@ -599,7 +599,7 @@
   "platform.by_platform_name_between_date_for_n_orders": "purchased from the store on {{platform}} between {{datefrom}} <span class=\"mr-1 text-primary\" style=\"font-weight: bold\">and</span> {{dateto}}, 1 order",
   "platform.cancel": "Cancel",
   "platform.choose_connect_platform": "Choose a channel to connect",
-  "platform.choose_platform_to_connect_for_order_point": "Choose the platform you want to connect so you never miss points from any order! Connect now",
+  "platform.choose_platform_to_connect_for_order_point": "Pick the platforms you shop on and get points from every order automatically \u2014 no need to enter them every time",
   "platform.close": "Close",
   "platform.confirm": "Confirm",
   "platform.connect": "Connect",
