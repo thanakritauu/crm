@@ -1,7 +1,7 @@
 import { A, useLocation } from "@solidjs/router";
 import { createSignal, For, onMount, Show } from "solid-js";
 import { applyFrameMode } from "~/components/layout/mobile-frame";
-import { outsideLine, pointsExpire, restorePrototypeSettings, setOutsideLine, setPointsExpire, setShowTierCard, setShowWelcome, setTierSystem, showTierCard, showWelcome, tierSystem } from "./settings";
+import { outsideLine, pointsExpire, restorePrototypeSettings, setOutsideLine, setPointsExpire, setShowTierCard, setShowWelcome, showTierCard, showWelcome, homeDark, setHomeDark } from "./settings";
 import { Dialog as DialogPrimitive } from "@kobalte/core/dialog";
 import { resetSession, session, sessionActions } from "~/lib/session";
 import { customer as mockCustomer } from "~/mocks/customer";
@@ -91,9 +91,7 @@ export function PrototypeNav() {
             onClick={() => setFrame(applyFrameMode(frame() === "mobile" ? "full" : "mobile"))}
           >
             <span>แสดงในกรอบมือถือ (สำหรับนำเสนอบนจอคอม)</span>
-            <span class={cn("h-5 w-9 rounded-full p-1 transition", frame() === "mobile" ? "bg-primary" : "bg-stroke-strong")}>
-              <span class={cn("block h-4 w-4 rounded-full bg-white transition", frame() === "mobile" && "translate-x-4")} />
-            </span>
+            <ToggleSwitch on={frame() === "mobile"} />
           </button>
           <button
             type="button"
@@ -101,9 +99,7 @@ export function PrototypeNav() {
             onClick={() => setPointsExpire(!pointsExpire())}
           >
             <span>คะแนนมีวันหมดอายุ (หน้าประวัติคะแนนแสดงแท็บ "หมดอายุ")</span>
-            <span class={cn("h-5 w-9 shrink-0 rounded-full p-1 transition", pointsExpire() ? "bg-primary" : "bg-stroke-strong")}>
-              <span class={cn("block h-4 w-4 rounded-full bg-white transition", pointsExpire() && "translate-x-4")} />
-            </span>
+            <ToggleSwitch on={pointsExpire()} />
           </button>
           <button
             type="button"
@@ -111,19 +107,7 @@ export function PrototypeNav() {
             onClick={() => setOutsideLine(!outsideLine())}
           >
             <span>จำลองเปิดนอก LINE (หน้าเข้าสู่ระบบมีปุ่ม "เบอร์มือถือ")</span>
-            <span class={cn("h-5 w-9 shrink-0 rounded-full p-1 transition", outsideLine() ? "bg-primary" : "bg-stroke-strong")}>
-              <span class={cn("block h-4 w-4 rounded-full bg-white transition", outsideLine() && "translate-x-4")} />
-            </span>
-          </button>
-          <button
-            type="button"
-            class="mt-1 flex w-full items-center justify-between rounded-xl px-4 py-2 text-left text-14 text-dark hover:bg-surface-gray"
-            onClick={() => setTierSystem(!tierSystem())}
-          >
-            <span>มีระบบระดับสมาชิก (ปิด = ไม่มีระดับเลย)</span>
-            <span class={cn("h-5 w-9 shrink-0 rounded-full p-1 transition", tierSystem() ? "bg-primary" : "bg-stroke-strong")}>
-              <span class={cn("block h-4 w-4 rounded-full bg-white transition", tierSystem() && "translate-x-4")} />
-            </span>
+            <ToggleSwitch on={outsideLine()} />
           </button>
           <button
             type="button"
@@ -131,9 +115,7 @@ export function PrototypeNav() {
             onClick={() => setShowTierCard(!showTierCard())}
           >
             <span>แสดงการ์ด "ระดับของคุณ" ในหน้าแรก</span>
-            <span class={cn("h-5 w-9 shrink-0 rounded-full p-1 transition", showTierCard() ? "bg-primary" : "bg-stroke-strong")}>
-              <span class={cn("block h-4 w-4 rounded-full bg-white transition", showTierCard() && "translate-x-4")} />
-            </span>
+            <ToggleSwitch on={showTierCard()} />
           </button>
           <button
             type="button"
@@ -146,9 +128,15 @@ export function PrototypeNav() {
             }}
           >
             <span>แสดง popup ต้อนรับเมื่อเปิดหน้าแรก</span>
-            <span class={cn("h-5 w-9 shrink-0 rounded-full p-1 transition", showWelcome() ? "bg-primary" : "bg-stroke-strong")}>
-              <span class={cn("block h-4 w-4 rounded-full bg-white transition", showWelcome() && "translate-x-4")} />
-            </span>
+            <ToggleSwitch on={showWelcome()} />
+          </button>
+          <button
+            type="button"
+            class="mt-1 flex w-full items-center justify-between rounded-xl px-4 py-2 text-left text-14 text-dark hover:bg-surface-gray"
+            onClick={() => setHomeDark(!homeDark())}
+          >
+            <span>หน้าแรกพื้นหลังชมพูเข้ม + การ์ดสีขาว (ปิด = พื้นชมพูอ่อน + การ์ดชมพูเข้ม)</span>
+            <ToggleSwitch on={homeDark()} />
           </button>
           <button
             type="button"
@@ -156,9 +144,7 @@ export function PrototypeNav() {
             onClick={() => sessionActions.updateCustomer({ profile_image: session.customer.profile_image ? "" : DEFAULT_PHOTO })}
           >
             <span>ผู้ใช้ไม่มีรูปโปรไฟล์ (หน้าแรก / โปรไฟล์แสดงไอคอนผู้ใช้แทน)</span>
-            <span class={cn("h-5 w-9 shrink-0 rounded-full p-1 transition", !session.customer.profile_image ? "bg-primary" : "bg-stroke-strong")}>
-              <span class={cn("block h-4 w-4 rounded-full bg-white transition", !session.customer.profile_image && "translate-x-4")} />
-            </span>
+            <ToggleSwitch on={!session.customer.profile_image} />
           </button>
           <div class="mt-1 rounded-xl px-4 py-2">
             <p class="text-14 text-dark">คูปองของฉัน (ดู 3 สถานะในหน้าแรก)</p>
@@ -220,5 +206,18 @@ export function PrototypeNav() {
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     </DialogPrimitive>
+  );
+}
+
+
+/**
+ * สวิตช์เปิด/ปิดในเมนู prototype — ราง 44×24 · ปุ่มกลม 16 (ขอบใน 4px ทุกด้าน) · เปิด = เลื่อน 20px พื้นชมพู
+ * (เดิมราง 20px แต่ padding 4 + ปุ่ม 16 = 24 → ปุ่มล้นรางดูเบี้ยว — แก้ 2026-11-26)
+ */
+function ToggleSwitch(props: { on: boolean }) {
+  return (
+    <span class={cn("flex h-6 w-11 shrink-0 items-center rounded-full p-1 transition-colors", props.on ? "bg-primary" : "bg-stroke-strong")} aria-hidden="true">
+      <span class={cn("block size-4 rounded-full bg-white shadow-card transition-transform", props.on && "translate-x-5")} />
+    </span>
   );
 }

@@ -33,9 +33,9 @@ export function legacyRedirect(path: string, search: string): string | null {
   if (path === "history") {
     const tab = q.get("tab");
     drop("tab");
-    return withQuery("wallet/history", tab && tab !== "received" ? { filter: tab } : undefined);
+    return withQuery("wallet/points-history", tab && tab !== "received" ? { filter: tab } : undefined);
   }
-  if (path === "coin-history") return withQuery("wallet/history", { type: "coins" });
+  if (path === "coin-history") return "wallet/coins-history";
   // ภารกิจ
   if (path === "mission") return withQuery("missions");
   if ((m = path.match(/^mission\/detail\/([^/]+)$/))) return withQuery(`missions/${m[1]}`);

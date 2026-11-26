@@ -30,6 +30,9 @@ import { useMemberOnly } from "~/lib/member-gate";
  * Mock: burn_settings ใช้ค่า default ในโค้ดต้นฉบับ (ขั้นต่ำ 10, step 10, 10 คะแนน = ฿1, อายุคูปอง 30 วัน)
  *   ตัดคะแนนด้วย sessionActions.updateCustomer; คูปองที่ได้เก็บใน history-service (ยังไม่เข้า session.myCoupons)
  */
+/** ปุ่ม − / + : พื้นชมพูอ่อน ตัวชมพู ไม่มีขอบเทา */
+const STEP_BTN = "border-primary-surface bg-primary-surface text-primary";
+
 export default function ExchangePointPage() {
   useMemberOnly();
   const { t } = useI18n();
@@ -124,9 +127,10 @@ export default function ExchangePointPage() {
       <form class="flex flex-col gap-6 p-4" onSubmit={submit}>
         {/* อัตราแลก (InfoBox) · คะแนนไม่ถึงขั้นต่ำ = กล่องแดง */}
         <div class="flex flex-col gap-2">
+          {/* "10 คะแนน = ส่วนลด 1 บาท" (เอาคำว่า "อัตราแลกเปลี่ยน" และ ฿ ออก — 2026-11-26) */}
           <InfoBox>
-            {t("profile.exchange_points_rate_label")}{" "}
-            <b class="font-semibold text-primary">{t("profile.exchange_points_rate_value", { points: n0(cfg.points_per_unit), discount: n0(cfg.discount_per_unit) })}</b>
+            {/* สีม่วง (secondary) ให้เข้ากับกล่อง InfoBox — 2026-11-26 */}
+            <b class="font-semibold text-secondary">{t("profile.exchange_points_rate_value", { points: n0(cfg.points_per_unit), discount: n0(cfg.discount_per_unit) })}</b>
           </InfoBox>
           <Show when={balance() < cfg.min_points_per_redemption}>
             <p role="alert" class="rounded-2xl bg-error-surface p-4 text-14 text-error">
@@ -137,32 +141,33 @@ export default function ExchangePointPage() {
 
         {/* จำนวนคะแนน: Label + ปุ่ม − / Input / + (Button outline icon) + คำแนะนำ + FieldError */}
         <div class="flex flex-col gap-2">
-          <div class="flex items-baseline justify-between gap-2">
+          {/* เอาลิงก์ "ใช้คะแนนสูงสุด (X)" ข้างหัวข้อออก — ใช้ชิป "ใช้คะแนนสูงสุด" ด้านล่างแทน (2026-11-26) */}
+          {/* หัวข้อ + บรรทัดเงื่อนไข "ขั้นต่ำ 10 คะแนน เพิ่มได้ครั้งละ 10 คะแนน" อยู่ใต้หัวข้อ (2026-11-26) */}
+          <div class="flex flex-col gap-1">
             <Label for="exchange-points-input" required class="mb-0">
               {t("profile.exchange_input_label")}
             </Label>
-            <Button variant="link" type="button" onClick={useMax} disabled={submitting()} class="text-14 font-medium">
-              {t("profile.exchange_max_btn")} ({n0(maxUsable())})
-            </Button>
+            <p class="text-12 text-gray">{t("profile.exchange_points_rule_hint", { min: n0(cfg.min_points_per_redemption), step: n0(cfg.point_step) })}</p>
           </div>
           <div class="flex items-center gap-2">
-            <Button variant="outline" size="icon" type="button" aria-label="-" onClick={() => step(-cfg.point_step)} disabled={amount() <= cfg.min_points_per_redemption || submitting()}>
+            {/* ปุ่ม − / + พื้นชมพูอ่อน ตัวชมพู · ตัวเลขกึ่งกลางช่อง (2026-11-26) */}
+            <Button variant="outline" size="icon" type="button" aria-label="-" class={STEP_BTN} onClick={() => step(-cfg.point_step)} disabled={amount() <= cfg.min_points_per_redemption || submitting()}>
               <span class="text-18">−</span>
             </Button>
             <Input
               id="exchange-points-input"
               class="flex-1"
+              align="center"
               inputmode="numeric"
               value={value()}
               invalid={!!error()}
               placeholder={t("profile.exchange_input_placeholder")}
               onInput={(e) => setValue(e.currentTarget.value.replace(/\D/g, ""))}
             />
-            <Button variant="outline" size="icon" type="button" aria-label="+" onClick={() => step(cfg.point_step)} disabled={submitting()}>
+            <Button variant="outline" size="icon" type="button" aria-label="+" class={STEP_BTN} onClick={() => step(cfg.point_step)} disabled={submitting()}>
               <span class="text-18">+</span>
             </Button>
           </div>
-          <p class="text-12 text-gray">{t("profile.exchange_points_rule_hint", { min: n0(cfg.min_points_per_redemption), step: n0(cfg.point_step) })}</p>
           <FieldError>{error()}</FieldError>
           {/* ตัวเลือกจำนวนด่วน = ชิป (Button size chip) แบบเดียวกับชิปตัวกรองทั้งแอป */}
           <div class="flex flex-wrap gap-2">
@@ -181,7 +186,7 @@ export default function ExchangePointPage() {
               onClick={useMax}
               disabled={submitting()}
             >
-              {t("loyalty.max")}
+              {t("profile.exchange_max_btn")}
             </Button>
           </div>
         </div>

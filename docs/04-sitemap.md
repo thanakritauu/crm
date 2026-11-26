@@ -63,7 +63,7 @@
 | `/coupon` | `/rewards?type=coupons` | แลกคูปองก็คือการแลกด้วยคะแนน → แท็บในหน้าแลกรางวัล |
 | `/exchange-point` (เมนูโปรไฟล์) | `/rewards/points-to-coupon` (แท็บคูปอง) | เป็นเรื่องการแลก ไม่ใช่ข้อมูลผู้ใช้ → ย้ายมาอยู่กับการแลก |
 | `/coupon/my-coupons`, `/coupon/my-coupons/detail/:id` | `/wallet/coupons`, `/wallet/coupons/:id` | "คูปองของฉัน" คือของที่มีอยู่แล้ว ไม่ใช่ที่แลก → อยู่ใน "กระเป๋าของฉัน" |
-| `/history`, `/coin-history`, แท็บ "ประวัติการแลก" ในสิทธิพิเศษ | `/wallet/history?type=points\|coins\|redemptions` | ประวัติกระจาย 3 ที่ (ประวัติคอยน์เข้าได้จากหน้าภารกิจเท่านั้น) → รวมที่เดียว เข้าได้จากหน้าแรก โปรไฟล์ และหน้าแลกรางวัล |
+| `/history`, `/coin-history`, แท็บ "ประวัติการแลก" ในสิทธิพิเศษ | `/wallet/points-history` · `/wallet/coins-history` (หน้าแยก) · `/wallet/history` (หน้ารวม — เมนูโปรไฟล์) · `/wallet/redemptions` | ประวัติคะแนน/คอยน์แยกหน้า เข้าจากการ์ด ">" และแถบยอด · เมนูโปรไฟล์ยังไปหน้ารวม (26 พ.ย. 2569) |
 | `/mission`, `/mission/detail/:id` | `/missions`, `/missions/:id` | ใช้พหูพจน์เหมือนหน้ารายการอื่น |
 | `/mission/redeem-detail/:id?reward=` | `/missions/:id/rewards/:rewardId` | id ของรางวัลอยู่ใน path · อยู่ใต้ภารกิจ |
 | `/quiz-activity/:id`, `/leaderboard/:id` | `/missions/:id/quiz`, `/missions/:id/leaderboard` | หน้าย่อยของภารกิจเคยอยู่ระดับบนสุด → ย้ายมาอยู่ใต้ภารกิจ |

@@ -22,7 +22,7 @@ import type { Privilege } from "~/mocks/privileges";
 import { missionService } from "~/services/mission-service";
 import { privilegeService } from "~/services/privilege-service";
 import { tierStatus } from "~/services/tier-service";
-import { showTierCard, tierSystem } from "~/prototype/settings";
+import { homeDark, showTierCard, tierSystem } from "~/prototype/settings";
 
 /**
  * /:partner/home — หน้าแรกสมาชิก (โครงแบบ Okya · token ตาม Figma Charmiss)
@@ -69,6 +69,8 @@ export default function Home() {
   const navigate = useNavigate();
   const location = useLocation<{ new_member?: boolean }>();
   const [welcome, setWelcome] = createSignal(false);
+  // ทดลองดีไซน์ (2026-11-26): พื้นชมพูเข้ม + การ์ดขาว — สลับได้จากเมนู prototype
+  const isDark = () => homeDark();
   onMount(() => {
     // สมาชิกใหม่เห็นเสมอ · คนอื่นเห็นครั้งเดียวต่อการเปิดแอป จนกว่าจะติ๊ก "ไม่ต้องแสดงอีก"
     setWelcome(!!location.state?.new_member || (session.isMember && shouldShowWelcome()));
@@ -76,7 +78,12 @@ export default function Home() {
   });
 
   // สินค้า 4 ใบ (ไม่รวมคูปอง และที่หมดเขตแล้ว) — หมด/ยังไม่เริ่ม แสดงป้ายทับรูป
-  const privileges = () => privilegeService.list().filter((p) => p.reward_type !== "coupon" && privilegeState(p) !== "expired_redeem").slice(0, 4);
+  // หน้าแรกไม่แสดงของรางวัลที่หมดแล้ว และที่หมดเขต (2026-11-26)
+  const privileges = () =>
+    privilegeService
+      .list()
+      .filter((p) => p.reward_type !== "coupon" && privilegeState(p) !== "expired_redeem" && privilegeState(p) !== "out_of_stock")
+      .slice(0, 4);
   const overlayOf = (p: Privilege) => {
     const st = privilegeState(p);
     return st === "out_of_stock" ? t("common.stock_out_overlay") : st === "not_started" ? t("priv.starts_on", { date: formatDate(p.redeem_start) }) : undefined;
@@ -94,7 +101,10 @@ export default function Home() {
 
   return (
     <div class="relative min-h-screen bg-white">
-      <div class="absolute left-0 right-0 top-0 h-[240px] bg-brand-fade" />
+      {/* พื้นหลังหัวหน้าแบบเดิม (ปิดตัวเลือก homeDark) = ไล่ชมพูอ่อน · แบบชมพูเข้ม = พื้นของกล่องสมาชิกด้านล่าง (ยาวคลุมถึงการ์ดระดับสมาชิก) */}
+      <Show when={!isDark()}>
+        <div class="absolute left-0 right-0 top-0 h-[240px] bg-brand-fade" />
+      </Show>
 
       <Show
         when={session.isMember}
@@ -104,15 +114,16 @@ export default function Home() {
           </div>
         }
       >
-        <div class="relative flex flex-col gap-4 px-4 pt-6">
+        {/* ชมพูเข้ม: พื้นคลุมทักทาย + การ์ดคะแนน|คอยน์ + การ์ดระดับสมาชิก ทั้งหมด โค้งล่าง (2026-11-26) */}
+        <div class={cn("relative flex flex-col gap-4 px-4 pt-6", isDark() && "rounded-b-3xl bg-primary pb-4")}>
           {/* ทักทาย + กระดิ่งแจ้งเตือน */}
           <div class="flex items-center gap-2">
             <A href={to("profile")} class="flex min-w-0 flex-1 items-center gap-2">
               <Avatar size={40} />
               <span class="flex min-w-0 flex-col">
-                <span class="truncate text-18 font-semibold text-dark">{t("core.hello_name", { name: session.customer.name || session.customer.line_display_name })}</span>
+                <span class={cn("truncate text-18 font-semibold", isDark() ? "text-white" : "text-dark")}>{t("core.hello_name", { name: session.customer.name || session.customer.line_display_name })}</span>
                 {/* รหัสสมาชิก (เช่น charmiss000000005) แทนชื่อระดับ */}
-                <span class="truncate text-12 text-gray">{session.customer.member_code}</span>
+                <span class={cn("truncate text-12", isDark() ? "text-white" : "text-gray")}>{session.customer.member_code}</span>
               </span>
             </A>
             {/* ปุ่มเดียวอัปเดตทั้งคะแนนและคอยน์ — วงกลมขาวข้างกระดิ่ง (ตัดสินใจ 2026-11-25) */}
@@ -125,7 +136,8 @@ export default function Home() {
           {/* คะแนน | คอยน์ — BalanceSplit (pattern เดียวกับทุกหน้า) · หน้าแรกพื้นชมพูเข้ม ตัวขาว (แบบ B — เลือกแล้ว 2026-11-25) */}
           {/* ระดับสมาชิก = การ์ดขาวสอดอยู่ใต้การ์ดชมพู (ชมพูทับขอบบน 16px — ตัดสินใจ 2026-11-25) · เปิด/ปิดได้จากเมนู prototype */}
           <div class="flex flex-col">
-            <BalanceSplit size="lg" tone="brand" countUp class="relative z-raised" />
+            {/* พื้นชมพูเข้ม → การ์ดขาว (tone white) · พื้นชมพูอ่อน → การ์ดชมพูเข้ม (tone brand) */}
+            <BalanceSplit size="lg" tone={isDark() ? "white" : "brand"} countUp class="relative z-raised" />
             <Show when={tierSystem() && showTierCard()}>
               <TierRow />
             </Show>

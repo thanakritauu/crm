@@ -74,7 +74,7 @@ export default function RewardsPage() {
   );
 }
 
-type Item = { id: string; title: string; points: number; cover: [string, string]; image?: string; start: string; popular: number; overlay?: string };
+type Item = { id: string; title: string; points: number; cover: [string, string]; image?: string; start: string; popular: number; overlay?: string; soldOut?: boolean };
 
 /** ป้ายทับรูปของสิทธิพิเศษ (หมดเขต / หมด / ยังไม่เริ่ม) */
 function usePrivilegeOverlay() {
@@ -110,7 +110,7 @@ function ProductCatalog() {
       ...privilegeService
         .list()
         .filter((p) => p.reward_type !== "coupon")
-        .map((p) => ({ id: p.id, title: p.title, points: p.points, cover: p.cover, image: p.image, start: p.redeem_start, popular: p.total - p.remaining, overlay: overlayOf(p) })),
+        .map((p) => ({ id: p.id, title: p.title, points: p.points, cover: p.cover, image: p.image, start: p.redeem_start, popular: p.total - p.remaining, overlay: overlayOf(p), soldOut: privilegeState(p) === "out_of_stock" })),
       ...rewardService.list().map((r) => ({
         id: r.id,
         title: r.name,
@@ -120,13 +120,15 @@ function ProductCatalog() {
         start: r.redeem_start,
         popular: 0,
         overlay: r.stock <= 0 ? t("common.stock_out_overlay") : undefined,
+        soldOut: r.stock <= 0,
       })),
     ];
     if (sort() === "asc") list.sort((a, b) => a.points - b.points);
     if (sort() === "desc") list.sort((a, b) => b.points - a.points);
     if (sort() === "new") list.sort((a, b) => b.start.localeCompare(a.start));
     if (sort() === "hot") list.sort((a, b) => b.popular - a.popular);
-    return list;
+    // ของรางวัลที่หมดแล้วไปอยู่ท้ายสุดเสมอ (ทุกการเรียง — 2026-11-26)
+    return [...list.filter((i) => !i.soldOut), ...list.filter((i) => i.soldOut)];
   };
 
   return (
@@ -166,7 +168,11 @@ function ProductCatalog() {
 function CouponPrivileges() {
   const to = usePartnerPath();
   const overlayOf = usePrivilegeOverlay();
-  const list = () => privilegeService.list().filter((p) => p.reward_type === "coupon");
+  // หมดแล้วไปท้ายสุด
+  const list = () => {
+    const all = privilegeService.list().filter((p) => p.reward_type === "coupon");
+    return [...all.filter((p) => privilegeState(p) !== "out_of_stock"), ...all.filter((p) => privilegeState(p) === "out_of_stock")];
+  };
   return (
     // การ์ดอย่างเดียว (ไม่มี grid ห่อ) — CouponCatalog วางรวมใน grid เดียวกับคูปองอื่น
     <Show when={list().length}>

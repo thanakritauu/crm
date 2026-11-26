@@ -14,11 +14,13 @@ const [tierSystem, setTierSystemSignal] = createSignal(true);
 const [showTierCard, setShowTierCardSignal] = createSignal(true);
 /** showWelcome: popup ต้อนรับขึ้นเองเมื่อเปิดหน้าแรก (ปิด = ไม่ขึ้น · สมาชิกใหม่หลังสมัครยังเห็น) */
 const [showWelcome, setShowWelcomeSignal] = createSignal(true);
-export { outsideLine, pointsExpire, showTierCard, showWelcome, tierSystem };
+/** homeDark: หน้าแรกพื้นหลังชมพูเข้ม + การ์ดคะแนน|คอยน์สีขาว (ปิด = พื้นชมพูอ่อน + การ์ดชมพูเข้มแบบเดิม) — ทดลอง 2026-11-26 */
+const [homeDark, setHomeDarkSignal] = createSignal(true);
+export { homeDark, outsideLine, pointsExpire, showTierCard, showWelcome, tierSystem };
 
 function save() {
   try {
-    localStorage.setItem(KEY, JSON.stringify({ pointsExpire: pointsExpire(), outsideLine: outsideLine(), tierSystem: tierSystem(), showTierCard: showTierCard(), showWelcome: showWelcome() }));
+    localStorage.setItem(KEY, JSON.stringify({ pointsExpire: pointsExpire(), outsideLine: outsideLine(), tierSystem: tierSystem(), showTierCard: showTierCard(), showWelcome: showWelcome(), homeDark: homeDark() }));
   } catch {
     /* ignore */
   }
@@ -29,9 +31,11 @@ export function restorePrototypeSettings() {
     const s = JSON.parse(localStorage.getItem(KEY) ?? "{}");
     setPointsExpireSignal(!!s.pointsExpire);
     setOutsideLineSignal(!!s.outsideLine);
-    setTierSystemSignal(s.tierSystem !== false);
+    // สวิตช์ "มีระบบระดับสมาชิก" เอาออกจากเมนู prototype แล้ว (2026-11-26) → มีระบบระดับเสมอ (ไม่อ่านค่าเก่าที่อาจปิดไว้)
+    setTierSystemSignal(true);
     setShowTierCardSignal(s.showTierCard !== false);
     setShowWelcomeSignal(s.showWelcome !== false);
+    setHomeDarkSignal(s.homeDark !== false);
   } catch {
     /* ignore */
   }
@@ -69,4 +73,9 @@ export function welcomeEnabled() {
   } catch {
     return true;
   }
+}
+
+export function setHomeDark(v: boolean) {
+  setHomeDarkSignal(v);
+  save();
 }

@@ -161,7 +161,7 @@ export default function RewardSummarize() {
             />
             <ResultModal
               open={result() === "success"}
-              onOpenChange={(o) => !o && navigate(to("wallet/history?filter=redeemed"))}
+              onOpenChange={(o) => !o && navigate(to("wallet/points-history?filter=redeemed"))}
               title={t("common.notifications.redeem.success", { product_name: r().name, point: formatNumber(r().points) })}
               description={t("common.points_history_hint")}
               buttonText={t("common.close")}

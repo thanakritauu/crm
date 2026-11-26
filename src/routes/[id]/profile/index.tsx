@@ -97,13 +97,14 @@ export default function Profile() {
         { name: t("profile.personal_info"), icon: Icons.user, path: "profile/info" },
         ...(tierSystem() ? [{ name: t("tier.title"), icon: Icons.crown, path: "profile/tier" }] : []),
         { name: t("profile.shipping_address"), icon: Icons.pin, path: "profile/addresses" },
+        // การแจ้งเตือน + ป้ายตัวเลขที่ยังไม่อ่าน — ย้ายออกจากหมวดการตั้งค่า (ไม่ใช่การตั้งค่า · 2026-11-26)
+        { name: t("notification.title"), icon: Icons.bell, path: "notifications", badge: () => <UnreadBadge /> },
       ],
     },
     {
       group: t("profile.settings_group"),
       menu: [
-        // การแจ้งเตือน (ย้ายจากแถบล่าง) + ป้ายตัวเลขที่ยังไม่อ่าน
-        { name: t("notification.title"), icon: Icons.bell, path: "notifications", badge: () => <UnreadBadge /> },
+        // เชื่อมต่อแพลตฟอร์มออนไลน์อยู่บนสุดของหมวดการตั้งค่า (2026-11-26)
         { name: t("profile.connect_platform"), icon: Icons.link, path: "profile/platforms" },
         { name: t("common.privacy_policy"), icon: Icons.shield, path: "profile/privacy" },
         {
@@ -128,19 +129,22 @@ export default function Profile() {
 
   return (
     <div class="min-h-screen bg-white">
-      {/* ส่วนหัว (Figma Profile_Member 871:4784): แถบชมพู 171px + รูป 64px + ชื่อ 18/700 สีขาว */}
-      <div class="flex h-[171px] w-full flex-col items-center bg-primary pt-6">
-        <Avatar size={64} guest={isGuest()} />
-        <p class="mt-1 text-18 font-semibold text-white">
-          {isGuest() ? t("me.guest_name") : session.customer.name ? `${session.customer.name} ${session.customer.surname}` : session.customer.line_display_name}
-        </p>
-      </div>
-
-      <div class="mt-[-36px] flex flex-col gap-4 px-4">
+      {/* ส่วนหัว (Figma Profile_Member 871:4784): รูป 64px + ชื่อ 18/700 สีขาว
+          พื้นชมพูคลุมลงมาถึงใต้การ์ดคะแนน|คอยน์ (เหมือนหน้าแรก — 2026-11-26) · โค้งล่าง rounded-b-3xl (DSL) · เว้นล่าง 16 เท่าซ้ายขวา */}
+      <div class="flex w-full flex-col gap-4 rounded-b-3xl bg-primary px-4 pb-4 pt-6">
+        <div class="flex flex-col items-center">
+          <Avatar size={64} guest={isGuest()} />
+          <p class="mt-1 text-18 font-semibold text-white">
+            {isGuest() ? t("me.guest_name") : session.customer.name ? `${session.customer.name} ${session.customer.surname}` : session.customer.line_display_name}
+          </p>
+        </div>
         {/* คะแนน | คอยน์ — ทำงานเหมือนการ์ดหน้าแรกเสมอ (ตัดสินใจ 2026-11-25): กดได้แค่ ">" → ประวัติคะแนน/คอยน์ · ตัวเลขนับขึ้น */}
         <Show when={!isGuest()} fallback={<BalanceBar unit="points" inline history={false} />}>
           <BalanceSplit countUp />
         </Show>
+      </div>
+
+      <div class="mt-4 flex flex-col gap-4 px-4">
 
         {/* ยังไม่เป็นสมาชิก (Figma Profile_Guest 871:4904) */}
         <Show when={isGuest()}>

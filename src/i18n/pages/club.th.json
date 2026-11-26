@@ -40,5 +40,6 @@
   "club.balances_now": "คะแนน {{points}} คะแนน · คอยน์ {{coins}} คอยน์",
   "club.times_progress": "{{progress}}/{{target}} ครั้ง",
   "club.unlimited_times": "สะสมได้ไม่จำกัดครั้ง",
-  "club.refresh_again_in": "อัปเดตคะแนนได้อีกครั้งใน {{time}} นาที"
+  "club.refresh_again_in": "อัปเดตคะแนนได้อีกครั้งใน {{time}} นาที",
+  "club.short_coins_brief": "ขาดอีก {{amount}}"
 }

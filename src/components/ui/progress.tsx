@@ -7,7 +7,7 @@ export function Progress(props: { value: number; max: number; showLabel?: boolea
         <div class="h-1 rounded-full bg-teriary transition-[width]" style={{ width: `${pct()}%` }} />
       </div>
       {props.showLabel !== false && (
-        <span class="shrink-0 whitespace-nowrap text-12 font-semibold">
+        <span class="shrink-0 whitespace-nowrap text-12 font-semibold text-dark">
           {props.value}/{props.max}
         </span>
       )}

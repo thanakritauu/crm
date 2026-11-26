@@ -21,7 +21,7 @@ import { IconChevronRight, IconSort } from "~/components/ui/icons";
 /**
  * /:partner/missions — รายการภารกิจ (แท็บในแถบล่าง — ไม่มีปุ่มย้อนกลับ)
  * ต้นฉบับ: index-9f791726.js (+ tab-slide-64307185.js สำหรับ "ภารกิจสำคัญ")
- * - PageHeader ชมพู + การ์ดยอดคอยน์ของฉัน + ลิงก์ประวัติคอยน์ (→ wallet/history?type=coins)
+ * - PageHeader ชมพู + การ์ดยอดคอยน์ของฉัน + ลิงก์ประวัติคอยน์ (→ wallet/coins-history)
  * - (เอาภารกิจสำคัญออก 2026-11-23) PillTabs ทั้งหมด / กำลังทำ / สำเร็จ อยู่นอกพื้นหัวหน้า, "เรียงลำดับโดย" (Sheet: ใหม่ล่าสุด / ภารกิจสำเร็จ)
  * - grid การ์ด col-span-6
  * Mock: missionService (ข้อมูลจาก src/mocks/missions.ts + ความคืบหน้าใน store)

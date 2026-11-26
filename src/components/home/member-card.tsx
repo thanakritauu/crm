@@ -63,7 +63,7 @@ export function MemberCard() {
               </A>
             }
           >
-            <A href={to("wallet/history")} class={buttonVariants({ variant: "white", size: "sm" })}>
+            <A href={to("wallet/points-history")} class={buttonVariants({ variant: "white", size: "sm" })}>
               {t("component.card_member.view_points_history")}
             </A>
           </Show>

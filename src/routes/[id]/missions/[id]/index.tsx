@@ -149,13 +149,13 @@ export default function MissionDetail() {
                         <div class="relative flex h-1 w-full items-center overflow-hidden rounded-full bg-white">
                           <div class="h-1 rounded-full bg-teriary" style={{ width: `${Math.round((m().progress / Math.max(1, m().target)) * 100)}%` }} />
                         </div>
-                        <span class="shrink-0 text-12 font-semibold">
-                          {m().progress}
-                          <span class="text-teriary">/{m().target}</span>
+                        {/* ตัวเลขในแถบสถานะเป็นสีดำทั้งหมด (DSL 2026-11-26) */}
+                        <span class="shrink-0 text-12 font-semibold text-dark">
+                          {m().progress}/{m().target}
                         </span>
                       </div>
                       <Show when={m().reward_coins > 0}>
-                        <span class="flex shrink-0 items-center gap-1 text-14 font-semibold text-teriary">
+                        <span class="flex shrink-0 items-center gap-1 text-14 font-semibold text-dark">
                           <CoinIcon size={14} />+{formatNumber(m().reward_coins)} {t("common.coins")}
                         </span>
                       </Show>
@@ -182,7 +182,7 @@ export default function MissionDetail() {
                       <div class="relative flex h-1 min-w-0 flex-1 items-center overflow-hidden rounded-full bg-white">
                         <div class="h-1 rounded-full bg-teriary" style={{ width: `${Math.round((m().progress / Math.max(1, m().target)) * 100)}%` }} />
                       </div>
-                      <span class="shrink-0 text-12 font-semibold">{t("club.times_progress", { progress: m().progress, target: m().target })}</span>
+                      <span class="shrink-0 text-12 font-semibold text-dark">{t("club.times_progress", { progress: m().progress, target: m().target })}</span>
                     </div>
                   }
                 >
@@ -238,10 +238,10 @@ export default function MissionDetail() {
             </A>
           </Show>
 
-          {/* รางวัลที่แลกได้หลังทำภารกิจ */}
+          {/* รางวัลที่แลกได้หลังทำภารกิจ — การ์ดแบบเดียวกับรางวัลของภารกิจสะสมคอยน์ (ImageRowCard: รูป 1:1 102px · ชื่อสูงสุด 2 บรรทัด — 2026-11-26) */}
           <Show when={rewards().length > 0}>
-            <section>
-              <div class="rounded-t-2xl bg-primary-surface p-4">
+            <section class="flex flex-col gap-4 rounded-2xl bg-primary-surface p-4">
+              <div>
                 <h2 class="text-16 font-semibold text-primary">{t("mission.reward_can_redeem")}</h2>
                 <Show when={m().redeem_start && m().redeem_end}>
                   <p class="mt-1 text-12 text-gray">
@@ -249,25 +249,25 @@ export default function MissionDetail() {
                   </p>
                 </Show>
               </div>
-              <div class="flex flex-col gap-2 rounded-b-2xl bg-white p-2 shadow-card">
-                <For each={rewards()}>
-                  {(r) => (
-                    <button type="button" onClick={() => openReward(r!.id)} class="flex w-full items-center gap-2 rounded-xl p-2 text-left active:bg-surface-gray">
-                      <CoverImage colors={r!.cover} src={r!.image} class="size-16 shrink-0 rounded-xl" />
-                      <div class="min-w-0 flex-1">
-                        <div class="line-clamp-1 text-14 font-semibold text-dark">{r!.name}</div>
-                        <div class="line-clamp-1 text-12 text-gray">{r!.description}</div>
-                        <div class="mt-1 text-12 font-semibold text-primary">
-                          {m().redeem_coins ? `${formatNumber(m().redeem_coins)} ${t("common.coins")}` : t("mission.use_your_rights_to_redeem")}
-                        </div>
-                      </div>
-                      <IconChevronRight size={16} class="text-gray" />
-                    </button>
-                  )}
-                </For>
-              </div>
+              <For each={rewards()}>
+                {(r) => (
+                  <ImageRowCard
+                    onClick={() => openReward(r!.id)}
+                    image={{ colors: r!.cover, src: r!.image }}
+                    badge={
+                      <Badge>
+                        <Show when={m().redeem_coins} fallback={t("mission.use_your_rights_to_redeem")}>
+                          <CoinIcon size={14} />
+                          {formatNumber(m().redeem_coins)} {t("common.coins")}
+                        </Show>
+                      </Badge>
+                    }
+                    title={r!.name}
+                  />
+                )}
+              </For>
               <Show when={m().status !== "completed"}>
-                <p class="pt-2 text-12 text-gray">{t("mission.complete_mission_description")}</p>
+                <p class="text-12 text-gray">{t("mission.complete_mission_description")}</p>
               </Show>
             </section>
           </Show>
@@ -286,18 +286,19 @@ export default function MissionDetail() {
                       overlay={st() === "redeemed" ? t("mis.redeemed") : st() === "redeem_expired" ? t("mis.redeem_expired") : undefined}
                       overlayTone="gray"
                       badge={
-                        <Badge>
-                          <CoinIcon size={14} />
-                          {t("mis.use_coins", { coins: cr.coins })}
-                        </Badge>
+                        // ป้าย "ใช้ X คอยน์" + (คอยน์ไม่พอ) "ขาดอีก X คอยน์" บรรทัดเดียวกัน → การ์ดสูง 102 รูป 1:1 พอดี (2026-11-26)
+                        <span class="flex items-center gap-2">
+                          <Badge>
+                            <CoinIcon size={14} />
+                            {t("mis.use_coins", { coins: cr.coins })}
+                          </Badge>
+                          <Show when={st() === "available" && (m().coin_balance ?? 0) < cr.coins}>
+                            <span class="text-12 text-error">{t("club.short_coins_brief", { amount: formatNumber(cr.coins - (m().coin_balance ?? 0)) })}</span>
+                          </Show>
+                        </span>
                       }
                       title={cr.reward.name}
-                    >
-                      {/* คอยน์ของภารกิจนี้ไม่พอ → บอกว่าขาดอีกเท่าไร */}
-                      <Show when={st() === "available" && (m().coin_balance ?? 0) < cr.coins}>
-                        <p>{t("club.short_coins", { amount: formatNumber(cr.coins - (m().coin_balance ?? 0)) })}</p>
-                      </Show>
-                    </ImageRowCard>
+                    />
                   );
                 }}
               </For>

@@ -10,7 +10,7 @@ import { cn, formatNumber } from "~/lib/utils";
 /**
  * การ์ดแถว "รูปซ้าย 102px + ป้าย + ชื่อ" — ใช้ร่วมกันทุกหน้า
  * (หน้าแรก สิทธิพิเศษ, รายการสิทธิพิเศษ/ประวัติการแลก, ของรางวัล, รางวัลของภารกิจสะสมคอยน์)
- * - รูปเป็นสี่เหลี่ยมจัตุรัส 1:1 (102×102) เสมอ — ถ้าเนื้อหาสูงกว่า 102 รูปอยู่กึ่งกลางแนวตั้ง
+ * - รูปเต็มกรอบซ้าย กว้าง 102 สูงเท่าการ์ด (การ์ดสูง 102 = รูป 1:1 พอดี: ป้าย + ชื่อ 2 บรรทัด) · ไฟล์รูปต้องเป็น 1:1
  * - image: { colors, src } หรือ undefined (พื้นเทา)
  * - overlay: ข้อความทับรูป (หมดเขต / หมด / แลกแล้ว) · overlayTone dark = ดำโปร่ง, gray = เทา
  * - badge: ป้ายด้านบน (ใช้ <PointsBadge/> สำหรับ "ใช้ X คะแนน")
@@ -34,17 +34,11 @@ export function ImageRowCard(props: {
   const extra = children(() => props.children);
   const body = () => (
     <>
-      <div class="flex w-[102px] shrink-0 items-center self-stretch border-r border-stroke bg-white">
-        <div class="relative aspect-square w-full">
+      {/* รูปเต็มกรอบซ้ายเสมอ (ไม่มีขอบขาวบน/ล่าง — 2026-11-26): กว้าง 102 สูงเท่าการ์ด (ขั้นต่ำ 102 = 1:1) · object-cover
+          ไฟล์รูปต้องเป็น 1:1 — การ์ดที่มีบรรทัดเพิ่ม (สูงกว่า 102) รูปถูกครอปบน/ล่างเล็กน้อย ไม่ยืด */}
+      <div class="relative min-h-[102px] w-[102px] shrink-0 self-stretch border-r border-stroke">
         <Show when={props.image} fallback={<div class="absolute inset-0 bg-surface-gray" />}>
-          {(img) => (
-            <CoverImage
-              colors={img().colors}
-              src={img().src}
-              fit={img().fit}
-              class="absolute inset-0 size-full"
-            />
-          )}
+          {(img) => <CoverImage colors={img().colors} src={img().src} fit={img().fit} class="absolute inset-0 size-full" />}
         </Show>
         <Show when={props.overlay}>
           <span
@@ -56,9 +50,8 @@ export function ImageRowCard(props: {
             {props.overlay}
           </span>
         </Show>
-        </div>
       </div>
-      <div class="flex min-h-[102px] min-w-0 flex-1 flex-col gap-2 p-4">
+      <div class="flex min-h-[102px] min-w-0 flex-1 flex-col justify-center gap-1 p-4">
         <Show when={badge()}>
           <div class="self-start">{badge()}</div>
         </Show>

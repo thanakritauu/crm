@@ -18,6 +18,8 @@ type InputProps = ComponentProps<"input"> & {
   invalid?: boolean;
   /** ไอคอน/ข้อความด้านหน้า เช่น +66 */
   prefix?: JSX.Element;
+  /** จัดข้อความในช่อง (ค่าเริ่มต้นชิดซ้าย) — center ใช้กับช่องตัวเลขระหว่างปุ่ม − / + */
+  align?: "start" | "center";
 };
 
 /** กรอบช่องกรอกที่ใช้ร่วมกัน (input, select): สูง 48, มุม 12, ขอบ Stroke เข้ม, 14/Reg · error = ขอบแดง */
@@ -32,13 +34,13 @@ const control = "h-full w-full min-w-0 bg-transparent text-14 text-dark placehol
 
 /** ช่องกรอกข้อมูล (Figma: 14/Reg, placeholder Text/Placeholder) */
 export function Input(props: InputProps) {
-  const [local, others] = splitProps(props, ["class", "invalid", "prefix"]);
+  const [local, others] = splitProps(props, ["class", "invalid", "prefix", "align"]);
   return (
     <div class={cn(field(local.invalid), local.class)}>
       <Show when={local.prefix}>
         <span class="shrink-0 text-14 text-gray">{local.prefix}</span>
       </Show>
-      <input class={control} aria-invalid={local.invalid} {...others} />
+      <input class={cn(control, local.align === "center" && "text-center")} aria-invalid={local.invalid} {...others} />
     </div>
   );
 }

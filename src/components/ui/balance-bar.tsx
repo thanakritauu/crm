@@ -31,7 +31,8 @@ import { expiringPoints } from "~/services/history-service";
 export type BalanceUnit = "points" | "coins";
 
 const SPEND: Record<BalanceUnit, string> = { points: "rewards", coins: "missions" };
-const HISTORY: Record<BalanceUnit, string> = { points: "wallet/history", coins: "wallet/history?type=coins" };
+// ประวัติแยกหน้า (2026-11-26) — หน้ารวม /wallet/history เข้าจากเมนูโปรไฟล์เท่านั้น
+const HISTORY: Record<BalanceUnit, string> = { points: "wallet/points-history", coins: "wallet/coins-history" };
 
 /** ring = ขอบขาวรอบไอคอน (ใช้บนพื้นชมพูเข้ม ไม่ให้ไอคอน P สีชมพูกลืนกับพื้น) */
 export function BalanceIcon(props: { unit: BalanceUnit; size: number; ring?: boolean }) {
@@ -123,7 +124,7 @@ function ExpiringLine(props: { onBrand?: boolean }) {
     <Show when={next()}>
       {(e) => (
         <A
-          href={to("wallet/history?filter=expired")}
+          href={to("wallet/points-history?filter=expired")}
           class={cn("flex items-center gap-2 border-t px-4 py-2 text-12", props.onBrand ? "border-white/30 text-white" : "border-stroke text-warning")}
         >
           <IconClock size={16} class="shrink-0" />

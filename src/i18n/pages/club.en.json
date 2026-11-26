@@ -40,5 +40,6 @@
   "club.balances_now": "{{points}} points · {{coins}} coins",
   "club.times_progress": "{{progress}}/{{target}} times",
   "club.unlimited_times": "No limit on collections",
-  "club.refresh_again_in": "You can update again in {{time}} min"
+  "club.refresh_again_in": "You can update again in {{time}} min",
+  "club.short_coins_brief": "{{amount}} short"
 }
