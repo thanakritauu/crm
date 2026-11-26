@@ -167,7 +167,7 @@ export default function EarnPoint() {
 
         {/* เชื่อมต่อแพลตฟอร์มออนไลน์ = ช่องทางแนะนำ → การ์ดเต็มความกว้างบนสุด (2026-11-26)
             DSL เดียวกับการ์ด LINE Shopping ในหน้าเชื่อมต่อแพลตฟอร์ม: การ์ดขาว ขอบชมพู 2px · ริบบิ้นชมพูเต็มความกว้างบนสุด (14/Medium ตัวขาว)
-            · ไอคอน + หัวข้อ 14/Semibold + รายละเอียด 14 สีเทา บรรทัดเดียวกัน (ไม่มีปุ่ม) · ไม่แสดงในโหมดภารกิจ */}
+            · ไอคอน + หัวข้อ 14/Medium (เท่าการ์ดช่องทางอื่น — 2026-11-26) + รายละเอียด 14 สีเทา บรรทัดเดียวกัน (ไม่มีปุ่ม) · ไม่แสดงในโหมดภารกิจ */}
         <Show when={!mission()}>
           <button
             type="button"
@@ -181,7 +181,7 @@ export default function EarnPoint() {
                 <IconSmartphone size={24} class="text-primary" />
               </span>
               <span class="flex min-w-0 flex-1 flex-col gap-1">
-                <span class="text-14 font-semibold text-dark">{t("platform.connect_platform")}</span>
+                <span class="text-14 font-medium text-dark">{t("platform.connect_platform")}</span>
                 <span class="text-14 text-gray">{t("club.connect_card_desc")}</span>
               </span>
             </span>
