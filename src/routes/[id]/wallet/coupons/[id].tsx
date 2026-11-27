@@ -112,7 +112,7 @@ export default function CouponDetail() {
           <ConfirmModal
             open={confirm()}
             onOpenChange={setConfirm}
-            icon={<IconTicket size={20} class="text-primary" />}
+            icon={<IconTicket size={20} />}
             title={t("common.coupon_use.confirm_title")}
             // ข้อความต้นฉบับใช้ {minutes} (วงเล็บเดี่ยว) → แทนค่าเองด้วย
             description={t("common.coupon_use.confirm_desc", { minutes: 10 }).replace("{minutes}", "10")}

@@ -178,6 +178,7 @@ export default function QuizActivity() {
         onOpenChange={setSuccessOpen}
         title={t("common.reward_collect_success_title_amount", { amount: mission()?.reward_coins ?? 0, unit: t("common.unit.coins") })}
         description={t("common.reward_collect_coin_notify", { amount: mission()?.reward_coins ?? 0, mission: mission()?.title ?? "" })}
+        tone="warning"
         icon={<CoinIcon size={32} />}
         confirmText={t("common.ok")}
       />

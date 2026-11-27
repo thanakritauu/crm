@@ -12,7 +12,8 @@ export function DiscardChangesModal(props: { open: boolean; onOpenChange: (o: bo
     <ConfirmModal
       open={props.open}
       onOpenChange={props.onOpenChange}
-      icon={<IconInfo size={24} class="text-warning" />}
+      tone="warning"
+      icon={<IconInfo size={24} />}
       title={t("account.discard_title")}
       description={t("account.discard_desc")}
       cancelText={t("account.discard_keep")}

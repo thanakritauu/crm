@@ -14,7 +14,8 @@ import { IconCheckCircle, IconCloseCircle, IconInfo } from "~/components/ui/icon
  * ใช้ได้ 3 แบบ: ResultModal (สำเร็จ/ไม่สำเร็จ ปุ่มเดียว), ConfirmModal (ยกเลิก + ยืนยัน), AlertDialog (ไอคอน JSX อิสระ)
  */
 type Tone = "primary" | "success" | "error" | "warning";
-/** DSL ไอคอนใน popup (2026-11-27): วงกลมพื้นสีอ่อน + ไอคอนสีเข้มของ "สีเดียวกัน" — ห้ามผสมสี (เช่น ไอคอนม่วงบนพื้นเหลือง) */
+/** DSL ไอคอนใน popup (2026-11-27): วงกลมพื้นสีอ่อน + ไอคอนสีเข้มของ "สีเดียวกัน" — ห้ามผสมสี (เช่น ไอคอนม่วงบนพื้นเหลือง)
+ *  สีมาจาก tone ที่เดียว: ไอคอนที่ส่งเข้ามา "ห้ามใส่ class สีเอง" (lint:ds ตรวจ) · รูปเหรียญคอยน์ (สีเหลือง) → tone="warning" */
 const TONE_BG: Record<Tone, string> = { primary: "bg-primary-surface", success: "bg-success-surface", error: "bg-error-surface", warning: "bg-warning-surface" };
 const TONE_FG: Record<Tone, string> = { primary: "text-primary", success: "text-success", error: "text-error", warning: "text-warning" };
 
@@ -66,7 +67,7 @@ export function ResultModal(props: {
     <ModalShell open={props.open} onOpenChange={props.onOpenChange}>
       <ModalBody
         tone={ok() ? "success" : "error"}
-        icon={props.icon ?? (ok() ? <IconCheckCircle size={24} class="text-success" /> : <IconCloseCircle size={24} class="text-error" />)}
+        icon={props.icon ?? (ok() ? <IconCheckCircle size={24} /> : <IconCloseCircle size={24} />)}
         title={props.title}
         description={props.description}
       />
@@ -96,9 +97,12 @@ export function ConfirmModal(props: {
   confirmText?: string;
   onConfirm: () => void;
   destructive?: boolean;
+  /** สีวงไอคอน (DSL พื้นอ่อน + ไอคอนสีเดียวกัน) — ค่าเริ่มต้น primary */
+  tone?: Tone;
 }) {
   return (
     <AlertDialog
+      tone={props.tone}
       destructive={props.destructive}
       open={props.open}
       onOpenChange={props.onOpenChange}

@@ -308,7 +308,7 @@ export default function PlatformQuestionAnswer() {
       <ResultModal
         open={suggestOpen()}
         onOpenChange={setSuggestOpen}
-        icon={<IconInfo size={24} class="text-success" />}
+        icon={<IconInfo size={24} />}
         title={t("platform.suggestion")}
         description={
           <span

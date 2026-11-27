@@ -177,19 +177,15 @@ export default function EarnPoint() {
             tabindex="0"
             onClick={() => choose("platform")}
             onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && choose("platform")}
-            class={cn(cardClass, "flex w-full cursor-pointer flex-col gap-4 p-4 text-left transition active:scale-[0.98]")}
+            class={cn(cardClass, "flex w-full cursor-pointer flex-col items-center gap-4 p-4 text-center transition active:scale-[0.98]")}
           >
-            {/* หัวข้อบรรทัดเดียว 14/Medium ตัวดำ เท่าหัวข้อการ์ดอื่นในหน้า (2026-11-27) */}
-            <span class="text-14 font-medium text-dark">
+            {/* แถวไอคอนแพลตฟอร์ม 40 บนสุด (ถูกเขียว = เชื่อมแล้ว) · หัวข้อ 14/Medium ด้านล่าง · กึ่งกลางทั้งหมด · ไม่มีปุ่ม — ทั้งการ์ดกดได้ (2026-11-27) */}
+            <div class="flex items-center justify-center gap-2">
+              <For each={enabledPlatforms()}>{(p) => <PlatformTile platform={p} connected={!!p.status} size={40} />}</For>
+            </div>
+            <span class="text-center text-14 font-medium text-dark">
               {t("club.connect_hero_title")} {t("club.connect_hero_desc")}
             </span>
-            {/* จอแคบ (320) ไอคอน 40 × 4 + ปุ่มไม่พอบรรทัดเดียว → ปุ่มขึ้นบรรทัดใหม่ (flex-wrap) */}
-            <div class="flex flex-wrap items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
-                <For each={enabledPlatforms()}>{(p) => <PlatformTile platform={p} connected={!!p.status} size={40} />}</For>
-              </div>
-              <span class="flex h-8 shrink-0 items-center rounded-full bg-primary px-4 text-14 font-medium text-white">{t("platform.connect")}</span>
-            </div>
           </div>
         </Show>
 

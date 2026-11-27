@@ -44,7 +44,7 @@ export function MemberGateModal() {
     <AlertDialog
       open={open()}
       onOpenChange={setOpen}
-      icon={<IconGift size={20} class="text-dark" />}
+      icon={<IconGift size={20} />}
       title={t("auth.member_only_title")}
       description={t("auth.member_only_desc")}
       cancelText={t("auth.later")}

@@ -71,7 +71,7 @@ export default function EditAddressPage() {
         open={confirmOpen()}
         onOpenChange={setConfirmOpen}
         tone="warning"
-        icon={<IconInfo size={24} class="text-warning" />}
+        icon={<IconInfo size={24} />}
         title={t("profile.confirm_delete_address")}
         description={t("account.delete_address_permanent")}
         destructive

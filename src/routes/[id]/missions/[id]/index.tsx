@@ -293,6 +293,7 @@ export default function MissionDetail() {
             <AlertDialog
               open={!!coinTarget()}
               onOpenChange={(o) => !o && setCoinTarget(undefined)}
+              tone="warning"
               icon={<CoinIcon size={28} />}
               title={t("mis.confirm_coin_redeem", { coins: coinTarget()?.coins ?? 0 })}
               description={t("mis.confirm_coin_redeem_desc", { reward: coinTarget()?.name ?? "" })}
@@ -314,7 +315,7 @@ export default function MissionDetail() {
               open={notice() === "cannot_redeem" || notice() === "not_enough"}
               onOpenChange={(o) => !o && setNotice(null)}
               tone="warning"
-              icon={<IconInfo size={24} class="text-warning" />}
+              icon={<IconInfo size={24} />}
               title={notice() === "not_enough" ? t("mis.not_enough_coins") : t("mis.cannot_redeem_title")}
               description={notice() === "not_enough" ? t("mis.not_enough_coins_desc", { coins: missingCoins() }) : t("mis.cannot_redeem_desc")}
               confirmText={t("common.ok")}
@@ -324,6 +325,7 @@ export default function MissionDetail() {
               onOpenChange={setConfirmOpen}
               title={isCoin() ? t("mis.start_question") : t("mission.confirm_join_mission")}
               description={joinQuestion()}
+              tone="warning"
               icon={<CoinIcon size={28} />}
               cancelText={t("common.cancel")}
               confirmText={t("common.get_started")}

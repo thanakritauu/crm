@@ -94,7 +94,8 @@ export function PlatformConnectList(props: { class?: string }) {
       <ConfirmModal
         open={!!unbindTarget()}
         onOpenChange={(o) => !o && setUnbindTarget(undefined)}
-        icon={<IconInfo size={24} class="text-warning" />}
+        tone="warning"
+        icon={<IconInfo size={24} />}
         destructive
         // ข้อความตาม production: เชื่อมต่อใหม่ได้ด้วยข้อมูลคำสั่งซื้อใหม่ (เดิมตาม Figma บอกว่าเชื่อมต่อไม่ได้อีก — ไม่ตรงกับระบบจริง)
         title={t("platform.do_you_want_to_unbind_platform_account")}

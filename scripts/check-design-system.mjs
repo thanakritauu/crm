@@ -32,6 +32,8 @@ const RULES = [
   [new RegExp(B + "(text|bg|border|ring|fill|stroke|from|to|via)-(gray|red|green|blue|yellow|pink|purple|slate|zinc|neutral)-[0-9]{2,3}" + E, "g"), "ไม่มีพาเลตต์ Tailwind เริ่มต้น — ใช้ token (gray, stroke, surface-gray …)"],
 ];
 const HEX = /#[0-9a-fA-F]{3,8}\b/g;
+/** DSL ไอคอนใน popup: สีมาจาก tone ของ modal ที่เดียว — ไอคอนที่ส่งผ่าน prop icon={…} ห้ามใส่ class สีเอง (2026-11-27) */
+const POPUP_ICON_COLOR = /icon=\{<\w+[^>]*\bclass="[^"]*\b(text-(?:primary|secondary|teriary|success|error|warning|dark|gray|white))\b/g;
 
 /** ระยะห่างต้องเป็น 0, 4 หรือทวีคูณของ 8 */
 function spacingIssues(line) {
@@ -72,6 +74,7 @@ for (const f of files) {
     } else {
       for (const [re, msg] of RULES) for (const m of line.matchAll(re)) found.push([m[0], msg]);
       found.push(...spacingIssues(line));
+      for (const m of line.matchAll(POPUP_ICON_COLOR)) found.push([m[1], "ไอคอนใน popup ห้ามใส่สีเอง — ใช้ tone ของ modal (primary/success/error/warning) · DSL พื้นอ่อน + ไอคอนสีเดียวกัน"]);
       if (!HEX_OK.some((s) => rel.startsWith(s)) && !/\bd="/.test(line)) for (const m of line.matchAll(HEX)) found.push([m[0], "ห้ามใส่ hex ในโค้ด — ใช้ class token หรือ var(--color-…)"]);
     }
     for (const [tok, msg] of found) {

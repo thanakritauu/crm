@@ -141,7 +141,7 @@ export default function PrivilegeSummary() {
             <ResultModal
               open={result() === "success"}
               onOpenChange={(o) => !o && goHistory()}
-              icon={<IconGift size={24} class="text-dark" />}
+              icon={<IconGift size={24} />}
               title={t("priv.success_title")}
               description={t("priv.success_desc")}
               buttonText={t("priv.back_to_history")}

@@ -477,7 +477,7 @@ export default function StyleGuide() {
           <ConfirmModal
             open={is("confirm")}
             onOpenChange={close}
-            icon={<IconTicket size={20} class="text-primary" />}
+            icon={<IconTicket size={20} />}
             title="ยืนยันการใช้คูปอง"
             description="คูปองจะใช้ได้ภายใน 10 นาที"
             onConfirm={() => {}}

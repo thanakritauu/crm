@@ -145,6 +145,7 @@ export default function MissionRedeemDetail() {
                   ? `${t("common.confirm_usage_prefix")}${formatNumber(cost())} ${t("common.coins")}${t("common.confirm_suffix")}`
                   : t("mission.confirm_redeem_coupon_des")
               }
+              tone="warning"
               icon={<CoinIcon size={28} />}
               cancelText={t("common.cancel")}
               confirmText={t("common.confirm")}
