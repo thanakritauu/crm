@@ -330,6 +330,7 @@ export const sessionActions = {
       }),
     );
     persist();
-    emitEarned("coins", amount);
+    // เหรียญ C ปลิวไปที่ยอดคอยน์หน้าภารกิจ (ถ้าอยู่หน้านั้น) ไม่งั้นปุ่ม "ภารกิจ" ในเมนูล่าง — ไม่ไปหน้าแรก (2026-11-27)
+    emitEarned("coins", amount, "coins");
   },
 };

@@ -13,7 +13,8 @@ export function StampGrid(props: { progress: number; target: number }) {
             <div
               class={cn(
                 "flex aspect-square w-full max-w-[52px] items-center justify-center rounded-full border-2 text-14 font-semibold",
-                filled ? "border-primary bg-primary text-white" : "border-dashed border-primary/40 bg-white text-primary/50",
+                // ยังไม่ได้แสตมป์ = วงเทา (พื้นเทาอ่อน ขอบประเทา เลขเทา) — 2026-11-27 · ได้แล้ว = ชมพูทึบ + ✓
+                filled ? "border-primary bg-primary text-white" : "border-dashed border-stroke-strong bg-surface-gray text-gray",
               )}
             >
               {filled ? (

@@ -41,5 +41,15 @@
   "mis.coin_target_done": "ครบ {{target}}/{{target}} ครั้งแล้ว รวม {{total}} คอยน์",
   "mis.collect_stamps": "สะสมแสตมป์",
   "mis.fill_receipt_info": "กรอกเลขที่ใบเสร็จเพื่อ{{action}}ให้ภารกิจนี้ หากกรอกเรียบร้อยแล้ว กดปุ่ม {{action}}",
-  "mis.fill_code_info": "กรอกโค้ดสินค้าบนผลิตภัณฑ์ เพื่อ{{action}}ให้ภารกิจนี้ หากกรอกเรียบร้อยแล้ว กดปุ่ม {{action}}"
+  "mis.fill_code_info": "กรอกโค้ดสินค้าบนผลิตภัณฑ์ เพื่อ{{action}}ให้ภารกิจนี้ หากกรอกเรียบร้อยแล้ว กดปุ่ม {{action}}",
+  "mis.times_left_prefix": "สะสมได้อีก",
+  "mis.times_each_prefix": "ครั้งละ",
+  "mis.progress_title": "ความคืบหน้า",
+  "mis.unit_times": "ครั้ง",
+  "mis.unit_stamps": "ดวง",
+  "mis.unit_days": "วัน",
+  "mis.unit_questions": "ข้อ",
+  "mis.more_prefix": "อีก",
+  "mis.get_prefix": "รับ",
+  "mis.to_complete": "ภารกิจสำเร็จ"
 }

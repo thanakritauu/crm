@@ -1,5 +1,5 @@
 import { A } from "@solidjs/router";
-import { Show } from "solid-js";
+import { Show, type JSX } from "solid-js";
 import { CoinIcon } from "~/components/mission/coin-icon";
 import { cardClass } from "~/components/ui/card";
 import { IconChevronRight, IconClock } from "~/components/ui/icons";
@@ -104,7 +104,7 @@ function BalanceBody(props: {
       <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary" : "text-primary")}>
         <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")}>
           <Show when={props.countUp} fallback={formatNumber(props.amount)}>
-            <CountUp value={props.amount} id={props.unit} waitFor={props.unit === "points" ? "points" : "home"} />
+            <CountUp value={props.amount} id={props.unit} waitFor={props.unit} />
           </Show>
         </span>
         <span class="shrink-0 text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>
@@ -126,6 +126,8 @@ function TierColumn(props: { onBrand?: boolean; size?: "lg" | "md" }) {
   const { t } = useI18n();
   const to = usePartnerPath();
   const tier = () => tierStatus();
+  // ครึ่งการ์ด → ชื่อระดับแบบสั้น ตัด "Charmiss " นำหน้า (Charmiss Radiance → Radiance) ไม่ให้โดนตัด … (2026-11-27)
+  const shortName = (id: string) => t(`tier.name_${id}`).replace(/^Charmiss\s+/i, "");
   return (
     // justify-between: บรรทัดล่างสุด (แถบ + "อีก X คะแนน") ตรงกับ "ซื้อสินค้าเพื่อสะสมคะแนน" ฝั่งคะแนน (2026-11-27)
     <A href={to("profile/tier")} class="flex min-w-0 flex-1 flex-col justify-between gap-1 p-4">
@@ -137,7 +139,7 @@ function TierColumn(props: { onBrand?: boolean; size?: "lg" | "md" }) {
         <IconChevronRight size={16} class={cn("shrink-0", props.onBrand ? "text-white" : "text-gray")} />
       </span>
       <span class={cn("truncate font-semibold", props.size === "lg" ? "text-18" : "text-14", props.onBrand ? "text-white" : "text-primary")}>
-        {t(`tier.name_${tier().current.id}`)}
+        {shortName(tier().current.id)}
       </span>
       <span class="flex items-center gap-2">
         <span class="h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-surface-gray">
@@ -227,6 +229,8 @@ export function BalanceBar(props: {
   class?: string;
   /** (inline) ปลายทางเหรียญปลิว + ตัวเลขนับขึ้น เช่น "mission-coins:<id>" */
   countId?: string;
+  /** เนื้อหาเพิ่มใต้แถบยอดในการ์ดเดียวกัน (เช่น ความคืบหน้าจำนวนครั้งของภารกิจสะสมคอยน์) */
+  extra?: JSX.Element;
 }) {
   const amount = () => props.amount ?? (props.unit === "coins" ? session.customer.coins : session.customer.points);
   return (
@@ -237,6 +241,7 @@ export function BalanceBar(props: {
       >
         <BalanceInline unit={props.unit} amount={amount()} label={props.label} link={props.history !== false} countId={props.countId} />
       </Show>
+      {props.extra}
       <Show when={props.unit === "points" && props.amount === undefined}>
         <ExpiringLine />
       </Show>

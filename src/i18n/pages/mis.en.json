@@ -41,5 +41,15 @@
   "mis.coin_target_done": "All {{target}}/{{target}} done — {{total}} coins in total",
   "mis.collect_stamps": "Collect stamps",
   "mis.fill_receipt_info": "Enter the receipt number to {{action}} for this mission, then tap {{action}}",
-  "mis.fill_code_info": "Enter the product code to {{action}} for this mission, then tap {{action}}"
+  "mis.fill_code_info": "Enter the product code to {{action}} for this mission, then tap {{action}}",
+  "mis.times_left_prefix": "Collect",
+  "mis.times_each_prefix": "each worth",
+  "mis.progress_title": "Progress",
+  "mis.unit_times": "times",
+  "mis.unit_stamps": "stamps",
+  "mis.unit_days": "days",
+  "mis.unit_questions": "questions",
+  "mis.more_prefix": "",
+  "mis.get_prefix": "more to get",
+  "mis.to_complete": "more to complete"
 }

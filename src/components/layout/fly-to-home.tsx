@@ -5,7 +5,8 @@ import { onCleanup, onMount } from "solid-js";
  *   ได้คะแนน → เหรียญ P ปลิว · ได้คอยน์ → เหรียญ C ปลิว
  * - ปลายทาง (target):
  *   "points" = คะแนน → ยอดคะแนนในหัวหน้าหน้าสะสมคะแนน ([data-fly-target="points"]) ถ้ามีบนจอ ไม่มี = ปุ่มหน้าแรก (2026-11-27)
- *   "home" (ค่าเริ่มต้น) = ปุ่ม "หน้าแรก" ในเมนูล่าง ([data-nav="home"]) — คอยน์หลัก
+ *   "coins" = คอยน์หลัก → ยอดคอยน์ในหัวหน้าหน้าภารกิจ ([data-fly-target="coins"]) ถ้ามีบนจอ ไม่มี = ปุ่ม "ภารกิจ" ในเมนูล่าง (2026-11-27)
+ *   "home" = ปุ่ม "หน้าแรก" ในเมนูล่าง ([data-nav="home"])
  *   "mission-coins:<id>" = ยอด "คอยน์ของภารกิจนี้" ในหน้าภารกิจสะสมคอยน์ ([data-fly-target="…"])
  * - จุดที่ส่ง: sessionActions.addPoints / addCoins (→ home) · missionService.addMissionCoins (→ mission-coins:<id>)
  *   ช่องทางใหม่ที่ให้คะแนน/คอยน์ ต้องเรียกฟังก์ชันเหล่านี้เท่านั้น (ห้ามแก้ยอดเอง) แอนิเมชันจะมาเอง · ยอดติดลบ (ใช้/แลก) ไม่เล่น
@@ -34,10 +35,13 @@ export const emitFlyTargetReady = () => {
 
 const selector = (target: string) => (target === "home" ? '[data-nav="home"]' : `[data-fly-target="${target}"]`);
 /** "points" = ยอดคะแนนในหัวหน้าหน้าสะสมคะแนน ถ้ามีบนจอ · ไม่มี = ปุ่มหน้าแรกในเมนูล่าง (2026-11-27) */
+/** "coins" = ยอดคอยน์ในหัวหน้าหน้าภารกิจ ถ้ามีบนจอ · ไม่มี = ปุ่ม "ภารกิจ" ในเมนูล่าง (ไม่ไปหน้าแรกแล้ว — หน้าแรกไม่แสดงคอยน์ · 2026-11-27) */
 const find = (target: string) =>
   target === "points"
     ? document.querySelector<HTMLElement>('[data-fly-target="points"]') ?? document.querySelector<HTMLElement>('[data-nav="home"]')
-    : document.querySelector<HTMLElement>(selector(target));
+    : target === "coins"
+      ? document.querySelector<HTMLElement>('[data-fly-target="coins"]') ?? document.querySelector<HTMLElement>('[data-nav="missions"]')
+      : document.querySelector<HTMLElement>(selector(target));
 
 export function FlyToHome() {
   const queued = new Set<string>();

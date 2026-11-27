@@ -64,7 +64,8 @@ export default function MissionList() {
         title={t("mission.mission")}
       >
         {/* คอยน์ของคุณ — BalanceBar (อยู่หน้าภารกิจแล้ว → แตะแถบไม่ไปไหน มีแค่ลิงก์ประวัติ) */}
-        <BalanceBar unit="coins" inline />
+        {/* countId "coins" = ปลายทางเหรียญ C ปลิว + ตัวเลขนับขึ้น (2026-11-27) */}
+        <BalanceBar unit="coins" inline countId="coins" />
       </PageHeader>
 
       <div class="flex flex-col gap-4 p-4">
