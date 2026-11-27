@@ -59,7 +59,8 @@ export function MissionGridCard(props: { mission: Mission }) {
           </div>
         </Show>
         <Show when={isCoinWallet(m())}>
-          <p class="mt-2 text-12 text-gray">{t("club.unlimited_times")}</p>
+          {/* ขนาด/น้ำหนัก/สีเท่า "2/5 ครั้ง" (12/Semibold ตัวดำ · 2026-11-27) */}
+          <p class="mt-2 text-12 font-semibold text-dark">{t("club.unlimited_times")}</p>
         </Show>
         {/* คอยน์: ภารกิจสะสมคอยน์ = "สะสมแล้ว X คอยน์" ของภารกิจนั้น (แยกจากยอดรวม — ไม่มี + เพราะไม่ใช่รางวัล) · ภารกิจอื่น = คอยน์ที่จะได้เมื่อสำเร็จ · ขนาดเท่าราคา "ใช้ X คะแนน" ในการ์ดรางวัล (ไอคอน 16 · 14/Medium) */}
         <Show
