@@ -14,7 +14,9 @@ import { IconCheckCircle, IconCloseCircle, IconInfo } from "~/components/ui/icon
  * ใช้ได้ 3 แบบ: ResultModal (สำเร็จ/ไม่สำเร็จ ปุ่มเดียว), ConfirmModal (ยกเลิก + ยืนยัน), AlertDialog (ไอคอน JSX อิสระ)
  */
 type Tone = "primary" | "success" | "error" | "warning";
+/** DSL ไอคอนใน popup (2026-11-27): วงกลมพื้นสีอ่อน + ไอคอนสีเข้มของ "สีเดียวกัน" — ห้ามผสมสี (เช่น ไอคอนม่วงบนพื้นเหลือง) */
 const TONE_BG: Record<Tone, string> = { primary: "bg-primary-surface", success: "bg-success-surface", error: "bg-error-surface", warning: "bg-warning-surface" };
+const TONE_FG: Record<Tone, string> = { primary: "text-primary", success: "text-success", error: "text-error", warning: "text-warning" };
 
 const ModalShell: ParentComponent<{ open: boolean; onOpenChange: (o: boolean) => void }> = (props) => (
   <AlertDialogPrimitive open={props.open} onOpenChange={props.onOpenChange}>
@@ -33,7 +35,7 @@ function ModalBody(props: { icon?: JSX.Element; tone?: Tone; title: JSX.Element;
   return (
     <div class="flex w-full flex-col items-center gap-4">
       <Show when={props.icon}>
-        <span class={cn("flex size-12 items-center justify-center rounded-full text-primary", TONE_BG[props.tone ?? "primary"])}>{props.icon}</span>
+        <span class={cn("flex size-12 items-center justify-center rounded-full", TONE_BG[props.tone ?? "primary"], TONE_FG[props.tone ?? "primary"])}>{props.icon}</span>
       </Show>
       <div class="flex w-full flex-col items-center text-center">
         <AlertDialogPrimitive.Title class="whitespace-pre-line text-18 font-semibold text-dark">{props.title}</AlertDialogPrimitive.Title>

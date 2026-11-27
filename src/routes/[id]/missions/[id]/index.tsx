@@ -346,7 +346,7 @@ export default function MissionDetail() {
               open={notice() === "cannot_redeem" || notice() === "not_enough"}
               onOpenChange={(o) => !o && setNotice(null)}
               tone="warning"
-              icon={<IconInfo size={24} class="text-secondary" />}
+              icon={<IconInfo size={24} class="text-warning" />}
               title={notice() === "not_enough" ? t("mis.not_enough_coins") : t("mis.cannot_redeem_title")}
               description={notice() === "not_enough" ? t("mis.not_enough_coins_desc", { coins: missingCoins() }) : t("mis.cannot_redeem_desc")}
               confirmText={t("common.ok")}

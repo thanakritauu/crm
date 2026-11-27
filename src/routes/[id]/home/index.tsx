@@ -73,6 +73,7 @@ export default function Home() {
   // ทดลองดีไซน์ (2026-11-26): พื้นชมพูเข้ม + การ์ดขาว — สลับได้จากเมนู prototype
   const isDark = () => homeDark();
   // การ์ดยอด: "both" = คะแนน | คอยน์ · "points" / "coins" = สกุลเดียว (เมนู prototype)
+  const tierInCard = () => tierSystem() && showTierCard() && homeBalance() === "points";
   const balanceOnly = () => {
     const v = homeBalance();
     return v === "both" ? undefined : v;
@@ -144,8 +145,9 @@ export default function Home() {
           <div class="flex flex-col">
             {/* พื้นชมพูเข้ม → การ์ดขาว (tone white) · พื้นชมพูอ่อน → การ์ดชมพูเข้ม (tone brand) */}
             {/* แสดงทั้งคะแนน|คอยน์ หรือสกุลเดียว — สลับได้จากเมนู prototype (homeBalance) */}
-            <BalanceSplit size="lg" tone={isDark() ? "white" : "brand"} countUp only={balanceOnly()} class="relative z-raised" />
-            <Show when={tierSystem() && showTierCard()}>
+            {/* คะแนนอย่างเดียว + เปิดการ์ดระดับ → ซ้ายคะแนน | ขวาระดับ ในการ์ดใบเดียวกัน (แบบ A) แทนการ์ดระดับแยก */}
+            <BalanceSplit size="lg" tone={isDark() ? "white" : "brand"} countUp only={balanceOnly()} tierInline={tierInCard()} class="relative z-raised" />
+            <Show when={tierSystem() && showTierCard() && !tierInCard()}>
               <TierRow />
             </Show>
           </div>

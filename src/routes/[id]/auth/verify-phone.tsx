@@ -333,7 +333,7 @@ export default function VerifyByPhone() {
         open={mergeOpen()}
         onOpenChange={setMergeOpen}
         tone="warning"
-        icon={<IconInfo size={24} class="text-secondary" />}
+        icon={<IconInfo size={24} class="text-warning" />}
         title={isGuest() ? t("otp.merge_guest_title") : t("otp.merge_title")}
         description={isGuest() ? t("otp.merge_guest_description") : t("otp.merge_description", { phone: formatPhone(phone()) })}
         cancelText={isGuest() ? t("otp.merge_guest_cancel") : t("otp.merge_cancel")}

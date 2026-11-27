@@ -8,6 +8,7 @@ import { session } from "~/lib/session";
 import { usePartnerPath } from "~/lib/theme";
 import { cn, formatNumber } from "~/lib/utils";
 import { pointsExpire } from "~/prototype/settings";
+import { tierStatus } from "~/services/tier-service";
 import { PlatformRefreshButton } from "~/components/platform/platform-refresh-button";
 import { CountUp } from "~/components/ui/count-up";
 import { expiringPoints } from "~/services/history-service";
@@ -113,6 +114,42 @@ function BalanceBody(props: {
         <span class={cn("-mt-1 truncate text-12", props.onBrand ? "text-white" : "text-gray")}>{props.hint}</span>
       </Show>
     </div>
+  );
+}
+
+/**
+ * คอลัมน์ระดับสมาชิก (แบบ A — คะแนนอย่างเดียว: ซ้ายคะแนน | ขวาระดับ แทนคอยน์ · 2026-11-27)
+ * โครงเดียวกับฝั่งคอยน์: ป้าย "ระดับสมาชิก" 14/Medium + ตรา 16 + ">" · ชื่อระดับ 18/Semibold (ตัด … ถ้ายาว) · แถบความคืบหน้า + "อีก X คะแนน" 12 เทา
+ * ทั้งคอลัมน์ → หน้าระดับสมาชิก
+ */
+function TierColumn(props: { onBrand?: boolean; size?: "lg" | "md" }) {
+  const { t } = useI18n();
+  const to = usePartnerPath();
+  const tier = () => tierStatus();
+  return (
+    // justify-between: บรรทัดล่างสุด (แถบ + "อีก X คะแนน") ตรงกับ "ซื้อสินค้าเพื่อสะสมคะแนน" ฝั่งคะแนน (2026-11-27)
+    <A href={to("profile/tier")} class="flex min-w-0 flex-1 flex-col justify-between gap-1 p-4">
+      <span class="flex items-center justify-between gap-2">
+        <span class="flex min-w-0 items-center gap-1">
+          <img src={tier().current.mark} alt="" width="16" height="16" class="size-4 shrink-0 object-contain" />
+          <span class={cn("truncate text-14 font-medium", props.onBrand ? "text-white" : "text-dark")}>{t("tier.title")}</span>
+        </span>
+        <IconChevronRight size={16} class={cn("shrink-0", props.onBrand ? "text-white" : "text-gray")} />
+      </span>
+      <span class={cn("truncate font-semibold", props.size === "lg" ? "text-18" : "text-14", props.onBrand ? "text-white" : "text-primary")}>
+        {t(`tier.name_${tier().current.id}`)}
+      </span>
+      <span class="flex items-center gap-2">
+        <span class="h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-surface-gray">
+          <span class="block h-1 rounded-full bg-primary" style={{ width: `${Math.round(tier().progress * 100)}%` }} />
+        </span>
+        <span class={cn("shrink-0 text-12", props.onBrand ? "text-white" : "text-gray")}>
+          <Show when={tier().next} fallback={t("tier.top_short")}>
+            {t("tier.to_next_short", { points: formatNumber(tier().needed) })}
+          </Show>
+        </span>
+      </span>
+    </A>
   );
 }
 
@@ -222,18 +259,25 @@ export function BalanceSplit(props: {
   history?: boolean;
   /** แสดงสกุลเดียว (หน้าแรก — ตัวเลือก prototype) · ไม่ใส่ = ทั้งคะแนนและคอยน์ */
   only?: "points" | "coins";
+  /** ระดับสมาชิกเป็นคอลัมน์ขวาของการ์ดคะแนน (ใช้กับ only="points" — แบบ A) */
+  tierInline?: boolean;
 }) {
   const { t } = useI18n();
   const pink = () => props.tone === "pink";
   const brand = () => props.tone === "brand";
+  const tierCol = () => !!props.tierInline && props.only === "points";
   // ป้าย "คะแนนของคุณ" / "คอยน์ของคุณ" (ขอให้ชัดว่าเป็นยอดของผู้ใช้ — ลิงก์ประวัติเหลือแค่ ">" จึงพอดีครึ่งความกว้าง)
   // สีตัวอักษรคงเดิมทั้งสองโทน: คะแนนชมพู · คอยน์ส้ม · ป้าย/วิธีได้สีเทา → ยังแยกสองสกุลได้ชัด
   return (
     <div class={cn(cardClass, "flex flex-col text-left", pink() && "bg-primary-surface", brand() && "bg-primary", props.class)}>
       {/* only = สกุลเดียวเต็มความกว้าง · ไม่ใส่ = 2 คอลัมน์ คะแนน | คอยน์ */}
-      <div class={cn("grid divide-x", props.only ? "grid-cols-1" : "grid-cols-2", pink() ? "divide-white" : brand() ? "divide-white/30" : "divide-stroke")}>
+      {/* คะแนนอย่างเดียว + ระดับ (แบบ A) = 2 คอลัมน์ คะแนน | ระดับ */}
+      <div class={cn("grid divide-x", props.only && !tierCol() ? "grid-cols-1" : "grid-cols-2", pink() ? "divide-white" : brand() ? "divide-white/30" : "divide-stroke")}>
         <Show when={props.only !== "coins"}>
           <BalanceBody unit="points" amount={session.customer.points} label={t("club.your_points")} hint={t("club.points_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} href={props.pointsHref} countUp={props.countUp} history={props.history} />
+        </Show>
+        <Show when={tierCol()}>
+          <TierColumn onBrand={brand()} size={props.size} />
         </Show>
         <Show when={props.only !== "points"}>
           <BalanceBody unit="coins" amount={session.customer.coins} label={t("club.your_coins")} hint={t("club.coins_how")} size={props.size ?? "md"} onBrand={brand()} refresh={props.refresh} countUp={props.countUp} history={props.history} />

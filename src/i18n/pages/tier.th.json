@@ -20,5 +20,7 @@
   "tier.perk_birthday_300": "คูปองวันเกิด ฿300",
   "tier.perk_early_access": "สิทธิ์ช้อปสินค้าใหม่ก่อนใคร",
   "tier.no_tier_system": "ยังไม่มีระบบระดับสมาชิก",
-  "tier.no_tier_system_desc": "สะสมคะแนนจากการซื้อสินค้า เพื่อแลกรางวัลได้เลย"
+  "tier.no_tier_system_desc": "สะสมคะแนนจากการซื้อสินค้า เพื่อแลกรางวัลได้เลย",
+  "tier.to_next_short": "อีก {{points}} คะแนน",
+  "tier.top_short": "ระดับสูงสุด"
 }

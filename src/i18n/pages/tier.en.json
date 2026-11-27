@@ -20,5 +20,7 @@
   "tier.perk_birthday_300": "฿300 birthday coupon",
   "tier.perk_early_access": "Early access to new products",
   "tier.no_tier_system": "No membership tiers yet",
-  "tier.no_tier_system_desc": "Earn points from purchases and redeem rewards"
+  "tier.no_tier_system_desc": "Earn points from purchases and redeem rewards",
+  "tier.to_next_short": "{{points}} pts to go",
+  "tier.top_short": "Top tier"
 }
