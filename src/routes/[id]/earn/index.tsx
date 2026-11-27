@@ -177,8 +177,10 @@ export default function EarnPoint() {
             tabindex="0"
             onClick={() => choose("platform")}
             onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && choose("platform")}
-            class={cn(cardClass, "flex w-full cursor-pointer flex-col items-center gap-4 p-4 text-center transition active:scale-[0.98]")}
+            class={cn(cardClass, "relative flex w-full cursor-pointer flex-col items-center gap-4 p-4 text-center transition active:scale-[0.98]")}
           >
+            {/* ป้ายมุมซ้ายบน "แนะนำ" — ทรงเดียวกับป้ายสถานะบนการ์ดภารกิจ (rounded-r-lg rounded-tl-2xl) สีชมพู (2026-11-27) */}
+            <span class="absolute left-0 top-0 rounded-r-lg rounded-tl-2xl bg-primary px-2 py-1 text-12 font-medium text-white">{t("club.connect_hero_badge")}</span>
             {/* แถวไอคอนแพลตฟอร์ม 40 บนสุด (ถูกเขียว = เชื่อมแล้ว) · หัวข้อ 14/Medium ด้านล่าง · กึ่งกลางทั้งหมด · ไม่มีปุ่ม — ทั้งการ์ดกดได้ (2026-11-27) */}
             <div class="flex items-center justify-center gap-2">
               <For each={enabledPlatforms()}>{(p) => <PlatformTile platform={p} connected={!!p.status} size={40} />}</For>
