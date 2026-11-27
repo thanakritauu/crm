@@ -52,7 +52,7 @@ const methods: { id: Method; title: string; icon: typeof IconCamera }[] = [
 
 /** คำแนะนำหน้าสะสมคะแนน — ข้อความจาก production (ไทย · อังกฤษ · จีน แสดงพร้อมกัน ไม่แปลตามภาษาแอป) */
 const EARN_NOTICE = [
-  "การสะสมคะแนนในส่วนนี้ใช้สำหรับแลกสินค้าเท่านั้น ไม่รวมถึงภารกิจหรือกิจกรรมอื่น ๆ",
+  "การสะสมคะแนนในส่วนนี้ใช้สำหรับแลกสินค้าเท่านั้น ไม่รวมภารกิจหรือกิจกรรมอื่นๆ", // ปรับจาก production "ไม่รวมถึง…อื่น ๆ" (2026-11-27)
   "Points collected here are for product redemption only and do not include missions or other activities.",
   "此处积累的积分仅用于兑换商品，不包含任务或其他活动。",
 ];

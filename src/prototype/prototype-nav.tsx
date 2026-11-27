@@ -18,6 +18,7 @@ import { cn } from "~/lib/utils";
 import { screenGroups } from "./screens";
 import { resetWelcome } from "~/components/home/welcome-popup";
 import { resetRefreshCooldown } from "~/components/platform/platform-refresh-button";
+import { notifications as seedNotifications } from "~/mocks/notifications";
 
 /**
  * เมนู prototype — ปุ่มลอยมุมขวาล่าง เปิด sheet รายการหน้าทั้งหมด
@@ -25,6 +26,13 @@ import { resetRefreshCooldown } from "~/components/platform/platform-refresh-but
  */
 export function PrototypeNav() {
   const [open, setOpen] = createSignal(false);
+  // สถานะการแจ้งเตือนปัจจุบัน (ดูจากข้อมูลจริง) — ไว้ไฮไลต์ชิป
+  const seedIds = new Set(seedNotifications.map((n) => n.id));
+  const notiScenario = () =>
+    session.notifications.length === 0 ? "empty" : session.notifications.some((n) => !seedIds.has(n.id)) ? "added" : "seed";
+  // สถานการณ์คูปองปัจจุบัน (ดูจากข้อมูลจริง) — ไว้ไฮไลต์ชิปที่เลือกอยู่
+  const couponScenario = () =>
+    session.myCoupons.length === 0 ? "none" : session.myCoupons.some((c) => c.status === "available") ? "has" : "all_used";
   const [frame, setFrame] = createSignal<"mobile" | "full">("full");
   onMount(() => {
     setFrame(applyFrameMode());
@@ -159,10 +167,7 @@ export function PrototypeNav() {
               ).map(([value, label]) => (
                 <button
                   type="button"
-                  class={cn(
-                    "rounded-full border px-4 py-1 text-12 font-medium",
-                    homeBalance() === value ? "border-primary bg-primary text-white" : "border-stroke-strong text-dark hover:border-primary hover:text-primary",
-                  )}
+                  class={chipClass(homeBalance() === value)}
                   onClick={() => setHomeBalance(value)}
                 >
                   {label}
@@ -182,7 +187,8 @@ export function PrototypeNav() {
               ).map(([value, label]) => (
                 <button
                   type="button"
-                  class="rounded-full border border-stroke-strong px-4 py-1 text-12 font-medium text-dark hover:border-primary hover:text-primary"
+                  // สถานะปัจจุบันดูจากข้อมูลคูปองจริง: มีที่ใช้ได้ = มีคูปองพร้อมใช้ · มีแต่ใช้หมด = ใช้หมดแล้ว · ไม่มีเลย = ยังไม่เคยมี
+                  class={chipClass(couponScenario() === value)}
                   onClick={() => sessionActions.setCouponScenario(value)}
                 >
                   {label}
@@ -191,19 +197,22 @@ export function PrototypeNav() {
             </div>
           </div>
           <div class="mt-1 rounded-xl px-4 py-2">
-            <p class="text-14 text-dark">การแจ้งเตือน</p>
+            <p class="text-14 text-dark">
+              การแจ้งเตือน <span class="text-12 text-gray">(ตอนนี้ {session.notifications.length} รายการ · ยังไม่อ่าน {session.notifications.filter((n) => !n.read).length})</span>
+            </p>
             <div class="mt-2 flex flex-wrap gap-2">
               {(
                 [
-                  ["เพิ่มตัวอย่าง (ยังไม่อ่าน)", () =>
+                  ["added", "เพิ่มตัวอย่าง (ยังไม่อ่าน)", () =>
                     sessionActions.pushNotification({ key: "delivered", params: { name: "Glow Setting Powder Translucent" }, type: "redeem", icon: "gift", link: "rewards" })],
-                  ["ล้างทั้งหมด", () => sessionActions.setNotifications("empty")],
-                  ["ชุดตั้งต้น", () => sessionActions.setNotifications("seed")],
+                  ["empty", "ล้างทั้งหมด", () => sessionActions.setNotifications("empty")],
+                  ["seed", "ชุดตั้งต้น", () => sessionActions.setNotifications("seed")],
                 ] as const
-              ).map(([label, run]) => (
+              ).map(([value, label, run]) => (
                 <button
                   type="button"
-                  class="rounded-full border border-stroke-strong px-4 py-1 text-12 font-medium text-dark hover:border-primary hover:text-primary"
+                  // ชิปที่ตรงกับข้อมูลตอนนี้เป็นปุ่มเข้ม: ว่าง = ล้างทั้งหมด · เท่าชุดตั้งต้น = ชุดตั้งต้น · มีที่เพิ่มเอง = เพิ่มตัวอย่าง
+                  class={chipClass(notiScenario() === value)}
                   onClick={run}
                 >
                   {label}
@@ -233,6 +242,13 @@ export function PrototypeNav() {
   );
 }
 
+
+/** ชิปในเมนู prototype — ที่เลือกอยู่ = ชมพูทึบตัวขาว · ไม่ได้เลือก = ขอบเทา (2026-11-27: เดิมชิปคูปอง/แจ้งเตือนไม่บอกสถานะ ดูเหมือนกดไม่ติด) */
+const chipClass = (selected: boolean) =>
+  cn(
+    "rounded-full border px-4 py-1 text-12 font-medium transition active:scale-95",
+    selected ? "border-primary bg-primary text-white" : "border-stroke-strong text-dark hover:border-primary hover:text-primary",
+  );
 
 /**
  * สวิตช์เปิด/ปิดในเมนู prototype — ราง 44×24 · ปุ่มกลม 16 (ขอบใน 4px ทุกด้าน) · เปิด = เลื่อน 20px พื้นชมพู
