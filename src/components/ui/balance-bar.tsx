@@ -103,7 +103,7 @@ function BalanceBody(props: {
       <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary" : "text-primary")}>
         <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")}>
           <Show when={props.countUp} fallback={formatNumber(props.amount)}>
-            <CountUp value={props.amount} id={props.unit} waitFor="home" />
+            <CountUp value={props.amount} id={props.unit} waitFor={props.unit === "points" ? "points" : "home"} />
           </Show>
         </span>
         <span class="shrink-0 text-14 font-medium">{coins() ? t("common.coins") : t("common.points")}</span>

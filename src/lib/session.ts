@@ -308,7 +308,8 @@ export const sessionActions = {
       }),
     );
     persist();
-    emitEarned("points", amount);
+    // เหรียญ P ปลิวไปที่ยอดคะแนนหน้าสะสมคะแนน (ถ้าอยู่หน้านั้น) ไม่งั้นปุ่มหน้าแรก
+    emitEarned("points", amount, "points");
   },
 
   /** ได้รับคอยน์จากภารกิจ */

@@ -4,6 +4,7 @@ import { Dynamic } from "solid-js/web";
 import { AlertDialog, InfoBox, ResultModal } from "~/components/ui/modal";
 import { BottomNav, BottomNavSpacer } from "~/components/layout/bottom-nav";
 import { PageHeader } from "~/components/layout/page-header";
+import { BalanceBar } from "~/components/ui/balance-bar";
 import { PlatformRefreshButton } from "~/components/platform/platform-refresh-button";
 import { ConnectPlatformHint } from "~/components/platform/connect-platform-hint";
 import { CoinIcon } from "~/components/mission/coin-icon";
@@ -119,16 +120,22 @@ export default function EarnPoint() {
     <div class="min-h-screen bg-white">
       <PageLoading show={!!loading()} message={loading() || undefined} />
       {/* โหมดภารกิจมีปุ่มย้อนกลับไปหน้าภารกิจ */}
-      {/* หน้าสะสมคะแนนปกติ: ชื่อชิดซ้าย + ปุ่มรีเฟรชมุมขวา (ย้ายมาจากหน้าเชื่อมต่อแพลตฟอร์ม — อัปเดตคะแนนและคอยน์เหมือนปุ่มหน้าแรก · 2026-11-25)
-          โหมดภารกิจ: ชื่อกึ่งกลาง + ปุ่มย้อนกลับไปหน้าภารกิจ (ไม่มีรีเฟรช) */}
+      {/* หน้าสะสมคะแนนปกติ: หัวหน้าชมพู ชื่อกึ่งกลาง + แถบยอดคะแนน + ปุ่มรีเฟรชมุมขวา (อัปเดตคะแนนและคอยน์เหมือนปุ่มหน้าแรก)
+          โหมดภารกิจ: หัวหน้าชมพู ชื่อกึ่งกลาง + ปุ่มย้อนกลับไปหน้าภารกิจ (ไม่มีรีเฟรช) */}
       <Show
         when={mission()}
-        fallback={<PageHeader title={t("component.card_member.collect_points")} hideBack right={<PlatformRefreshButton unit="all" />} />}
+        fallback={
+          // หัวหน้าแบบเดียวกับแลกรางวัล/ภารกิจ (2026-11-27): พื้นชมพูโค้งล่าง · ชื่อกึ่งกลาง · แถบยอดคะแนน (บรรทัดเดียว) · ปุ่มรีเฟรชมุมขวา
+          <PageHeader tone="primary" align="center" hideBack title={t("component.card_member.collect_points")} right={<PlatformRefreshButton unit="all" />}>
+            {/* countId "points" = ปลายทางเหรียญ P ปลิว + ตัวเลขนับขึ้น (ใช้ค่าที่จำร่วมกับหน้าแรก) */}
+            <BalanceBar unit="points" inline countId="points" />
+          </PageHeader>
+        }
       >
-        {(m) => <PageHeader align="center" title={t(missionCollectKey(m()))} backTo={`missions/${m().id}`} />}
+        {(m) => <PageHeader tone="primary" align="center" title={t(missionCollectKey(m()))} backTo={`missions/${m().id}`} />}
       </Show>
 
-      <div class="px-4 pb-4">
+      <div class="p-4">
         <InfoBox>
           {/* หน้าสะสมคะแนนปกติ: ข้อความจาก production (club.charmiss.co/charmiss/point-collection — 25 พ.ย. 2569) แสดง 3 ภาษาพร้อมกันทุกภาษาแอป
               โหมดภารกิจ: ข้อความภารกิจเดิม (สะสมแสตมป์ / คอยน์) */}
