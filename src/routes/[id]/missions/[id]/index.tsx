@@ -139,38 +139,21 @@ export default function MissionDetail() {
             overlay: m().status === "expired" ? { text: t("common.mission_timeout"), tone: "dark" } : undefined,
           }}
           status={
-            <Show
-              when={isCoin()}
-              fallback={
-                // กำลังทำ: ไม่มีแถบสถานะใต้รูปแล้ว — ความคืบหน้าแยกเป็นการ์ดในเนื้อหา (MissionProgressCard · 2026-11-27) · ครบแล้ว = แถบเขียว
-                <Show when={m().status === "completed"}
-                >
-                  <div class="flex h-10 w-full items-center justify-between bg-success px-4">
-                    <span class="text-14 font-semibold text-white">{t("mission.mission_completed")}</span>
-                    <span class="flex items-center gap-1 text-14 font-semibold text-white">
-                      <CoinIcon size={14} />
-                      {formatNumber(m().reward_coins)} {t("common.coins")}
-                    </span>
-                  </div>
-                </Show>
-              }
-            >
-              {/* ภารกิจสะสมคอยน์: ยอดคอยน์ของภารกิจแสดงด้วย BalanceBar ในเนื้อหา
-                  แบบมีเป้า (ตาม production: goal > 0 → มีแถบความคืบหน้า): แถบ "2/5 ครั้ง" · ครบแล้ว = แถบเขียว "ภารกิจสำเร็จ" */}
-              <Show when={isCoinTarget(m())}>
-                {/* กำลังทำ: ไม่มีแถบสถานะ — ความคืบหน้าอยู่ในการ์ด "คอยน์ที่สะสมได้จากภารกิจนี้" (2026-11-27) · ครบแล้ว = แถบเขียว */}
-                <Show when={m().status === "completed" || missionFull(m())}>
-                  <div class="flex h-10 w-full items-center justify-between bg-success px-4">
-                    <span class="text-14 font-semibold text-white">{t("mission.mission_completed")}</span>
-                    <span class="text-14 font-semibold text-white">{t("club.times_progress", { progress: m().target, target: m().target })}</span>
-                  </div>
-                </Show>
-              </Show>
+            // ไม่มีแถบสถานะใต้รูปแล้ว — ความคืบหน้า/สำเร็จ อยู่ในการ์ด MissionProgressCard ทั้งกำลังทำและสำเร็จแล้ว (2026-11-27)
+            // แถบเขียวเหลือเฉพาะภารกิจที่ไม่มีเป้าและไม่ใช่ภารกิจสะสมคอยน์
+            <Show when={!isCoin() && m().status === "completed" && !(m().target > 0)}>
+              <div class="flex h-10 w-full items-center justify-between bg-success px-4">
+                <span class="text-14 font-semibold text-white">{t("mission.mission_completed")}</span>
+                <span class="flex items-center gap-1 text-14 font-semibold text-white">
+                  <CoinIcon size={14} />
+                  {formatNumber(m().reward_coins)} {t("common.coins")}
+                </span>
+              </div>
             </Show>
           }
         >
-          {/* ความคืบหน้า = การ์ดแยก ทุกภารกิจที่มีเป้า (แสตมป์ / ใบเสร็จ / เช็คอิน / ควิซ / สะสมคอยน์แบบมีจำนวนครั้ง) — ยังไม่สำเร็จ */}
-          <Show when={m().target > 0 && m().status !== "completed" && m().status !== "expired" && !missionFull(m())}>
+          {/* ความคืบหน้า = การ์ดแยก ทุกภารกิจที่มีเป้า (แสตมป์ / ใบเสร็จ / เช็คอิน / ควิซ / สะสมคอยน์แบบมีจำนวนครั้ง) — ทั้งกำลังทำและสำเร็จแล้ว (2026-11-27) */}
+          <Show when={m().target > 0 && m().status !== "expired"}>
             <MissionProgressCard mission={m()} />
           </Show>
           {/* คอยน์ของภารกิจนี้ (แยกจากคอยน์รวม) — BalanceBar pattern เดียวกับทุกหน้า */}
@@ -369,41 +352,66 @@ export default function MissionDetail() {
  * หัว "ความคืบหน้า" + "2/5 ครั้ง" (ตัวดำ · DSL) · แถบ 8px · บรรทัดสรุป:
  *  - สะสมคอยน์แบบมีจำนวนครั้ง: "สะสมได้อีก 3 ครั้ง · ครั้งละ 10 คอยน์" (ได้คอยน์ทุกครั้ง)
  *  - อื่นๆ: "อีก 3 ดวง รับ 20 คอยน์" (ได้คอยน์เมื่อทำครบ) · ไม่มีคอยน์ = "อีก 3 ครั้ง ภารกิจสำเร็จ"
+ *  สำเร็จแล้ว/ครบแล้ว: แถบเขียวเต็ม + ✓ (แทนแถบเขียวใต้รูป)
+ *  บรรทัดสรุปเป็นตัวดำ น้ำหนักปกติทั้งบรรทัด (ไม่มีตัวหนา/สีเหลือง · 2026-11-27)
  *  หน่วย: แสตมป์ = ดวง · เช็คอิน = วัน · ควิซ = ข้อ · อื่นๆ = ครั้ง
  */
 function MissionProgressCard(props: { mission: Mission }) {
   const { t } = useI18n();
   const m = () => props.mission;
   const unit = () => t(m().type === "stamp" ? "mis.unit_stamps" : m().type === "checkin" ? "mis.unit_days" : m().type === "quiz" ? "mis.unit_questions" : "mis.unit_times");
+  const done = () => m().status === "completed" || missionFull(m());
+  const shown = () => (done() ? m().target : m().progress);
   const left = () => Math.max(0, m().target - m().progress);
-  const pct = () => Math.round((m().progress / Math.max(1, m().target)) * 100);
+  const pct = () => Math.round((shown() / Math.max(1, m().target)) * 100);
   return (
     <Card class="flex flex-col gap-2 p-4">
       <div class="flex items-center justify-between gap-2">
         <span class="text-14 font-medium text-dark">{t("mis.progress_title")}</span>
         <span class="text-14 font-semibold text-dark">
-          {m().progress}/{m().target} {unit()}
+          {shown()}/{m().target} {unit()}
         </span>
       </div>
-      <div class="h-2 w-full overflow-hidden rounded-full bg-warning-surface">
-        <div class="h-2 rounded-full bg-teriary" style={{ width: `${pct()}%` }} />
+      <div class={`h-2 w-full overflow-hidden rounded-full ${done() ? "bg-success-surface" : "bg-warning-surface"}`}>
+        <div class={`h-2 rounded-full ${done() ? "bg-success" : "bg-teriary"}`} style={{ width: `${pct()}%` }} />
       </div>
-      <p class="text-14 text-dark">
+      {/* สำเร็จแล้ว/ครบแล้ว: ✓ "ภารกิจสำเร็จ · ได้รับ 30 คอยน์" · สะสมคอยน์แบบมีจำนวนครั้ง = "สะสมครบ 5 ครั้งแล้ว" */}
+      <Show
+        when={!done()}
+        fallback={
+          <p class="flex items-center gap-1 text-14 text-dark">
+            <IconCheck size={16} class="shrink-0 text-success" />
+            <Show
+              when={isCoinTarget(m())}
+              fallback={
+                <span>
+                  <span>{t("mission.mission_completed")}</span>
+                  <Show when={m().reward_coins > 0}> · {t("mis.coin_target_collected", { coins: formatNumber(m().reward_coins) })}</Show>
+                </span>
+              }
+            >
+              <span>{t("mis.collected_all", { n: m().target, unit: unit() })}</span>
+            </Show>
+          </p>
+        }
+      >
+        <p class="text-14 text-dark">
         <Show
           when={isCoinTarget(m())}
           fallback={
             <>
-              {t("mis.more_prefix")} <b class="font-semibold">{`${left()} ${unit()}`}</b>{" "}
+              {t("mis.more_prefix")} <span>{`${left()} ${unit()}`}</span>{" "}
               <Show when={m().reward_coins > 0} fallback={t("mis.to_complete")}>
-                {t("mis.get_prefix")} <b class="font-semibold text-teriary">{`${formatNumber(m().reward_coins)} ${t("common.coins")}`}</b>
+                {t("mis.get_prefix")} <span>{`${formatNumber(m().reward_coins)} ${t("common.coins")}`}</span>
               </Show>
             </>
           }
         >
-          {t("mis.times_left_prefix")} <b class="font-semibold">{`${left()} ${unit()}`}</b> · {t("mis.times_each_prefix")}{" "}
-          <b class="font-semibold text-teriary">{`${formatNumber(m().coins_per_collect ?? 10)} ${t("common.coins")}`}</b>
+          {t("mis.times_left_prefix")} <span>{`${left()} ${unit()}`}</span> · {t("mis.times_each_prefix")}{" "}
+          <span>{`${formatNumber(m().coins_per_collect ?? 10)} ${t("common.coins")}`}</span>
         </Show>
-      </p>
+        </p>
+      </Show>
     </Card>
   );
 }

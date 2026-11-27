@@ -51,5 +51,6 @@
   "mis.unit_questions": "ข้อ",
   "mis.more_prefix": "อีก",
   "mis.get_prefix": "รับ",
-  "mis.to_complete": "ภารกิจสำเร็จ"
+  "mis.to_complete": "ภารกิจสำเร็จ",
+  "mis.collected_all": "สะสมครบ {{n}} {{unit}}แล้ว"
 }

@@ -11,5 +11,7 @@
   "rw.tab_products": "Products",
   "rw.tab_coupons": "Coupons",
   "rw.tab_redemptions": "Redemptions",
-  "rw.my_redemptions": "Reward redemption history"
+  "rw.my_redemptions": "Reward redemption history",
+  "rw.coupons_ready": "Ready to use",
+  "rw.coupons_expiring": "Expiring soon"
 }

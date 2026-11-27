@@ -51,5 +51,6 @@
   "mis.unit_questions": "questions",
   "mis.more_prefix": "",
   "mis.get_prefix": "more to get",
-  "mis.to_complete": "more to complete"
+  "mis.to_complete": "more to complete",
+  "mis.collected_all": "Collected all {{n}} {{unit}}"
 }

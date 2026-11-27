@@ -11,5 +11,7 @@
   "rw.tab_products": "แลกสินค้า",
   "rw.tab_coupons": "แลกคูปอง",
   "rw.tab_redemptions": "การแลกรางวัล",
-  "rw.my_redemptions": "ประวัติการแลกของรางวัล"
+  "rw.my_redemptions": "ประวัติการแลกของรางวัล",
+  "rw.coupons_ready": "คูปองพร้อมใช้",
+  "rw.coupons_expiring": "ใกล้หมดอายุ"
 }

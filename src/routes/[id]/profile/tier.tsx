@@ -57,13 +57,16 @@ export default function TierPage() {
         <div class={cn(cardClass, "flex flex-col gap-4 p-4 text-dark")}>
           <div class="flex items-center gap-2">
             <img src={s().current.mark} alt="" width="48" height="48" class="size-12 shrink-0 object-contain" />
+            {/* ชื่อระดับ (ชมพูเข้ม) + "650/1,000" บรรทัดเดียวกัน · "ระดับสมาชิกของคุณ" บรรทัดล่าง · ป้ายนี้ + "/1,000" = 14/Medium เท่าป้าย "ระดับสมาชิก" หน้าแรก · "/1,000", ป้าย, "อีก x คะแนน…" ตัวดำ (2026-11-27) */}
             <span class="flex min-w-0 flex-1 flex-col">
-              <span class="text-18 font-semibold">{t(`tier.name_${s().current.id}`)}</span>
-              <span class="text-12 text-gray">{t("tier.earned_12m")}</span>
-            </span>
-            <span class="text-right">
-              <span class="text-18 font-semibold text-primary">{formatNumber(s().earned)}</span>
-              <Show when={s().next}>{(n) => <span class="text-14 text-gray">/{formatNumber(n().min)}</span>}</Show>
+              <span class="flex items-baseline justify-between gap-2">
+                <span class="truncate text-18 font-semibold text-primary">{t(`tier.name_${s().current.id}`)}</span>
+                <span class="shrink-0">
+                  <span class="text-18 font-semibold text-primary">{formatNumber(s().earned)}</span>
+                  <Show when={s().next}>{(n) => <span class="text-14 font-medium text-dark">/{formatNumber(n().min)}</span>}</Show>
+                </span>
+              </span>
+              <span class="text-14 font-medium text-dark">{t("tier.earned_12m")}</span>
             </span>
           </div>
 
@@ -88,7 +91,7 @@ export default function TierPage() {
             </div>
           </div>
 
-          <p class="text-14 text-gray">
+          <p class="text-14 text-dark">
             <Show when={s().next} fallback={t("tier.top")}>
               {(n) => t("tier.to_next", { points: formatNumber(s().needed), tier: t(`tier.name_${n().id}`) })}
             </Show>
