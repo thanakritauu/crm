@@ -29,8 +29,8 @@ function Shell(props: { children: any }) {
     restorePlatformState();
     missionService.restore();
     // สถานะจัดส่งเดินเองตามเวลา → เติมแจ้งเตือนขั้นที่ถึงแล้ว
-    notificationService.syncDelivery();
-    const timer = setInterval(() => notificationService.syncDelivery(), 15_000);
+    notificationService.syncTimed();
+    const timer = setInterval(() => notificationService.syncTimed(), 15_000);
     onCleanup(() => clearInterval(timer));
   });
   return (

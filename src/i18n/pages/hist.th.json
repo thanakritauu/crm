@@ -10,5 +10,6 @@
   "hist.src_receipt": "ใบเสร็จ",
   "hist.src_reward": "แลกรางวัล",
   "hist.used_points": "คุณใช้ {{points}} คะแนน แลก {{name}}",
-  "hist.used_points_discount": "คุณใช้ {{points}} คะแนน แลก คูปองส่วนลด ฿{{discount}}"
+  "hist.used_points_discount": "คุณใช้ {{points}} คะแนน แลก คูปองส่วนลด ฿{{discount}}",
+  "hist.earned_receipt_photo": "คุณได้รับ {{points}} คะแนน จากใบเสร็จที่ผ่านการตรวจสอบ"
 }

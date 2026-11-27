@@ -798,5 +798,6 @@
   "platform.none_connected": "No platforms connected yet",
   "platform.intro_short": "Order from the Charmiss Official store with a connected account and get points automatically, no entering needed",
   "platform.status_not_connected": "Not connected",
-  "platform.unbind_short": "Disconnect"
+  "platform.unbind_short": "Disconnect",
+  "notification.earn_title": "Points"
 }

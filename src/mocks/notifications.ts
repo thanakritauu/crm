@@ -1,13 +1,13 @@
 /**
  * การแจ้งเตือน — Figma "Noti" (400:7351)
  * ข้อความเก็บเป็น key + params แล้วแปลตอนแสดง (สลับภาษาได้) → `noti.<key>` ใน src/i18n/pages/noti.*.json
- * - type: แท็บที่รายการนี้อยู่ ("other" = แสดงเฉพาะแท็บ "ทั้งหมด")
+ * - type: แท็บที่รายการนี้อยู่ ("earn" = สะสมคะแนน · "other" = แสดงเฉพาะแท็บ "ทั้งหมด" เช่น ขึ้นระดับ/คะแนนใกล้หมดอายุ)
  * - icon: ไอคอนในวงกลม 24px ตาม Figma (gift / star / bell / megaphone)
  * - link: path ใต้ /:partner ที่แตะแล้วไป (ไม่มี = แตะไม่ได้)
  * - ref: กันสร้างซ้ำ (เช่น `<id ประวัติการแลก>:shipping`)
  */
-export type NotificationType = "redeem" | "mission" | "other";
-export type NotificationIcon = "gift" | "star" | "bell" | "megaphone";
+export type NotificationType = "earn" | "redeem" | "mission" | "other";
+export type NotificationIcon = "gift" | "star" | "bell" | "megaphone" | "coins";
 export type AppNotification = {
   id: string;
   key: string;

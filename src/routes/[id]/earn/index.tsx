@@ -52,6 +52,9 @@ const methods: { id: Method; title: string; icon: typeof IconCamera }[] = [
   { id: "missions", title: "common.earn_coins_from_mission", icon: CoinIcon as typeof IconCamera },
 ];
 
+/** คะแนนจากใบเสร็จ (ถ่ายรูป) เมื่อเจ้าหน้าที่อนุมัติ (mock) */
+const RECEIPT_PHOTO_POINTS = 150;
+
 export default function EarnPoint() {
   const { t } = useI18n();
   // แพลตฟอร์มที่เปิดใช้ (แถวไอคอนในการ์ดเชื่อมต่อ)
@@ -88,6 +91,8 @@ export default function EarnPoint() {
     await delay(1200);
     setLoading(false);
     if (mission()) return collectForMission();
+    // ส่งให้เจ้าหน้าที่ตรวจ — ได้คะแนน + แจ้งเตือนเมื่ออนุมัติ (notificationService.syncTimed)
+    sessionActions.submitReceiptReview(RECEIPT_PHOTO_POINTS);
     setResult({ variant: "success", title: t("core.receipt_submitted_title"), description: t("core.receipt_review_time"), connectHint: true });
   };
 
@@ -210,7 +215,8 @@ export default function EarnPoint() {
                 >
                   <CoinIcon size={40} />
                 </Show>
-                <span class="line-clamp-2 max-w-full text-center text-14 font-medium text-dark">{t(m.title)}</span>
+                {/* ไม่ใช้ line-clamp (overflow hidden ตัดสระ/วรรณยุกต์ไทยบน-ล่าง เช่น "ด" ใน "โค้ด" หาย · 2026-11-27) — ป้ายสั้น ขึ้นบรรทัดเองได้ */}
+                <span class="max-w-full break-words text-center text-14 font-medium text-dark">{t(m.title)}</span>
               </button>
             )}
           </For>

@@ -22,7 +22,7 @@ export function PillTabs<T extends string | number>(props: {
             aria-selected={props.value === it.value}
             onClick={() => props.onChange(it.value)}
             class={cn(
-              "flex h-10 min-w-0 flex-1 items-center justify-center truncate rounded-full px-2 text-14 font-medium transition-colors",
+              "flex h-10 min-w-0 flex-1 items-center justify-center truncate rounded-full px-1 text-14 font-medium transition-colors",
               props.value === it.value ? "bg-secondary-surface text-primary" : "text-gray-disable",
             )}
           >

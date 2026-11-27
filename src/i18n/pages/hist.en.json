@@ -10,5 +10,6 @@
   "hist.src_receipt": "Receipt",
   "hist.src_reward": "Reward",
   "hist.used_points": "Used {{points}} points for {{name}}",
-  "hist.used_points_discount": "Used {{points}} points for a ฿{{discount}} discount coupon"
+  "hist.used_points_discount": "Used {{points}} points for a ฿{{discount}} discount coupon",
+  "hist.earned_receipt_photo": "You got {{points}} points from an approved receipt"
 }

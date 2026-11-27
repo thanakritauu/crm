@@ -10,7 +10,7 @@ import { usePartnerPath } from "~/lib/theme";
 import { formatDate } from "~/lib/utils";
 import type { AppNotification } from "~/mocks/notifications";
 import { notificationService } from "~/services/notification-service";
-import { IconBell, IconGift, IconMegaphone, IconStar } from "~/components/ui/icons";
+import { IconBell, IconGift, IconMegaphone, IconStar, IconCoins } from "~/components/ui/icons";
 import { ActivityEmpty, ActivityRow } from "~/components/history/activity-row";
 
 /**
@@ -21,10 +21,10 @@ import { ActivityEmpty, ActivityRow } from "~/components/history/activity-row";
  * - แตะ → หน้าของรายการนั้น (เช่น รายละเอียดการแลก ?redeem=<id>, คูปองใบนั้น)
  * ข้อมูล: session.notifications (สร้างจากการแลก + สถานะจัดส่ง ดู notification-service)
  */
-type Filter = "all" | "mission" | "redeem";
+type Filter = "all" | "earn" | "mission" | "redeem";
 
 /** ไอคอนในวงกลม 24px (Figma: gift / star / bell / megaphone) → Solar Linear */
-const NOTI_ICON = { gift: IconGift, star: IconStar, bell: IconBell, megaphone: IconMegaphone } as const;
+const NOTI_ICON = { gift: IconGift, star: IconStar, bell: IconBell, megaphone: IconMegaphone, coins: IconCoins } as const;
 
 export default function NotificationPage() {
   const { t } = useI18n();
@@ -58,6 +58,8 @@ export default function NotificationPage() {
           onChange={setFilter}
           items={[
             { value: "all", label: t("common.all") },
+            // สะสมคะแนน = คะแนนที่เข้าตอนผู้ใช้ไม่ได้อยู่ในแอป (แพลตฟอร์ม / ใบเสร็จผ่านการตรวจ) · ได้ทันทีในแอป (กรอกรหัส/สแกน) ไม่แจ้ง (2026-11-27)
+            { value: "earn", label: t("notification.earn_title") },
             { value: "mission", label: t("mission.mission") },
             // "การแลก" = ทุกการใช้คะแนนแลก: แลกสินค้า/สิทธิพิเศษ + แลกคูปอง + แลกคะแนนเป็นคูปอง (type "redeem" ทั้งหมด · 2026-11-27)
             { value: "redeem", label: t("notification.redeem_title") },

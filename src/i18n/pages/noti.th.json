@@ -12,5 +12,9 @@
   "noti.seed_campaign": "คุณได้เข้าร่วมกิจกรรม '{{campaign}}' และรับคะแนนเพิ่ม {{points}} คะแนน ดูรายละเอียดในแอปพลิเคชัน",
   "noti.seed_level_up": "คุณได้รับการอัปเกรดเป็นสมาชิกระดับ {{level}} สนุกกับสิทธิพิเศษเพิ่มเติมในทุกการสั่งซื้อ",
   "noti.unread": "ยังไม่อ่าน",
-  "noti.platform_bind_failed": "คุณเชื่อมต่อบัญชี {{platform}} ไม่สำเร็จ"
+  "noti.platform_bind_failed": "คุณเชื่อมต่อบัญชี {{platform}} ไม่สำเร็จ",
+  "noti.earn_platform": "คุณได้รับ {{points}} คะแนน จาก {{count}} คำสั่งซื้อ {{platforms}}",
+  "noti.receipt_approved": "ใบเสร็จของคุณผ่านการตรวจสอบแล้ว ได้รับ {{points}} คะแนน",
+  "noti.tier_up": "ยินดีด้วย! คุณได้เลื่อนเป็นสมาชิกระดับ {{level}} สนุกกับสิทธิพิเศษเพิ่มเติมได้เลย",
+  "noti.points_expiring": "{{text}} ใช้ก่อนหมดอายุ"
 }

@@ -7,6 +7,7 @@ import { redeemHistory as initialRedeem, pointHistory as initialPointHistory, co
 import { notifications as initialNotifications, type AppNotification } from "~/mocks/notifications";
 import { rewards } from "~/mocks/rewards";
 import { privileges } from "~/mocks/privileges";
+import { tierStatus } from "~/services/tier-service";
 
 /**
  * สถานะจำลองของผู้ใช้ (แทน backend) — เก็บใน localStorage เพื่อให้คลิกต่อเนื่องได้
@@ -22,6 +23,8 @@ type SessionState = {
   pointHistory: PointTransaction[];
   coinHistory: PointTransaction[];
   notifications: AppNotification[];
+  /** ใบเสร็จ (ถ่ายรูป) ที่ส่งรอเจ้าหน้าที่ตรวจ — ครบเวลาแล้วอนุมัติ ได้คะแนน + แจ้งเตือน (notificationService.syncTimed) */
+  receiptReviews: { id: string; submitted_at: string; points: number; status: "pending" | "approved" }[];
   language: "th" | "en";
 };
 
@@ -36,6 +39,7 @@ const initialState = (): SessionState => ({
   pointHistory: structuredClone(initialPointHistory),
   coinHistory: structuredClone(initialCoinHistory),
   notifications: structuredClone(initialNotifications),
+  receiptReviews: [],
   language: "th",
 });
 
@@ -301,6 +305,7 @@ export const sessionActions = {
 
   /** ได้รับคะแนน (สะสมคะแนน) + บันทึกประวัติคะแนน */
   addPoints(amount: number, title: HistoryMsg, source: HistoryMsg) {
+    const tierBefore = tierStatus().current.id;
     setSession(
       produce((s) => {
         s.customer.points += amount;
@@ -308,8 +313,26 @@ export const sessionActions = {
       }),
     );
     persist();
+    // ขึ้นระดับสมาชิก → แจ้งเตือน (แท็บ "ทั้งหมด" เท่านั้น · 2026-11-27)
+    const tierAfter = tierStatus().current.id;
+    if (tierAfter !== tierBefore)
+      sessionActions.pushNotification({ key: "tier_up", params: { level: translate(`tier.name_${tierAfter}`) }, type: "other", icon: "megaphone", link: "profile/tier", ref: `tier:${tierAfter}:${Date.now()}` });
     // เหรียญ P ปลิวไปที่ยอดคะแนนหน้าสะสมคะแนน (ถ้าอยู่หน้านั้น) ไม่งั้นปุ่มหน้าแรก
     emitEarned("points", amount, "points");
+  },
+
+  /** ส่งรูปใบเสร็จให้เจ้าหน้าที่ตรวจ (ยังไม่ได้คะแนน) */
+  submitReceiptReview(points: number) {
+    setSession("receiptReviews", (list) => [...list, { id: `rv-${Date.now()}`, submitted_at: now(), points, status: "pending" as const }]);
+    persist();
+  },
+  /** เจ้าหน้าที่อนุมัติใบเสร็จ → ได้คะแนน + แจ้งเตือนแท็บสะสมคะแนน */
+  approveReceiptReview(id: string) {
+    const r = session.receiptReviews.find((x) => x.id === id && x.status === "pending");
+    if (!r) return;
+    setSession("receiptReviews", (x) => x.id === id, "status", "approved");
+    sessionActions.addPoints(r.points, { key: "hist.earned_receipt_photo", params: { points: r.points } }, { key: "hist.src_receipt" });
+    sessionActions.pushNotification({ key: "receipt_approved", params: { points: r.points }, type: "earn", icon: "coins", link: "wallet/points-history", ref: `receipt:${id}` });
   },
 
   /** ได้รับคอยน์จากภารกิจ */

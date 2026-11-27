@@ -101,6 +101,14 @@ export const earnService = {
     }
     setState("syncedPlatforms", (list) => [...list, ...pending.map((p) => p.platform)]);
     persist();
+    // แจ้งเตือนแท็บสะสมคะแนน — รวมเป็นรายการเดียวต่อการซิงก์ (หลายออเดอร์ = 1 แจ้งเตือน · 2026-11-27)
+    sessionActions.pushNotification({
+      key: "earn_platform",
+      params: { points: orders.length * PLATFORM_ORDER_POINTS, count: orders.length, platforms: [...new Set(orders.map((o) => o.platform))].join(", ") },
+      type: "earn",
+      icon: "coins",
+      link: "wallet/points-history",
+    });
     return { status: "success", points: orders.length * PLATFORM_ORDER_POINTS, orders };
   },
 

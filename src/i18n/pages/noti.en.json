@@ -12,5 +12,9 @@
   "noti.seed_campaign": "You joined '{{campaign}}' and earned {{points}} bonus points. See details in the app.",
   "noti.seed_level_up": "You've been upgraded to {{level}}. Enjoy extra perks on every order.",
   "noti.unread": "Unread",
-  "noti.platform_bind_failed": "Your {{platform}} account could not be connected"
+  "noti.platform_bind_failed": "Your {{platform}} account could not be connected",
+  "noti.earn_platform": "You got {{points}} points from {{count}} order(s) on {{platforms}}",
+  "noti.receipt_approved": "Your receipt was approved. You got {{points}} points",
+  "noti.tier_up": "Congratulations! You're now a {{level}} member. Enjoy your new benefits",
+  "noti.points_expiring": "{{text}} Use them before they expire"
 }
