@@ -17,6 +17,8 @@ import { earnService } from "~/services/earn-service";
 import { usePartnerPath } from "~/lib/theme";
 import { delay, formatNumber } from "~/lib/utils";
 import { missionService } from "~/services/mission-service";
+import { platformService } from "~/services/platform-service";
+import { PlatformTile } from "~/components/platform/platform-icon";
 import { missionCollectKey } from "~/components/mission/mission-status";
 import { cardClass } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
@@ -50,15 +52,10 @@ const methods: { id: Method; title: string; icon: typeof IconCamera }[] = [
   { id: "missions", title: "common.earn_coins_from_mission", icon: CoinIcon as typeof IconCamera },
 ];
 
-/** คำแนะนำหน้าสะสมคะแนน — ข้อความจาก production (ไทย · อังกฤษ · จีน แสดงพร้อมกัน ไม่แปลตามภาษาแอป) */
-const EARN_NOTICE = [
-  "การสะสมคะแนนในส่วนนี้ใช้สำหรับแลกสินค้าเท่านั้น ไม่รวมภารกิจหรือกิจกรรมอื่นๆ", // ปรับจาก production "ไม่รวมถึง…อื่น ๆ" (2026-11-27)
-  "Points collected here are for product redemption only and do not include missions or other activities.",
-  "此处积累的积分仅用于兑换商品，不包含任务或其他活动。",
-];
-
 export default function EarnPoint() {
   const { t } = useI18n();
+  // แพลตฟอร์มที่เปิดใช้ (แถวไอคอนในการ์ดเชื่อมต่อ)
+  const enabledPlatforms = () => platformService.list().filter((p) => p.is_enabled);
   const to = usePartnerPath();
   const navigate = useNavigate();
   const [search] = useSearchParams<{ mission?: string }>();
@@ -137,15 +134,14 @@ export default function EarnPoint() {
 
       <div class="p-4">
         <InfoBox>
-          {/* หน้าสะสมคะแนนปกติ: ข้อความจาก production (club.charmiss.co/charmiss/point-collection — 25 พ.ย. 2569) แสดง 3 ภาษาพร้อมกันทุกภาษาแอป
+          {/* หน้าสะสมคะแนนปกติ: ข้อความจาก production (club.charmiss.co/charmiss/point-collection — 25 พ.ย. 2569) แสดงภาษาเดียวตามภาษาแอป (club.earn_notice)
               โหมดภารกิจ: ข้อความภารกิจเดิม (สะสมแสตมป์ / คอยน์) */}
           <Show
             when={!mission()}
             fallback={mission()?.type === "stamp" ? t("common.notice_earn_stamp") : t("common.notice_earn_coin")}
           >
-            <span class="flex flex-col gap-1">
-              <For each={EARN_NOTICE}>{(line) => <span>{line}</span>}</For>
-            </span>
+            {/* ภาษาเดียว ตามภาษาที่ผู้ใช้เลือกในโปรไฟล์ (เดิมแสดง ไทย/อังกฤษ/จีน พร้อมกัน · 2026-11-27) */}
+            <span>{t("club.earn_notice")}</span>
           </Show>
         </InfoBox>
       </div>
@@ -172,27 +168,29 @@ export default function EarnPoint() {
           )}
         </Show>
 
-        {/* เชื่อมต่อแพลตฟอร์มออนไลน์ = ช่องทางแนะนำ → การ์ดเต็มความกว้างบนสุด (2026-11-26)
-            DSL เดียวกับการ์ด LINE Shopping ในหน้าเชื่อมต่อแพลตฟอร์ม: การ์ดขาว ขอบชมพู 2px · ริบบิ้นชมพูเต็มความกว้างบนสุด (14/Medium ตัวขาว)
-            · ไอคอน + หัวข้อ 14/Medium (เท่าการ์ดช่องทางอื่น — 2026-11-26) + รายละเอียด 14 สีเทา บรรทัดเดียวกัน (ไม่มีปุ่ม) · ไม่แสดงในโหมดภารกิจ */}
+        {/* เชื่อมต่อแพลตฟอร์มออนไลน์ = การ์ดขาว ภาษาภาพเดียวกับหน้าเชื่อมต่อแพลตฟอร์ม (2026-11-27)
+            หัวข้อประโยชน์ + "ซื้อจากร้าน Charmiss Official" · แถวไอคอนแพลตฟอร์ม 40 (เท่ารายการหน้าเชื่อมต่อ · ถูกเขียว = เชื่อมแล้ว) + ปุ่มชมพู "เชื่อมต่อ" (ไม่มีบรรทัดจำนวนแล้ว — ถูกเขียวบนไอคอนบอกแทน)
+            ทั้งการ์ดกด → หน้าเชื่อมต่อแพลตฟอร์ม · ไม่แสดงในโหมดภารกิจ */}
         <Show when={!mission()}>
-          <button
-            type="button"
+          <div
+            role="button"
+            tabindex="0"
             onClick={() => choose("platform")}
-            class={cn(cardClass, "flex w-full flex-col gap-4 overflow-hidden border-2 border-primary p-4 text-left transition active:scale-[0.98]")}
+            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && choose("platform")}
+            class={cn(cardClass, "flex w-full cursor-pointer flex-col gap-4 p-4 text-left transition active:scale-[0.98]")}
           >
-            <span class="-mx-4 -mt-4 block bg-primary px-4 py-2 text-14 font-medium text-white">{t("club.connect_card_ribbon")}</span>
-            {/* ไอคอน + ข้อความบรรทัดเดียวกัน (ไม่มีปุ่ม "เชื่อมต่อ" — ทั้งการ์ดกดได้ · 2026-11-26) */}
-            <span class="flex items-start gap-4">
-              <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary-surface">
-                <IconSmartphone size={24} class="text-primary" />
-              </span>
-              <span class="flex min-w-0 flex-1 flex-col gap-1">
-                <span class="text-14 font-medium text-dark">{t("platform.connect_platform")}</span>
-                <span class="text-14 text-gray">{t("club.connect_card_desc")}</span>
-              </span>
+            {/* หัวข้อบรรทัดเดียว 14/Medium ตัวดำ เท่าหัวข้อการ์ดอื่นในหน้า (2026-11-27) */}
+            <span class="text-14 font-medium text-dark">
+              {t("club.connect_hero_title")} {t("club.connect_hero_desc")}
             </span>
-          </button>
+            {/* จอแคบ (320) ไอคอน 40 × 4 + ปุ่มไม่พอบรรทัดเดียว → ปุ่มขึ้นบรรทัดใหม่ (flex-wrap) */}
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <For each={enabledPlatforms()}>{(p) => <PlatformTile platform={p} connected={!!p.status} size={40} />}</For>
+              </div>
+              <span class="flex h-8 shrink-0 items-center rounded-full bg-primary px-4 text-14 font-medium text-white">{t("platform.connect")}</span>
+            </div>
+          </div>
         </Show>
 
         <div class="grid grid-cols-2 gap-4">

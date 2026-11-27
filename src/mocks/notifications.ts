@@ -26,7 +26,7 @@ export const notifications: AppNotification[] = [
   { id: "n-002", key: "seed_mission_done", params: { mission: "ซื้อ Crystal Cube 7 ชิ้น" }, date: "2026-11-17T10:54:00+07:00", type: "mission", icon: "star", read: false, link: "missions" },
   { id: "n-003", key: "seed_platform_connected", params: { platform: "Shopee" }, date: "2026-11-16T10:54:00+07:00", type: "other", icon: "bell", read: true, link: "profile/platforms" },
   { id: "n-004", key: "seed_welcome", date: "2026-11-15T10:54:00+07:00", type: "other", icon: "bell", read: true },
-  { id: "n-005", key: "seed_welcome_coupon", params: { code: "WELCOME100" }, date: "2026-11-15T10:53:00+07:00", type: "other", icon: "bell", read: true, link: "rewards?type=mine" },
+  { id: "n-005", key: "seed_welcome_coupon", params: { code: "WELCOME100" }, date: "2026-11-15T10:53:00+07:00", type: "other", icon: "bell", read: true, link: "wallet/coupons" },
   { id: "n-006", key: "seed_campaign", params: { campaign: "ช้อปปิ้งสุดมันส์", points: 500 }, date: "2026-11-12T10:54:00+07:00", type: "other", icon: "megaphone", read: true },
   { id: "n-007", key: "seed_level_up", params: { level: "Charmiss Radiance" }, date: "2026-11-10T10:54:00+07:00", type: "other", icon: "megaphone", read: true, link: "home" },
 ];

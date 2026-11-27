@@ -172,12 +172,20 @@ module.exports = {
         // bottom sheet: เลื่อนขึ้นตรงๆ จากล่าง — ต้องคง translateX(-50%) ของ .fixed-frame ไว้ ไม่งั้นจะเลื่อนเฉียง
         "sheet-in": { from: { transform: "translate(-50%, 100%)" }, to: { transform: "translate(-50%, 0)" } },
         "sheet-out": { from: { transform: "translate(-50%, 0)" }, to: { transform: "translate(-50%, 100%)" } },
+        // ป้ายตัวเลขเด้งเบาๆ เป็นจังหวะ ชวนกด (ป้าย "0/4" เชื่อมต่อแพลตฟอร์ม · 2026-11-27)
+        "badge-nudge": {
+          "0%, 60%, 100%": { transform: "scale(1)" },
+          "70%": { transform: "scale(1.25)" },
+          "80%": { transform: "scale(0.95)" },
+          "90%": { transform: "scale(1.1)" },
+        },
       },
       animation: {
         "content-show": "content-show 0.2s ease-out",
         "content-hide": "content-hide 0.2s ease-out",
         "sheet-in": "sheet-in 0.28s cubic-bezier(0.32, 0.72, 0, 1)",
         "sheet-out": "sheet-out 0.2s ease-in",
+        "badge-nudge": "badge-nudge 2s ease-in-out infinite",
       },
     },
   },

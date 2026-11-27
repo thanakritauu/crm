@@ -242,7 +242,8 @@ export default function PlatformQuestionAnswer() {
                     </Show>
                   </p>
                 </div>
-                <Show when={!brokenImg()[guidelineImg(q().question_type)]}>
+                {/* LINE Shopping: ไม่แสดงรูปตัวอย่างในหน้าตอบคำถาม (2026-11-27) · แพลตฟอร์มอื่นยังแสดง */}
+                <Show when={key() !== "line" && !brokenImg()[guidelineImg(q().question_type)]}>
                   <img src={guidelineImg(q().question_type)} alt="" class="w-full rounded-lg object-cover" onError={() => markBroken(guidelineImg(q().question_type))} />
                   <p class="text-center text-12 text-gray">{t("platform.view_how_to", { field: fieldLabel(q()) })}</p>
                 </Show>
@@ -341,10 +342,14 @@ export default function PlatformQuestionAnswer() {
         onOpenChange={setSuccess}
         title={t("core.platform_connected_success", { platform: name() })}
         description={
-          // LINE Shopping ผูกด้วยเบอร์โทร → แจ้งว่าซิงค์เบอร์ของสมาชิกแล้ว (เว็บจริง)
-          platform()?.platform_id_source === "customer_phone" ? (
-            <span innerHTML={t("platform.line_bind_phone_sync_notice", { platform: name(), phone: session.customer.phone })} />
-          ) : undefined
+          // ทุกแพลตฟอร์ม: บอกว่าได้คะแนนเฉพาะออเดอร์ร้าน Charmiss Official · เข้าเมื่อได้รับสินค้า (2026-11-27)
+          // LINE Shopping ผูกด้วยเบอร์โทร → ต่อด้วยแจ้งว่าซิงค์เบอร์ของสมาชิกแล้ว (เว็บจริง)
+          <span class="flex flex-col gap-2">
+            <span>{t("platform.connected_official_desc", { platform: name() })}</span>
+            <Show when={platform()?.platform_id_source === "customer_phone"}>
+              <span innerHTML={t("platform.line_bind_phone_sync_notice", { platform: name(), phone: session.customer.phone })} />
+            </Show>
+          </span>
         }
         onButton={() => {
           resetToStep1();

@@ -38,7 +38,7 @@ export const screenGroups: ScreenGroup[] = [
     title: "รางวัล คูปอง สิทธิพิเศษ",
     screens: [
       { path: "rewards?type=coupons", title: "แลกคูปอง", status: "done" },
-      { path: "rewards?type=mine", title: "คูปองของฉัน", status: "done" },
+      { path: "wallet/coupons", title: "คูปองของฉัน", status: "done" },
       { path: "rewards/r-001", title: "รายละเอียดรางวัล", status: "done" },
       { path: "rewards/r-001/checkout", title: "สรุปก่อนแลก", status: "done" },
       { path: "rewards?type=coupons", title: "แลกคูปอง", status: "done" },

@@ -22,5 +22,6 @@
   "tier.no_tier_system": "ยังไม่มีระบบระดับสมาชิก",
   "tier.no_tier_system_desc": "สะสมคะแนนจากการซื้อสินค้า เพื่อแลกรางวัลได้เลย",
   "tier.to_next_short": "อีก {{points}} คะแนน",
-  "tier.top_short": "ระดับสูงสุด"
+  "tier.top_short": "ระดับสูงสุด",
+  "tier.your_tier": "ระดับสมาชิกของคุณ"
 }

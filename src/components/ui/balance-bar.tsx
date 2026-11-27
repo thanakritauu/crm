@@ -119,7 +119,7 @@ function BalanceBody(props: {
 
 /**
  * คอลัมน์ระดับสมาชิก (แบบ A — คะแนนอย่างเดียว: ซ้ายคะแนน | ขวาระดับ แทนคอยน์ · 2026-11-27)
- * โครงเดียวกับฝั่งคอยน์: ป้าย "ระดับสมาชิก" 14/Medium + ตรา 16 + ">" · ชื่อระดับ 18/Semibold (ตัด … ถ้ายาว) · แถบความคืบหน้า + "อีก X คะแนน" 12 เทา
+ * โครงเดียวกับฝั่งคอยน์: ป้าย "ระดับสมาชิกของคุณ" 14/Medium + ตรา 16 (ไม่มี ">") · ชื่อระดับ Semibold ขนาดเท่ายอดคะแนน (ตัด … ถ้ายาว) · แถบความคืบหน้า + "อีก X คะแนน" 12 เทา
  * ทั้งคอลัมน์ → หน้าระดับสมาชิก
  */
 function TierColumn(props: { onBrand?: boolean; size?: "lg" | "md" }) {
@@ -131,14 +131,13 @@ function TierColumn(props: { onBrand?: boolean; size?: "lg" | "md" }) {
   return (
     // justify-between: บรรทัดล่างสุด (แถบ + "อีก X คะแนน") ตรงกับ "ซื้อสินค้าเพื่อสะสมคะแนน" ฝั่งคะแนน (2026-11-27)
     <A href={to("profile/tier")} class="flex min-w-0 flex-1 flex-col justify-between gap-1 p-4">
-      <span class="flex items-center justify-between gap-2">
-        <span class="flex min-w-0 items-center gap-1">
-          <img src={tier().current.mark} alt="" width="16" height="16" class="size-4 shrink-0 object-contain" />
-          <span class={cn("truncate text-14 font-medium", props.onBrand ? "text-white" : "text-dark")}>{t("tier.title")}</span>
-        </span>
-        <IconChevronRight size={16} class={cn("shrink-0", props.onBrand ? "text-white" : "text-gray")} />
+      {/* ไม่มี ">" แล้ว ให้ "ระดับสมาชิกของคุณ" แสดงเต็ม (ทั้งคอลัมน์ยังกดไปหน้าระดับสมาชิกได้ · 2026-11-27) */}
+      <span class="flex min-w-0 items-center gap-1">
+        <img src={tier().current.mark} alt="" width="16" height="16" class="size-4 shrink-0 object-contain" />
+        <span class={cn("truncate text-14 font-medium", props.onBrand ? "text-white" : "text-dark")}>{t("tier.your_tier")}</span>
       </span>
-      <span class={cn("truncate font-semibold", props.size === "lg" ? "text-18" : "text-14", props.onBrand ? "text-white" : "text-primary")}>
+      {/* ชื่อระดับขนาดเท่ายอดคะแนนฝั่งซ้าย (lg 24 · md 18 · 2026-11-27) */}
+      <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18", props.onBrand ? "text-white" : "text-primary")}>
         {shortName(tier().current.id)}
       </span>
       <span class="flex items-center gap-2">

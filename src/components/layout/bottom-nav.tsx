@@ -5,7 +5,7 @@ import { Dynamic } from "solid-js/web";
 import { useI18n } from "~/lib/i18n";
 import { useTheme } from "~/lib/theme";
 import { cn } from "~/lib/utils";
-import { IconGift, IconHome, IconMission, IconUser } from "~/components/ui/icons";
+import { IconGift, IconGiftBold, IconHome, IconHomeBold, IconMission, IconMissionBold, IconUser, IconUserBold } from "~/components/ui/icons";
 
 /**
  * NavBottom — ตาม Figma "Nav" (component 2022:*)
@@ -14,14 +14,14 @@ import { IconGift, IconHome, IconMission, IconUser } from "~/components/ui/icons
  * ช่องกลาง "สะสมคะแนน": ไอคอน EarnPoint 48px ยกขึ้น (top -24px)
  * เรียง: หน้าแรก · แลกรางวัล (คะแนน) · [สะสมคะแนน] · ภารกิจ (คอยน์) · โปรไฟล์ — ฝั่งซ้ายเรื่องคะแนน ฝั่งขวาเรื่องคอยน์
  * (เดิมช่องที่ 4 = แจ้งเตือน → ย้ายเป็นกระดิ่งมุมขวาบนหน้าแรก + แถวในโปรไฟล์ — NotificationBell)
- * ไอคอน: Solar Linear (Home / Gift / CupStar / User) · active = สีชมพู · ปุ่มกลางยังเป็นไอคอนสะสมคะแนนของแบรนด์
+ * ไอคอน: Solar Linear (Home / Gift / CupStar / User) · active = Solar Bold (ทึบ) สีชมพู (2026-11-27) · ปุ่มกลางยังเป็นไอคอนสะสมคะแนนของแบรนด์
  */
-const ITEMS: { path: string; key: string; icon?: typeof IconHome }[] = [
-  { path: "home", key: "component.nav_bottom.home", icon: IconHome },
-  { path: "rewards", key: "rw.title", icon: IconGift },
+const ITEMS: { path: string; key: string; icon?: typeof IconHome; iconActive?: typeof IconHome }[] = [
+  { path: "home", key: "component.nav_bottom.home", icon: IconHome, iconActive: IconHomeBold },
+  { path: "rewards", key: "rw.title", icon: IconGift, iconActive: IconGiftBold },
   { path: "earn", key: "component.nav_bottom.collect_points" },
-  { path: "missions", key: "mission.mission", icon: IconMission },
-  { path: "profile", key: "component.nav_bottom.profile", icon: IconUser },
+  { path: "missions", key: "mission.mission", icon: IconMission, iconActive: IconMissionBold },
+  { path: "profile", key: "component.nav_bottom.profile", icon: IconUser, iconActive: IconUserBold },
 ];
 
 export function BottomNav() {
@@ -47,7 +47,7 @@ export function BottomNav() {
                 class="flex min-w-0 flex-col items-center justify-end gap-2 pb-1 pt-2"
               >
                 <span class="relative flex">
-                  <Dynamic component={item.icon} size={16} class={isActive(item.path) ? "text-primary" : "text-dark"} />
+                  <Dynamic component={isActive(item.path) ? (item.iconActive ?? item.icon) : item.icon} size={16} class={isActive(item.path) ? "text-primary" : "text-dark"} />
                 </span>
                 <span class={cn("whitespace-nowrap text-12 font-medium", isActive(item.path) ? "text-primary" : "text-dark")}>{t(item.key)}</span>
               </button>

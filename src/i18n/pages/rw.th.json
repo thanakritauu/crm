@@ -13,5 +13,6 @@
   "rw.tab_redemptions": "การแลกรางวัล",
   "rw.my_redemptions": "ประวัติการแลกของรางวัล",
   "rw.coupons_ready": "คูปองพร้อมใช้",
-  "rw.coupons_expiring": "ใกล้หมดอายุ"
+  "rw.coupons_expiring": "ใกล้หมดอายุ",
+  "rw.coupons_ready_count": "พร้อมใช้ {{count}} ใบ"
 }

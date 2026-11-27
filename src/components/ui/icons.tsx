@@ -69,3 +69,8 @@ export { QrCodeIcon as IconQr } from "@solar-icons/solid/linear/qr-code";
 export { CrownStarIcon as IconCrown } from "@solar-icons/solid/linear/crown-star";
 export { LockKeyholeMinimalisticIcon as IconLock } from "@solar-icons/solid/linear/lock-keyhole-minimalistic";
 export { CupStarIcon as IconMission } from "@solar-icons/solid/linear/cup-star";
+// เมนูล่างตอน active = ไอคอนแบบทึบ (Solar Bold · 2026-11-27)
+export { HomeIcon as IconHomeBold } from "@solar-icons/solid/bold/home";
+export { GiftIcon as IconGiftBold } from "@solar-icons/solid/bold/gift";
+export { CupStarIcon as IconMissionBold } from "@solar-icons/solid/bold/cup-star";
+export { UserIcon as IconUserBold } from "@solar-icons/solid/bold/user";

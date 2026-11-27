@@ -5,20 +5,16 @@ import { PageHeader } from "~/components/layout/page-header";
 import { BalanceBar } from "~/components/ui/balance-bar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
-import { Badge } from "~/components/ui/badge";
 import { Checkbox } from "~/components/ui/checkbox";
 import { FieldError, Input, Label } from "~/components/ui/input";
-import { InfoBox } from "~/components/ui/modal";
-import { ActivityRow } from "~/components/history/activity-row";
-import { IconTicket } from "~/components/ui/icons";
+import { InfoBox, ResultModal } from "~/components/ui/modal";
 import { PageLoading } from "~/components/ui/page-loading";
 import { requireMember } from "~/lib/member-gate";
 import { useI18n } from "~/lib/i18n";
 import { session } from "~/lib/session";
 import { usePartnerPath } from "~/lib/theme";
 import { cn, delay, formatNumber } from "~/lib/utils";
-import { exchangeSettings as cfg, exchangeState, historyService, restoreExchangeState, type ExchangeRecord } from "~/services/history-service";
-import { formatDate } from "~/lib/utils";
+import { exchangeSettings as cfg, historyService, restoreExchangeState, type ExchangeRecord } from "~/services/history-service";
 import { useMemberOnly } from "~/lib/member-gate";
 
 /**
@@ -26,7 +22,7 @@ import { useMemberOnly } from "~/lib/member-gate";
  * UI ใช้ component ของ Design System ทั้งหมด: PageHeader + BalanceBar inline · InfoBox · Label/Input/FieldError · Button (outline icon, chip, link, block) · Card · Checkbox · Badge · ActivityRow
  * ต้นฉบับ: index-f6f0a2ed.js — การ์ดคะแนนสะสม + อัตราแลกเปลี่ยน, ช่องกรอกคะแนน (−/+ ทีละ step, ปุ่มลัด, MAX),
  *   สรุป (คะแนนที่ใช้ / ส่วนลดที่ได้ / คะแนนคงเหลือ), checkbox ยินยอม, ปุ่ม "ยืนยันแลกคูปองส่วนลด ฿x"
- *   → กล่องสำเร็จพร้อมรหัสคูปอง + ประวัติการแลกล่าสุด
+ *   → popup สำเร็จ (ไม่โชว์รหัส) → ปุ่ม/ปิด = ไปหน้าคูปองของฉัน (ส่วน "ประวัติการแลกคูปองล่าสุด" ตัดออก 2026-11-27)
  * Mock: burn_settings ใช้ค่า default ในโค้ดต้นฉบับ (ขั้นต่ำ 10, step 10, 10 คะแนน = ฿1, อายุคูปอง 30 วัน)
  *   ตัดคะแนนด้วย sessionActions.updateCustomer; คูปองที่ได้เก็บใน history-service (ยังไม่เข้า session.myCoupons)
  */
@@ -42,7 +38,6 @@ export default function ExchangePointPage() {
   const [consent, setConsent] = createSignal(false);
   const [submitting, setSubmitting] = createSignal(false);
   const [result, setResult] = createSignal<ExchangeRecord>();
-  const [copied, setCopied] = createSignal("");
 
   const balance = () => session.customer.points;
   onMount(() => {
@@ -103,19 +98,9 @@ export default function ExchangePointPage() {
     setResult(rec);
     setConsent(false);
     setValue(balance() < cfg.min_points_per_redemption ? "" : amount() > balance() ? String(cfg.min_points_per_redemption) : value());
-    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   };
 
-  const copy = async (code: string) => {
-    try {
-      await navigator.clipboard?.writeText(code);
-    } catch {
-      /* ignore */
-    }
-    setCopied(code);
-    setTimeout(() => setCopied(""), 2000);
-  };
-  const goCoupons = () => navigate(to("rewards?type=mine"));
+  const goCoupons = () => navigate(to("wallet/coupons"));
 
   return (
     <div class="img-background min-h-screen bg-white bg-cover bg-center">
@@ -213,51 +198,7 @@ export default function ExchangePointPage() {
           <span class="text-14 text-gray">{t("profile.exchange_consent_text")}</span>
         </Checkbox>
 
-        {/* ผลการแลก */}
-        <Show when={result()}>
-          {(r) => (
-            <Card class="flex flex-col gap-4 p-4">
-              <Badge tone="success" class="self-start">{t("profile.exchange_success_title")}</Badge>
-              <div class="flex items-center justify-between gap-2">
-                <div class="min-w-0">
-                  <p class="text-12 text-gray">
-                    {t("profile.exchange_success_code_label")} (฿{formatNumber(r().discount, 2)})
-                  </p>
-                  <p class="truncate font-mono text-16 font-semibold text-dark">{r().code}</p>
-                </div>
-                <Button variant="secondary" size="sm" type="button" onClick={() => copy(r().code)}>
-                  {copied() === r().code ? t("profile.exchange_copied") : t("profile.exchange_copy_code")}
-                </Button>
-              </div>
-              <Button size="md" type="button" class="w-full" onClick={goCoupons}>
-                {t("profile.view_my_coupons")}
-              </Button>
-            </Card>
-          )}
-        </Show>
-
-        {/* ประวัติการแลกล่าสุด — แถว ActivityRow แบบหน้าประวัติ */}
-        <Show when={exchangeState.records.length > 0}>
-          <div class="-mx-4 flex flex-col">
-            <div class="flex items-center justify-between px-4">
-              <h3 class="text-16 font-semibold text-dark">{t("profile.exchange_recent_history_title")}</h3>
-              <Button variant="link" type="button" class="text-14 font-medium" onClick={goCoupons}>
-                {t("profile.view_my_coupons")}
-              </Button>
-            </div>
-            <For each={exchangeState.records.slice(0, 5)}>
-              {(rec) => (
-                <ActivityRow
-                  icon={IconTicket}
-                  title={`${t("loyalty.discount_coupon_amount", { amount: formatNumber(rec.discount, 2) })} · ${rec.code}`}
-                  date={`${formatDate(rec.created_at, true)}${t("common.time_suffix")}`}
-                  amount={{ text: `-${n0(rec.points_used)}`, tone: "error" }}
-                  onClick={() => copy(rec.code)}
-                />
-              )}
-            </For>
-          </div>
-        </Show>
+        {/* ประวัติการแลกล่าสุด: ตัดออก (2026-11-27) — ซ้ำกับคูปองของฉัน + ประวัติคะแนน และเคยโชว์/คัดลอกรหัสข้ามขั้นตอน "ใช้คูปอง" */}
 
         <BottomActionBarSpacer />
         <BottomActionBar>
@@ -267,6 +208,24 @@ export default function ExchangePointPage() {
         </BottomActionBar>
       </form>
       <PageLoading show={submitting()} message={t("profile.exchange_submitting")} />
+      {/* แลกสำเร็จ = popup (2026-11-27) — ปุ่ม/ปิด → หน้าคูปองของฉัน (แบบเดียวกับแลกคูปองในแท็บแลกคูปอง) · ไม่โชว์รหัส (ได้ตอนกด "ใช้คูปอง") */}
+      <ResultModal
+        open={!!result()}
+        onOpenChange={(o) => {
+          if (o) return;
+          setResult(undefined);
+          goCoupons();
+        }}
+        title={t("profile.exchange_success_title")}
+        description={
+          <>
+            {t("loyalty.discount_coupon_amount", { amount: formatNumber(result()?.discount ?? 0, 2) })}
+            {"\n"}
+            {t("profile.exchange_saved_note")}
+          </>
+        }
+        buttonText={t("profile.view_my_coupons")}
+      />
     </div>
   );
 }

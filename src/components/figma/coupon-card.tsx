@@ -2,6 +2,7 @@ import { A } from "@solidjs/router";
 import { Show } from "solid-js";
 import { useI18n } from "~/lib/i18n";
 import type { Coupon } from "~/mocks/coupons";
+import { CouponDefaultCover } from "~/components/coupon/coupon-default-cover";
 
 /**
  * การ์ดคูปอง (Figma My Coupon 583:1753)
@@ -16,7 +17,10 @@ export function FigmaCouponCard(props: { coupon: Coupon; href: string }) {
     <A href={props.href} class="relative block min-w-0">
       <div class="drop-shadow-card">
         <div class="relative aspect-square overflow-hidden rounded-t-2xl bg-white">
-          <img src={c().image} alt="" class="h-full w-full object-cover" />
+          {/* ไม่มีรูป = ภาพปกเริ่มต้นของระบบ (ไอคอนตั๋ว + มูลค่าส่วนลด · 2026-11-27) */}
+          <Show when={c().image} fallback={<CouponDefaultCover discount={c().discount} class="h-full w-full" />}>
+            <img src={c().image} alt="" class="h-full w-full object-cover" />
+          </Show>
           <Show when={overlay()}>
             <div class="absolute inset-0 flex items-center justify-center bg-black/50">
               <span class="text-14 font-semibold text-white">{overlay()}</span>

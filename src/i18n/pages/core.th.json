@@ -16,7 +16,7 @@
   "core.code": "โค้ด",
   "core.code_expired": "รหัสหมดอายุแล้ว",
   "core.connect_account_line1": "เชื่อมต่อบัญชี {{platform}} ของคุณ",
-  "core.connect_account_line2": "เพื่อรับคะแนนจากทุกคำสั่งซื้อ",
+  "core.connect_account_line2": "เพื่อรับคะแนนจากคำสั่งซื้อที่ร้าน Charmiss Official",
   "core.connect_failed": "เชื่อมต่อบัญชี {{platform}} ไม่สำเร็จ",
   "core.coupon_expired": "คูปองหมดอายุ",
   "core.coupon_howto": "วิธีใช้",
@@ -112,5 +112,7 @@
   "history.point_history": "ประวัติคะแนน",
   "core.line_badge": "x10 คะแนน",
   "core.banner_placeholder": "พื้นที่แบนเนอร์",
-  "core.banner_size": "ขนาดรูป 1200 × 600 px (สัดส่วน 2:1)"
+  "core.banner_size": "ขนาดรูป 1200 × 600 px (สัดส่วน 2:1)",
+  "core.line_promo_short": "x10 คะแนนทุกออเดอร์",
+  "core.line_promo_badge": "รับคะแนน x10"
 }

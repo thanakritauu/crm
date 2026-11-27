@@ -102,7 +102,7 @@ export function CouponCatalog(props: { extra?: JSX.Element }) {
       />
       <ResultModal
         open={success()}
-        onOpenChange={(o) => !o && navigate(to("rewards?type=mine"))}
+        onOpenChange={(o) => !o && navigate(to("wallet/coupons"))}
         title={t("common.coupon_redeem_success_title")}
         description={t("common.coupon_redeem_success_note")}
         buttonText={t("home.my_coupon")}

@@ -1,6 +1,6 @@
 import { useNavigate } from "@solidjs/router";
 import { createSignal, For, onMount, Show } from "solid-js";
-import { PlatformLogo } from "~/components/figma/platform-logo";
+import { PlatformTile } from "~/components/platform/platform-icon";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { IconInfo } from "~/components/ui/icons";
@@ -16,6 +16,7 @@ import { platformService, type PlatformItem } from "~/services/platform-service"
 /**
  * รายการการ์ดเชื่อมต่อแพลตฟอร์มออนไลน์ — ใช้ร่วมกัน: หน้าเชื่อมต่อแพลตฟอร์ม (/profile/platforms) และหน้าสะสมคะแนน (/earn)
  * เรียงตาม priority (LINE Shopping บนสุด) · "เชื่อมต่อ" → /profile/platforms/:platform
+ * หน้าตา (2026-11-27): การ์ดเดียว แถวละแพลตฟอร์ม ไอคอนสี่เหลี่ยมชุดเดียวกับการ์ดชวนเชื่อมหน้าสะสมคะแนน (PlatformTile)
  * ยกเลิกเชื่อมต่อ (flow ตาม production): ปุ่มแดงจาง → modal ยืนยัน "คุณต้องยกเลิกเชื่อมต่อบัญชีแพลตฟอร์มออนไลน์หรือไม่?"
  *   ("ไม่ต้องการ" | "ยกเลิกเชื่อมต่อ") → ยกเลิก → การ์ดกลับเป็นยังไม่เชื่อมต่อ (ไม่มี modal สำเร็จ) · เชื่อมต่อใหม่ได้ด้วยหมายเลขคำสั่งซื้อใหม่
  */
@@ -51,18 +52,26 @@ export function PlatformConnectList(props: { class?: string }) {
   return (
     <>
       <PageLoading show={loading()} />
-      <div class={cn("flex flex-col gap-4", props.class)}>
-        <For each={enabled()}>
-          {(p) => (
-            // LINE Shopping: ขอบชมพู + ริบบิ้นโปรบนสุด ให้เด่นกว่าการ์ดอื่น
-            <Card class={cn("relative flex flex-col gap-4 overflow-hidden p-4", p.platform === "line" && "border-2 border-primary")}>
-              {/* LINE Shopping: ริบบิ้นโปรเต็มความกว้างบนสุดของการ์ด (แทนป้ายมุม + แถบโปรด้านล่าง) */}
-              <Show when={p.platform === "line"}>
-                <p class="-mx-4 -mt-4 bg-primary px-4 py-2 text-14 font-medium text-white">{t("core.line_promo")}</p>
-              </Show>
-              {/* โลโก้ซ้าย · ปุ่ม sm (32px ตาม Design System) ชิดขวาบรรทัดเดียวกัน */}
-              <div class="flex items-center justify-between gap-2">
-                <PlatformLogo platform={p} />
+      {/* รายการเดียวในการ์ดเดียว (2026-11-27) — ทุกแถวโครงเดียวกัน: ไอคอน 40 (ถูกเขียว = เชื่อมแล้ว) · ชื่อ + สถานะ · ปุ่มขวาตำแหน่งเดิมเสมอ
+          สี: ชมพู = ปุ่ม/ป้าย x10 เท่านั้น · เขียว = ถูกบนไอคอน · เทา = สถานะ + "ยกเลิกเชื่อมต่อ" · สีแบรนด์อยู่ในไอคอนเท่านั้น */}
+      <div class={props.class}>
+        <Card class="flex flex-col divide-y divide-stroke px-4">
+          <For each={enabled()}>
+            {(p) => (
+              <div class="flex items-center gap-4 py-4">
+                <PlatformTile platform={p} connected={!!p.status} size={40} />
+                <div class="flex min-w-0 flex-1 flex-col gap-1">
+                  <p class="flex items-center gap-2 text-14 font-semibold text-dark">
+                    <span class="truncate">{p.display_name}</span>
+                    <Show when={p.platform === "line"}>
+                      <span class="shrink-0 rounded-full bg-primary-surface px-2 text-12 font-medium text-primary">{t("core.line_promo_badge")}</span>
+                    </Show>
+                  </p>
+                  <p class="truncate text-12 text-gray">
+                    {/* เชื่อมแล้ว = ชื่อบัญชี/เบอร์อย่างเดียว (ถูกเขียวบนไอคอนบอกสถานะ · 2026-11-27) · ไม่มีข้อมูล = "เชื่อมต่อแล้ว" */}
+                    {p.status ? p.platform_id || p.order_id || t("platform.connected") : t("platform.status_not_connected")}
+                  </p>
+                </div>
                 <Show
                   when={p.status}
                   fallback={
@@ -71,39 +80,15 @@ export function PlatformConnectList(props: { class?: string }) {
                     </Button>
                   }
                 >
-                  {/* ยกเลิกเชื่อมต่อ = ปุ่มแดงจาง (variant "error-soft": พื้น Error/Surface ตัวแดง) */}
-                  <Button variant="error-soft" size="sm" onClick={() => askUnbind(p)}>
-                    {t("platform.unbind")}
-                  </Button>
+                  {/* ป้ายสั้น "ยกเลิก" ให้ชื่อแพลตฟอร์มไม่โดนตัด · ชื่อเต็มอยู่ใน aria-label · popup ยืนยันบอกชัดว่ายกเลิกเชื่อมต่อ */}
+                  <button type="button" aria-label={t("platform.unbind")} class="shrink-0 text-12 text-gray underline underline-offset-2" onClick={() => askUnbind(p)}>
+                    {t("platform.unbind_short")}
+                  </button>
                 </Show>
               </div>
-              {/* หัวข้อเต็มความกว้างการ์ด (บรรทัดเดียว) · รายละเอียด */}
-              <div class="flex flex-col gap-1">
-                <Show
-                  when={p.status}
-                  fallback={
-                    <p class="line-clamp-2 break-words text-14 font-semibold text-dark">
-                      {t("core.not_connected_with", { platform: p.platform === "tiktok" ? "Tiktok" : p.display_name })}
-                    </p>
-                  }
-                >
-                  <p class="line-clamp-2 text-14 font-semibold text-success">{t("platform.connected")}</p>
-                </Show>
-                {/* รายละเอียดสูงสุด 2 บรรทัด เกินตัด … */}
-                <Show
-                  when={p.status}
-                  fallback={
-                    <p class="line-clamp-2 break-words text-14 text-gray">
-                      {t("core.connect_account_line1", { platform: p.display_name })} {t("core.connect_account_line2")}
-                    </p>
-                  }
-                >
-                  <p class="line-clamp-2 break-all text-14 text-gray">{p.platform_id || p.order_id}</p>
-                </Show>
-              </div>
-            </Card>
-          )}
-        </For>
+            )}
+          </For>
+        </Card>
       </div>
 
       <ConfirmModal

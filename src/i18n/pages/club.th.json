@@ -31,7 +31,7 @@
   "club.refresh_coins": "อัปเดตคอยน์",
   "club.points_is_now": "คะแนนของคุณเป็นปัจจุบันแล้ว",
   "club.points_updated": "อัปเดตคะแนนสำเร็จ",
-  "club.connect_for_auto_points": "เชื่อมต่อแพลตฟอร์มออนไลน์ เพื่อรับคะแนนจากคำสั่งซื้ออัตโนมัติ",
+  "club.connect_for_auto_points": "เชื่อมต่อแพลตฟอร์มออนไลน์ รับคะแนนอัตโนมัติเมื่อซื้อจากร้าน Charmiss Official",
   "club.no_new_platform_orders": "ไม่มีคำสั่งซื้อใหม่จากแพลตฟอร์มออนไลน์",
   "club.new_platform_orders": "พบคำสั่งซื้อใหม่ {{count}} รายการ",
   "club.refresh_all": "อัปเดตคะแนนและคอยน์",
@@ -44,11 +44,16 @@
   "club.short_coins_brief": "ขาดอีก {{amount}}",
   "club.qa_title": "ทางลัด",
   "club.qa_connect": "เชื่อมต่อ\nแพลตฟอร์ม",
-  "club.connect_card_desc": "สั่งซื้อผ่าน Shopee, Lazada, TikTok, LINE Shopping รับคะแนนอัตโนมัติ ไม่ต้องกรอกเองทุกครั้ง",
+  "club.connect_card_desc": "สั่งซื้อจากร้าน Charmiss Official บน Shopee, Lazada, TikTok, LINE Shopping รับคะแนนอัตโนมัติเมื่อได้รับสินค้า ไม่ต้องกรอกเองทุกครั้ง",
   "club.connect_hint_q": "ไม่อยากกรอกเองทุกครั้ง?",
-  "club.connect_hint_desc": "เชื่อมต่อแพลตฟอร์มเพื่อรับคะแนนอัตโนมัติ",
+  "club.connect_hint_desc": "เชื่อมต่อแพลตฟอร์ม รับคะแนนอัตโนมัติเมื่อซื้อจากร้าน Charmiss Official",
   "club.qa_coupons": "คูปอง\nของฉัน",
   "club.qa_exchange": "แลกคะแนน\nเป็นคูปอง",
   "club.qa_history": "ประวัติ\nคะแนน",
-  "club.connect_card_ribbon": "แนะนำ! รับคะแนนอัตโนมัติจากทุกออเดอร์ออนไลน์"
+  "club.connect_card_ribbon": "แนะนำ! ซื้อจาก Charmiss Official รับคะแนนอัตโนมัติ",
+  "club.earn_notice": "คะแนนในส่วนนี้สะสมจากการซื้อสินค้าเท่านั้น ไม่รวมภารกิจหรือกิจกรรมอื่นๆ",
+  "club.connect_hero_badge": "แนะนำ",
+  "club.connect_hero_title": "เชื่อมต่อแพลตฟอร์มออนไลน์",
+  "club.connect_hero_desc": "เพื่อรับคะแนนอัตโนมัติ",
+  "club.connect_hero_count": "เชื่อมต่อแล้ว {{connected}}/{{total}} แพลตฟอร์ม"
 }

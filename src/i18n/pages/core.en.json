@@ -16,7 +16,7 @@
   "core.code": "Code",
   "core.code_expired": "Code expired",
   "core.connect_account_line1": "Connect your {{platform}} account",
-  "core.connect_account_line2": "to earn points on every order",
+  "core.connect_account_line2": "to earn points on Charmiss Official store orders",
   "core.connect_failed": "Couldn't connect your {{platform}} account",
   "core.coupon_expired": "Coupon expired",
   "core.coupon_howto": "How to use",
@@ -112,5 +112,7 @@
   "history.point_history": "Point history",
   "core.line_badge": "10x points",
   "core.banner_placeholder": "Banner area",
-  "core.banner_size": "Image size 1200 × 600 px (2:1)"
+  "core.banner_size": "Image size 1200 × 600 px (2:1)",
+  "core.line_promo_short": "10x points on every order",
+  "core.line_promo_badge": "Get 10x points"
 }

@@ -28,7 +28,7 @@ export function legacyRedirect(path: string, search: string): string | null {
   if (path === "coupon") return withQuery("rewards", { type: "coupons" });
   if (path === "exchange-point") return withQuery("rewards/points-to-coupon");
   // กระเป๋า
-  if (path === "coupon/my-coupons") return withQuery("rewards?type=mine");
+  if (path === "coupon/my-coupons") return withQuery("wallet/coupons");
   if ((m = path.match(/^coupon\/my-coupons\/detail\/([^/]+)$/))) return withQuery(`wallet/coupons/${m[1]}`);
   if (path === "history") {
     const tab = q.get("tab");

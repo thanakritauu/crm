@@ -59,6 +59,7 @@ export default function NotificationPage() {
           items={[
             { value: "all", label: t("common.all") },
             { value: "mission", label: t("mission.mission") },
+            // "การแลก" = ทุกการใช้คะแนนแลก: แลกสินค้า/สิทธิพิเศษ + แลกคูปอง + แลกคะแนนเป็นคูปอง (type "redeem" ทั้งหมด · 2026-11-27)
             { value: "redeem", label: t("notification.redeem_title") },
           ]}
         />

@@ -1,54 +1,33 @@
-import { Match, Switch } from "solid-js";
 import { cn } from "~/lib/utils";
 import type { PlatformConfig } from "~/mocks/platforms";
 
 /**
- * ไอคอนแพลตฟอร์ม rounded-xl (12) + shadow-card — SVG โลโก้ชุดเดียวกับหน้า /online-platform-connection จริง
+ * ไอคอนแพลตฟอร์ม — ไฟล์จากเจ้าของ (2026-11-27): public/images/platforms/<platform>.png (120×120 · มุมโค้งในไฟล์แล้ว)
+ * กรอบ rounded-xl + overflow-hidden ตัดมุมให้ตรงกันทุกขนาด · ไม่มีเงา (ใส่ class เพิ่มเองได้)
  */
 export function PlatformIcon(props: { platform: PlatformConfig; disabled?: boolean; class?: string }) {
   return (
-    <div
-      class={cn(
-        "flex h-full w-full items-center justify-center rounded-xl shadow-card",
-        props.platform.icon_class,
-        props.disabled && "opacity-55 grayscale",
-        props.class,
+    <span class={cn("block h-full w-full overflow-hidden rounded-xl", props.disabled && "opacity-55 grayscale", props.class)}>
+      <img src={`/images/platforms/${props.platform.platform}.png`} alt={props.platform.display_name} width="120" height="120" class="h-full w-full object-cover" />
+    </span>
+  );
+}
+
+/**
+ * ไอคอนแพลตฟอร์มขนาดคงที่ + ป้ายถูกสีเขียวมุมขวาล่างเมื่อเชื่อมต่อแล้ว (2026-11-27)
+ * ใช้ชุดเดียวกันทั้งการ์ดชวนเชื่อม (หน้าสะสมคะแนน · size 32) และรายการหน้าเชื่อมต่อแพลตฟอร์ม (size 40) ให้สองหน้าดูเป็นเรื่องเดียวกัน
+ */
+export function PlatformTile(props: { platform: PlatformConfig; connected?: boolean; size?: 32 | 40 }) {
+  return (
+    <span class={cn("relative block shrink-0", props.size === 32 ? "size-8" : "size-10")}>
+      <PlatformIcon platform={props.platform} />
+      {props.connected && (
+        <span class="absolute -bottom-1 -right-1 flex size-4 items-center justify-center rounded-full border-2 border-white bg-success">
+          <svg viewBox="0 0 12 12" class="size-2" fill="none" aria-hidden="true">
+            <path d="M2.5 6.2 5 8.5l4.5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
       )}
-    >
-      <Switch>
-        <Match when={props.platform.platform === "line"}>
-          <svg viewBox="0 0 120 120" class="h-full w-full rounded-xl" fill="none">
-            <rect width="120" height="120" rx="28" fill="#06C755" />
-            <path d="M98 55.6C98 37.9 80.9 23.5 59.9 23.5C38.9 23.5 21.8 37.9 21.8 55.6C21.8 71.5 35.3 84.8 53.6 87.3C54.8 87.6 56.5 88.2 56.9 89.4C57.3 90.5 57.1 92.2 57 93.3C57 93.3 56.5 96 56.4 96.6C56.2 97.6 55.5 100.4 59.7 98.6C63.9 96.8 82.4 85.2 90.8 75.6C95.8 70.1 98 63.2 98 55.6Z" fill="white" />
-            <path d="M40.3 47.4H37.6C37.1 47.4 36.7 47.8 36.7 48.3V63.6C36.7 64.1 37.1 64.5 37.6 64.5H47.4C47.9 64.5 48.3 64.1 48.3 63.6V60.9C48.3 60.4 47.9 60 47.4 60H41.2V48.3C41.2 47.8 40.8 47.4 40.3 47.4ZM54.6 47.4H51.9C51.4 47.4 51 47.8 51 48.3V63.6C51 64.1 51.4 64.5 51.9 64.5H54.6C55.1 64.5 55.5 64.1 55.5 63.6V48.3C55.5 47.8 55.1 47.4 54.6 47.4ZM72.4 47.4H69.7C69.2 47.4 68.8 47.8 68.8 48.3V57.4L61.8 47.9C61.6 47.6 61.3 47.4 60.9 47.4H58.2C57.7 47.4 57.3 47.8 57.3 48.3V63.6C57.3 64.1 57.7 64.5 58.2 64.5H60.9C61.4 64.5 61.8 64.1 61.8 63.6V54.5L68.8 64C69 64.3 69.3 64.5 69.7 64.5H72.4C72.9 64.5 73.3 64.1 73.3 63.6V48.3C73.3 47.8 72.9 47.4 72.4 47.4ZM86.6 51.9C87.1 51.9 87.5 51.5 87.5 51V48.3C87.5 47.8 87.1 47.4 86.6 47.4H76.8C76.3 47.4 75.9 47.8 75.9 48.3V63.6C75.9 64.1 76.3 64.5 76.8 64.5H86.6C87.1 64.5 87.5 64.1 87.5 63.6V60.9C87.5 60.4 87.1 60 86.6 60H80.4V57.9H86.6C87.1 57.9 87.5 57.5 87.5 57V54.3C87.5 53.8 87.1 53.4 86.6 53.4H80.4V51.9H86.6Z" fill="#06C755" />
-          </svg>
-        </Match>
-        <Match when={props.platform.platform === "tiktok"}>
-          <svg viewBox="0 0 48 48" class="h-6 w-6">
-            <path fill="#25F4EE" d="M32.4 18.2c-2.6 0-4.9-1.6-5.8-4V10h-4.7v18.6c0 2.3-1.9 4.2-4.2 4.2-2.3 0-4.2-1.9-4.2-4.2s1.9-4.2 4.2-4.2c.4 0 .9.1 1.3.2v-4.8c-.4-.1-.9-.1-1.3-.1-4.9 0-8.9 4-8.9 8.9s4 8.9 8.9 8.9 8.9-4 8.9-8.9v-8.8c1.7 1.2 3.8 1.9 6 1.9v-4.5h-.2z" />
-            <path fill="#FE2C55" d="M34 19.6c-2.6 0-4.9-1.6-5.8-4v-4.2h-3.6v18.6c0 2.3-1.9 4.2-4.2 4.2-1.6 0-3-.9-3.7-2.2.7 1.9 2.6 3.3 4.8 3.3 2.8 0 5.1-2.3 5.1-5.1v-8.8c1.7 1.2 3.8 1.9 6 1.9v-3.7h1.4z" />
-            <path fill="#FFFFFF" d="M31.3 18.2v-3.5c-.8-.9-1.3-2.1-1.5-3.3h-3.2v18.2c0 2.3-1.9 4.2-4.2 4.2-1.4 0-2.7-.7-3.4-1.8.8.7 1.8 1.1 3 1.1 2.3 0 4.2-1.9 4.2-4.2V10.7h2.1c.6 3.1 3.1 5.6 6.2 6v1.5h-3.2z" />
-          </svg>
-        </Match>
-        <Match when={props.platform.platform === "shopee"}>
-          <svg viewBox="0 0 48 48" class="h-7 w-7 fill-white">
-            <path d="M34.6 16.5h-3.4C30.8 11.7 27.7 8 24 8s-6.8 3.7-7.2 8.5h-3.4c-1.3 0-2.3 1.1-2.2 2.4l1.6 18.8c.2 2.4 2.1 4.3 4.5 4.3h13.4c2.4 0 4.3-1.9 4.5-4.3l1.6-18.8c.1-1.3-.9-2.4-2.2-2.4zM24 11c2.3 0 4.2 2.4 4.5 5.5h-9c.3-3.1 2.2-5.5 4.5-5.5zm.2 24.4c-2.9 0-5.2-1.4-5.7-3.6-.2-.7.3-1.4 1-1.5.7-.2 1.4.3 1.6.9.3 1.1 1.5 1.8 3.1 1.8 1.7 0 2.9-.8 2.9-2 0-1.1-.8-1.7-3-2.3-3-.8-5.1-2-5.1-4.6 0-2.6 2.3-4.5 5.4-4.5 2.6 0 4.6 1.2 5.2 3.1.2.7-.2 1.4-.9 1.6-.7.2-1.4-.2-1.6-.8-.4-1-1.4-1.6-2.7-1.6-1.6 0-2.7.8-2.7 1.9 0 1.1.9 1.7 3.2 2.3 3.1.8 4.9 2.1 4.9 4.6 0 2.8-2.3 4.7-5.6 4.7z" />
-          </svg>
-        </Match>
-        <Match when={props.platform.platform === "lazada"}>
-          <svg viewBox="0 0 48 48" class="h-7 w-7">
-            <defs>
-              <linearGradient id="lazGradCons" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#FF8A00" />
-                <stop offset="50%" stop-color="#FF2E63" />
-                <stop offset="100%" stop-color="#E10098" />
-              </linearGradient>
-            </defs>
-            <path fill="url(#lazGradCons)" d="M24 38.5 8.5 29.2V14.8L16.8 10l7.2 4.3 7.2-4.3 8.3 4.8v14.4L24 38.5z" />
-            <path fill="#FFFFFF" fill-opacity="0.22" d="M24 23.6v14.9l15.5-9.3V14.8L24 23.6z" />
-          </svg>
-        </Match>
-      </Switch>
-    </div>
+    </span>
   );
 }

@@ -39,6 +39,8 @@ export const DetailLayout: ParentComponent<{
 export type DetailCoverProps = {
   colors: [string, string];
   src?: string;
+  /** ไม่มีรูป → แสดงอันนี้แทนภาพไล่สี (เช่น ภาพปกเริ่มต้นของคูปอง) */
+  fallback?: JSX.Element;
   /** ข้อความทับรูป · tone: dark = ใช้ไม่ได้ (หมดเขต / หมด / หมดอายุ), gray = แลก/ใช้แล้ว */
   overlay?: { text: string; tone?: "dark" | "gray" };
 };
@@ -51,7 +53,7 @@ export function DetailCover(props: DetailCoverProps) {
       <Show
         when={props.src && !failed()}
         fallback={
-          <Show when={props.src} fallback={<CoverImage colors={props.colors} class="absolute inset-0 size-full" />}>
+          <Show when={props.src} fallback={props.fallback ? <div class="absolute inset-0">{props.fallback}</div> : <CoverImage colors={props.colors} class="absolute inset-0 size-full" />}>
             <div class="absolute inset-0 flex items-center justify-center bg-gray-placeholder">
               <img src="/images/figma/image-error.svg" alt="" width="100" height="100" />
             </div>

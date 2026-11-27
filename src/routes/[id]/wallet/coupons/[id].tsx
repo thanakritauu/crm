@@ -12,6 +12,7 @@ import { PageHeader } from "~/components/layout/page-header";
 import { EmptyData } from "~/components/ui/empty-data";
 import { IconTicket } from "~/components/ui/icons";
 import { InfoTabs } from "~/components/ui/info-tabs";
+import { CouponDefaultCover } from "~/components/coupon/coupon-default-cover";
 import { DetailActionBar, DetailLayout, DetailMeta, DetailTitle } from "~/components/detail/detail-layout";
 import { useBackWith } from "~/lib/navigation";
 
@@ -51,7 +52,7 @@ export default function CouponDetail() {
       when={coupon()}
       fallback={
         <div class="min-h-screen bg-white">
-          <PageHeader title={t("home.my_coupon")} backTo="rewards?type=mine" />
+          <PageHeader title={t("home.my_coupon")} backTo="wallet/coupons" />
           <EmptyData class="pt-16" title={t("core.coupon_not_found")} />
         </div>
       }
@@ -59,10 +60,11 @@ export default function CouponDetail() {
       {(c) => (
         <DetailLayout
           title={t("home.my_coupon")}
-          backTo="rewards?type=mine"
+          backTo="wallet/coupons"
           cover={{
             colors: c().cover,
             src: c().image,
+            fallback: <CouponDefaultCover discount={c().discount} size="lg" class="size-full" />,
             overlay:
               c().status === "used"
                 ? { text: t("common.expired_use_overlay"), tone: "gray" }
@@ -126,7 +128,7 @@ export default function CouponDetail() {
             code={c().code}
             expiresAt={c().code_expires_at ?? Date.now() + 600_000}
             backText={t("core.back_to_my_coupons")}
-            onBack={() => backWith("rewards?type=mine")}
+            onBack={() => backWith("wallet/coupons")}
           />
         </DetailLayout>
       )}

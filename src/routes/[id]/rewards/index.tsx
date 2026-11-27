@@ -1,4 +1,4 @@
-import { useSearchParams } from "@solidjs/router";
+import { Navigate, useSearchParams } from "@solidjs/router";
 import { createSignal, For, Match, Show, Switch } from "solid-js";
 import { BottomNav, BottomNavSpacer } from "~/components/layout/bottom-nav";
 import { PageHeader } from "~/components/layout/page-header";
@@ -18,26 +18,29 @@ import type { Privilege } from "~/mocks/privileges";
 import { privilegeService, type PrivilegeSort } from "~/services/privilege-service";
 import { rewardService } from "~/services/reward-service";
 import { CouponCatalog } from "~/views/coupon-catalog";
-import { MyCoupons } from "~/views/my-coupons";
 
 /**
  * /:partner/rewards — แลกรางวัล (แท็บในแถบล่าง) — ทุกอย่างที่แลกด้วยคะแนน
- * ?type=products (ค่าเริ่มต้น) | coupons | mine
+ * ?type=products (ค่าเริ่มต้น) | coupons · ?type=mine (URL เดิม) → /wallet/coupons
  * - แลกสินค้า: สิทธิพิเศษที่เป็นสินค้า + ของรางวัล รวมใน grid เดียว + เรียงลำดับ → /rewards/:id
  * - แลกคูปอง: แลกคะแนนเป็นคูปองส่วนลด + สิทธิพิเศษที่เป็นคูปอง + แคตตาล็อกคูปอง
- * - คูปองของฉัน: แสดงแท็บเมื่อเคยแลกคูปองแล้วเท่านั้น (เดิม /wallet/coupons และส่วนหนึ่งในหน้าแรก)
+ * - คูปองของฉัน: แยกเป็นหน้าเดี่ยว /wallet/coupons (2026-11-27) — ไม่มีทางเข้าจากหน้านี้แล้ว (เข้าจากทางลัดหน้าแรก / โปรไฟล์ / popup แลกสำเร็จ / แจ้งเตือน)
  * ?type=privileges (URL เดิม) → แลกสินค้า
  */
-type Type = "products" | "coupons" | "mine";
+type Type = "products" | "coupons";
 
 export default function RewardsPage() {
   const { t } = useI18n();
-  const [params, setParams] = useSearchParams<{ type?: string }>();
-  const hasCoupons = () => session.myCoupons.length > 0;
-  const type = (): Type => (params.type === "coupons" ? "coupons" : params.type === "mine" && hasCoupons() ? "mine" : "products");
+  const to = usePartnerPath();
+  const [params, setParams] = useSearchParams<{ type?: string; status?: string }>();
+  const type = (): Type => (params.type === "coupons" ? "coupons" : "products");
 
   return (
     <div class="img-background min-h-screen bg-white bg-cover bg-center">
+      {/* URL เดิม ?type=mine → หน้าคูปองของฉัน (คง status) */}
+      <Show when={params.type === "mine"}>
+        <Navigate href={to(`wallet/coupons${params.status ? `?status=${params.status}` : ""}`)} />
+      </Show>
       <PageHeader tone="primary" align="center" hideBack title={t("rw.title")}>
         {/* คะแนนของคุณ (ในหัวหน้า) — แตะแถบไม่ไปไหน (อยู่หน้าแลกรางวัลแล้ว) มีลิงก์ประวัติ */}
         <BalanceBar unit="points" inline />
@@ -51,7 +54,6 @@ export default function RewardsPage() {
           items={[
             { value: "products", label: t("rw.tab_products") },
             { value: "coupons", label: t("rw.tab_coupons") },
-            ...(hasCoupons() ? [{ value: "mine" as Type, label: t("home.my_coupon") }] : []),
           ]}
         />
       </div>
@@ -62,9 +64,6 @@ export default function RewardsPage() {
         </Match>
         <Match when={type() === "coupons"}>
           <CouponCatalog extra={<CouponPrivileges />} />
-        </Match>
-        <Match when={type() === "mine"}>
-          <MyCoupons />
         </Match>
       </Switch>
 

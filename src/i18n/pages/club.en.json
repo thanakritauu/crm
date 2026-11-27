@@ -31,7 +31,7 @@
   "club.refresh_coins": "Refresh coins",
   "club.points_is_now": "Your points are up to date",
   "club.points_updated": "Points updated",
-  "club.connect_for_auto_points": "Connect an online platform to earn points from orders automatically",
+  "club.connect_for_auto_points": "Connect an online platform to get points automatically when you buy from the Charmiss Official store",
   "club.no_new_platform_orders": "No new orders from online platforms",
   "club.new_platform_orders": "{{count}} new orders found",
   "club.refresh_all": "Refresh points and coins",
@@ -44,11 +44,16 @@
   "club.short_coins_brief": "{{amount}} short",
   "club.qa_title": "Shortcuts",
   "club.qa_connect": "Connect\nplatforms",
-  "club.connect_card_desc": "Order on Shopee, Lazada, TikTok or LINE Shopping and get points automatically — no need to enter them every time",
+  "club.connect_card_desc": "Order from the Charmiss Official store on Shopee, Lazada, TikTok or LINE Shopping and get points automatically once you receive your order — no need to enter them every time",
   "club.connect_hint_q": "Tired of entering receipts?",
-  "club.connect_hint_desc": "Connect your platforms to get points automatically",
+  "club.connect_hint_desc": "Connect your platforms to get points automatically when you buy from the Charmiss Official store",
   "club.qa_coupons": "My\ncoupons",
   "club.qa_exchange": "Points to\ncoupon",
   "club.qa_history": "Points\nhistory",
-  "club.connect_card_ribbon": "Recommended! Get points automatically from every online order"
+  "club.connect_card_ribbon": "Recommended! Buy from Charmiss Official, get points automatically",
+  "club.earn_notice": "Points here are earned from purchases only and do not include missions or other activities.",
+  "club.connect_hero_badge": "Recommended",
+  "club.connect_hero_title": "Connect online platforms",
+  "club.connect_hero_desc": "to get points automatically",
+  "club.connect_hero_count": "{{connected}}/{{total}} platforms connected"
 }
