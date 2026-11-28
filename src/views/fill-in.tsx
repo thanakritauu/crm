@@ -1,6 +1,6 @@
 import { useNavigate, useParams, useSearchParams } from "@solidjs/router";
 import { createMemo, createSignal, Show } from "solid-js";
-import { InfoBox, ResultModal } from "~/components/ui/modal";
+import { ResultModal } from "~/components/ui/modal";
 import { BottomActionBar, BottomActionBarSpacer } from "~/components/layout/bottom-action-bar";
 import { PageHeader } from "~/components/layout/page-header";
 import { Button } from "~/components/ui/button";
@@ -90,9 +90,9 @@ export default function FillIn(props: { kind: "receipt" | "product-code" }) {
         }
       />
       <div class="px-4">
-        <InfoBox>{texts().info}</InfoBox>
+        {/* ไม่มีกล่องคำแนะนำ — ชื่อหน้า + ช่องกรอก + ปุ่ม "สะสมคะแนน" บอกครบแล้ว (เดิมกล่องอธิบายซ้ำ · 2026-11-28) · ตัวอย่างใบเสร็จยังกดได้ที่ไอคอน ⓘ ข้างชื่อหน้า */}
         <form
-          class="mt-6"
+          class="mt-4"
           onSubmit={(e) => {
             e.preventDefault();
             submit();

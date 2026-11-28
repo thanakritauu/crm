@@ -185,10 +185,10 @@ export default function PlatformQuestionAnswer() {
       <Show when={step() === 1}>
         <div class="flex flex-col items-center gap-4">
           <div class="w-full px-4">
-            <div class="flex flex-col gap-2 rounded-2xl bg-primary-surface p-4">
+            <div class="flex flex-col gap-2 rounded-2xl bg-secondary-surface p-4">
               <p class="text-14 font-medium text-dark">
                 {t("core.bought_via_between", { platform: name() })}{" "}
-                <b class="font-semibold text-primary">
+                <b class="font-semibold text-secondary">
                   {t("core.date_range", {
                     from: fmt(new Date(Date.now() - LOOKBACK_DAYS * 86_400_000)),
                     to: fmt(new Date(Date.now() - 86_400_000)),
@@ -230,11 +230,11 @@ export default function PlatformQuestionAnswer() {
                   </For>
                 </div>
               </div>
-              <div class="flex flex-col gap-2 rounded-2xl bg-primary-surface p-4">
+              <div class="flex flex-col gap-2 rounded-2xl bg-secondary-surface p-4">
                 <div class="flex items-start gap-2">
-                  <span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-14 font-semibold text-white">{current() + 1}</span>
+                  <span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-secondary text-14 font-semibold text-white">{current() + 1}</span>
                   <p class="min-w-0 flex-1 text-14 font-medium text-dark">
-                    {t("core.select_prefix")} <b class="font-semibold text-primary">{fieldLabel(q())}</b>{" "}
+                    {t("core.select_prefix")} <b class="font-semibold text-secondary">{fieldLabel(q())}</b>{" "}
                     <Show when={q().question_type === "platform_username"} fallback={<>{t("core.of_order_number", { orderNumber: orderNumber().trim() })}</>}>
                       {t("core.used_to_order_with")}
                       <br />

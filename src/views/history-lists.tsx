@@ -28,9 +28,10 @@ function Filters<T extends string>(props: { tabs?: boolean; value: T; items: { v
       when={props.tabs}
       fallback={
         <div class="flex gap-2 px-4 pt-4">
+          {/* ชิปตัวกรอง = ตัวกรองข้อมูล (ม่วง ไม่ใช่ปุ่มชมพูทึบ) ให้แยกจากแท็บด้านบนแต่เป็นระบบเดียวกัน (DSL บทบาทสี 2026-11-28) */}
           <For each={props.items}>
             {(it) => (
-              <Button size="chip" variant={props.value === it.value ? "primary" : "outline"} class={cn(props.value !== it.value && "border-stroke text-gray")} onClick={() => props.onChange(it.value)}>
+              <Button size="chip" variant="outline" class={cn(props.value === it.value ? "border-secondary-surface bg-secondary-surface text-secondary" : "border-stroke text-gray")} onClick={() => props.onChange(it.value)}>
                 {it.label}
               </Button>
             )}

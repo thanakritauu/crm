@@ -61,7 +61,7 @@ export function AddressCard(props: {
       )}
     >
       <Show when={ribbon()}>
-        <span class="absolute -left-px -top-px rounded-br-xl rounded-tl-2xl rounded-tr-xl bg-secondary px-2 text-12 font-medium text-white">
+        <span class="absolute -left-px -top-px rounded-br-xl rounded-tl-2xl rounded-tr-xl bg-gray px-2 text-12 font-medium text-white">
           {t("profile.default")}
         </span>
       </Show>

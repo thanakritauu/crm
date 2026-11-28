@@ -216,6 +216,7 @@ export const sessionActions = {
           description: "คูปองจากการแลกคะแนน",
           code,
           points,
+          valid_from: new Date().toISOString().slice(0, 10), // ใช้ได้ตั้งแต่วันที่แลก (เดิมไม่มี → ช่วงเวลาโชว์วันหมดอายุซ้ำ 2 ครั้ง)
           expires_at: expires,
           status: "available",
           cover: ["#FFE9CC", "#FF9300"],

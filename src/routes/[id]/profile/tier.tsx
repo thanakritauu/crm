@@ -103,12 +103,13 @@ export default function TierPage() {
         {/* สิทธิประโยชน์แต่ละระดับ */}
         <h2 class="text-18 font-semibold text-dark">{t("tier.benefits")}</h2>
         {/* ระดับปัจจุบันอยู่บนสุดเสมอ แล้วตามด้วยระดับอื่นตามลำดับ */}
-        <ul class="flex flex-col gap-4">
+        {/* รายการเรียบคั่นเส้น (ข้อมูล ไม่ใช่การ์ด · 2026-11-28) — ระดับปัจจุบันบนสุด + ป้าย "ระดับของคุณ" */}
+        <ul class="flex flex-col">
           <For each={orderedTiers()}>
             {(tier) => {
               const current = () => tier.id === s().current.id;
               return (
-                <li class={cn(cardClass, "flex flex-col gap-2 p-4", current() && "ring-2 ring-primary")}>
+                <li class="flex flex-col gap-2 border-b border-stroke py-4 last:border-b-0">
                   <div class="flex items-center gap-2">
                     <img src={tier.mark} alt="" width="40" height="40" class="size-10 shrink-0 object-contain" />
                     <span class="flex min-w-0 flex-1 flex-col">

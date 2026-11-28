@@ -28,7 +28,7 @@ export default function MyRedemptionsPage() {
   );
 }
 
-/** ประวัติการแลก (Figma Reward History 142:1951): รูปทับเทา "แลกแล้ว" + ป้ายสถานะ (จัดส่งเดินเองตามเวลา) */
+/** ประวัติการแลก (Figma Reward History 142:1951): รูป (ไม่ทับ "แลกแล้ว" — ทุกรายการในหน้านี้แลกแล้ว · 2026-11-28) + ป้ายสถานะ (จัดส่งเดินเองตามเวลา) */
 function RedemptionList() {
   const { t } = useI18n();
   const to = usePartnerPath();
@@ -53,8 +53,6 @@ function RedemptionList() {
                     onClick={() => h.privilege_id && navigate(to(`rewards/${h.privilege_id}?redeem=${h.id}`))}
                     disabled={!h.privilege_id}
                     image={p() ? { colors: p()!.cover, src: p()!.image } : undefined}
-                    overlay={t("priv.redeemed_overlay")}
-                    overlayTone="gray"
                     badge={<Badge tone={st().tone}>{t(st().key)}</Badge>}
                     title={h.name}
                   >

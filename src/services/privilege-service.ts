@@ -39,9 +39,10 @@ export const privilegeService = {
 export type RedeemStatus = "picked_up" | "coupon" | "preparing" | "shipping" | "delivered" | "cancelled";
 /** key ข้อความ + โทนป้ายของแต่ละสถานะ */
 export const REDEEM_STATUS: Record<RedeemStatus, { key: string; tone: "primary" | "teriary" | "secondary" | "success" | "gray" }> = {
-  picked_up: { key: "priv.status_picked_up", tone: "primary" },
-  coupon: { key: "priv.status_coupon", tone: "primary" },
-  preparing: { key: "priv.status_preparing", tone: "teriary" },
+  // DSL บทบาทสีของสถานะ (2026-11-28): เสร็จแล้ว = เขียว · กำลังดำเนินการ = ม่วง · ยกเลิก/ยังไม่เริ่ม = เทา
+  picked_up: { key: "priv.status_picked_up", tone: "success" },
+  coupon: { key: "priv.status_coupon", tone: "success" },
+  preparing: { key: "priv.status_preparing", tone: "secondary" },
   shipping: { key: "priv.status_shipping", tone: "secondary" },
   delivered: { key: "priv.status_delivered", tone: "success" },
   cancelled: { key: "common.cancelled", tone: "gray" },

@@ -27,7 +27,7 @@ import { IconCamera, IconEdit, IconReceipt, IconRefresh, IconScanner, IconSmartp
 /**
  * /:partner/point-collection — สะสมคะแนน (Figma "Earn Point" 589:3670)
  * - หัวข้อ "สะสมคะแนน" 18/700 + กล่องแจ้งข้อมูล
- * - การ์ด 2x2: ถ่ายรูปใบเสร็จ / แสกนคิวอาร์โค้ด / กรอกเลขที่ใบเสร็จ / กรอกรหัสสินค้า (เปิดใช้ครบตาม Figma)
+ * - การ์ด 2x2: ถ่ายรูปใบเสร็จ / สแกนคิวอาร์โค้ด / กรอกเลขที่ใบเสร็จ / กรอกรหัสสินค้า (เปิดใช้ครบตาม Figma)
  * - (การ์ด "กดเพื่ออัปเดตคะแนนจากแพลตฟอร์มออนไลน์" ย้ายไปล่างสุดของหน้าเชื่อมต่อแพลตฟอร์มออนไลน์)
  * - การ์ดแรกใน grid "เชื่อมต่อแพลตฟอร์มออนไลน์" (คู่กับถ่ายรูปใบเสร็จ) → /profile/platforms (LINE Shopping บนสุด)
  * Flow ตาม Figma:
@@ -184,8 +184,8 @@ export default function EarnPoint() {
             onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && choose("platform")}
             class={cn(cardClass, "relative flex w-full cursor-pointer flex-col items-center gap-4 p-4 text-center transition active:scale-[0.98]")}
           >
-            {/* ป้ายมุมซ้ายบน "แนะนำ" — ทรงเดียวกับป้ายสถานะบนการ์ดภารกิจ (rounded-r-lg rounded-tl-2xl) สีชมพู (2026-11-27) */}
-            <span class="absolute left-0 top-0 rounded-r-lg rounded-tl-2xl bg-primary px-2 py-1 text-12 font-medium text-white">{t("club.connect_hero_badge")}</span>
+            {/* ป้ายมุมซ้ายบน "แนะนำ" — ทรงเดียวกับป้ายสถานะบนการ์ดภารกิจ (rounded-r-lg rounded-tl-2xl) · แดงตาม DSL (2026-11-28) */}
+            <span class="absolute left-0 top-0 rounded-r-lg rounded-tl-2xl bg-error px-2 py-1 text-12 font-medium text-white">{t("club.connect_hero_badge")}</span>
             {/* แถวไอคอนแพลตฟอร์ม 40 บนสุด (ถูกเขียว = เชื่อมแล้ว) · หัวข้อ 14/Medium ด้านล่าง · กึ่งกลางทั้งหมด · ไม่มีปุ่ม — ทั้งการ์ดกดได้ (2026-11-27) */}
             <div class="flex items-center justify-center gap-2">
               <For each={enabledPlatforms()}>{(p) => <PlatformTile platform={p} connected={!!p.status} size={40} />}</For>
@@ -204,12 +204,12 @@ export default function EarnPoint() {
                 onClick={() => choose(m.id)}
                 class={cn(cardClass, "relative flex min-w-0 flex-col items-center justify-center gap-2 px-4 py-8 transition active:scale-[0.98]")}
               >
-                {/* สะสมคอยน์ = เหรียญ C สีเหลืองเต็มวง 40px (ไม่มีวงชมพู) · การ์ดอื่น = ไอคอนชมพูในวงชมพูอ่อน */}
+                {/* สะสมคอยน์ = เหรียญ C สีเหลืองเต็มวง 40px (ไม่มีวงชมพู) · การ์ดอื่น = ไอคอนม่วงในวงม่วงอ่อน (เหมือนทางลัดหน้าแรก · DSL บทบาทสี 2026-11-28) */}
                 <Show
                   when={m.id === "missions"}
                   fallback={
-                    <span class="flex size-10 items-center justify-center rounded-full bg-primary-surface">
-                      <Dynamic component={m.icon} size={24} class="text-primary" />
+                    <span class="flex size-10 items-center justify-center rounded-full bg-secondary-surface">
+                      <Dynamic component={m.icon} size={24} class="text-secondary" />
                     </span>
                   }
                 >

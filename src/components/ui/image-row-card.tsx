@@ -3,6 +3,7 @@ import { children, Show, type JSX } from "solid-js";
 import { Badge } from "~/components/ui/badge";
 import { cardClass } from "~/components/ui/card";
 import { CoverImage } from "~/components/ui/cover-image";
+import { IconGift } from "~/components/ui/icons";
 import { useI18n } from "~/lib/i18n";
 import { useTheme } from "~/lib/theme";
 import { cn, formatNumber } from "~/lib/utils";
@@ -37,7 +38,15 @@ export function ImageRowCard(props: {
       {/* รูปเต็มกรอบซ้ายเสมอ (ไม่มีขอบขาวบน/ล่าง — 2026-11-26): กว้าง 102 สูงเท่าการ์ด (ขั้นต่ำ 102 = 1:1) · object-cover
           ไฟล์รูปต้องเป็น 1:1 — การ์ดที่มีบรรทัดเพิ่ม (สูงกว่า 102) รูปถูกครอปบน/ล่างเล็กน้อย ไม่ยืด */}
       <div class="relative min-h-[102px] w-[102px] shrink-0 self-stretch border-r border-stroke">
-        <Show when={props.image} fallback={<div class="absolute inset-0 bg-surface-gray" />}>
+        {/* ไม่มีรูป = ภาพเริ่มต้น: พื้นม่วงอ่อน + ไอคอนของขวัญม่วง (เดิมกล่องเทาว่าง ดูเหมือนยังทำไม่เสร็จ · 2026-11-28) */}
+        <Show
+          when={props.image}
+          fallback={
+            <div class="absolute inset-0 flex items-center justify-center bg-secondary-surface text-secondary">
+              <IconGift size={32} />
+            </div>
+          }
+        >
           {(img) => <CoverImage colors={img().colors} src={img().src} fit={img().fit} class="absolute inset-0 size-full" />}
         </Show>
         <Show when={props.overlay}>

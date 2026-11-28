@@ -33,6 +33,8 @@ const RULES = [
 ];
 const HEX = /#[0-9a-fA-F]{3,8}\b/g;
 /** DSL ไอคอนใน popup: สีมาจาก tone ของ modal ที่เดียว — ไอคอนที่ส่งผ่าน prop icon={…} ห้ามใส่ class สีเอง (2026-11-27) */
+/** DSL บทบาทสี: ห้ามผสมพื้นอ่อนสีหนึ่งกับตัว/ไอคอนอีกสีในชิ้นเดียว (ม่วงอ่อน+ชมพู / ชมพูอ่อน+ม่วง · 2026-11-28) */
+const MIXED_TINT = /(bg-secondary-surface[^"'`]*\btext-primary\b|bg-primary-surface[^"'`]*\btext-secondary\b)/g;
 const POPUP_ICON_COLOR = /icon=\{<\w+[^>]*\bclass="[^"]*\b(text-(?:primary|secondary|teriary|success|error|warning|dark|gray|white))\b/g;
 
 /** ระยะห่างต้องเป็น 0, 4 หรือทวีคูณของ 8 */
@@ -74,6 +76,7 @@ for (const f of files) {
     } else {
       for (const [re, msg] of RULES) for (const m of line.matchAll(re)) found.push([m[0], msg]);
       found.push(...spacingIssues(line));
+      for (const m of line.matchAll(MIXED_TINT)) found.push([m[1].slice(0, 40), "ผสมสี: พื้นอ่อนกับตัวอักษร/ไอคอนต้องเป็นสีเดียวกัน (ม่วงอ่อน+ม่วง · ชมพูอ่อน+ชมพู) — DSL บทบาทสี"]);
       for (const m of line.matchAll(POPUP_ICON_COLOR)) found.push([m[1], "ไอคอนใน popup ห้ามใส่สีเอง — ใช้ tone ของ modal (primary/success/error/warning) · DSL พื้นอ่อน + ไอคอนสีเดียวกัน"]);
       if (!HEX_OK.some((s) => rel.startsWith(s)) && !/\bd="/.test(line)) for (const m of line.matchAll(HEX)) found.push([m[0], "ห้ามใส่ hex ในโค้ด — ใช้ class token หรือ var(--color-…)"]);
     }

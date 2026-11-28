@@ -18,7 +18,7 @@ import { missionService } from "~/services/mission-service";
  * ต้นฉบับ: _id_-980bb7c4.js
  * - PageHeader ชมพู + ชื่อภารกิจ (Badge teriary) + section#end-event นับถอยหลัง
  * - โพเดียม 3 อันดับแรก (กลางสูง 162px, ข้าง 97×132) — ต้นฉบับใช้รูป /images/badge-1..3.png ซึ่งไม่มี จึงวาดเหรียญเอง
- * - รายการอันดับ rounded-2xl p-4 bg-primary-surface ห่างกัน 8 + วงกลมเลขอันดับ bg-primary
+ * - รายการอันดับ: แถวเรียบคั่นเส้น + วงเลขม่วงอ่อน (2026-11-28 · เดิม rounded-2xl p-4 bg-primary-surface) ห่างกัน 8 + วงกลมเลขอันดับ bg-primary
  * - กล่อง "คอยน์ที่สะสมทั้งหมด / คุณอยู่อันดับที่" ของผู้ใช้ (prototype ปักไว้ด้านล่างจอ)
  * Mock: missionService.leaderboard (แถว me ใช้คอยน์ปัจจุบันจาก session)
  */
@@ -106,12 +106,13 @@ export default function Leaderboard() {
             </PageHeader>
 
             <section>
-              <div class="flex flex-col gap-2 px-4 pb-6 pt-4">
+              <div class="flex flex-col px-4 pb-6 pt-2">
                 <For each={others()}>
                   {(r) => (
-                    <div class="flex items-center justify-between rounded-2xl bg-primary-surface p-4">
+                    <div class="flex items-center justify-between border-b border-stroke py-4">
                       <div class="flex min-w-0 flex-1 items-center gap-x-2 pr-2">
-                        <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-14 font-semibold text-white">{r.rank}</span>
+                        {/* อันดับ = ข้อมูล → วงม่วงอ่อน เลขม่วง · แถวเรียบคั่นเส้น (ไม่ใช่การ์ดชมพู · DSL บทบาทสี 2026-11-28) */}
+                        <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary-surface text-14 font-semibold text-secondary">{r.rank}</span>
                         <span class="block min-w-0 truncate text-14 font-semibold text-dark">{r.name}</span>
                       </div>
                       <div class="flex flex-shrink-0 flex-col items-end whitespace-nowrap">
@@ -137,9 +138,9 @@ export default function Leaderboard() {
                 <>
                   <BottomActionBarSpacer />
                   <BottomActionBar>
-                    <div class="flex items-center justify-between rounded-2xl bg-primary-surface p-4">
+                    <div class="flex items-center justify-between rounded-2xl bg-secondary-surface p-4">
                       <strong class="flex min-w-0 items-center gap-x-2 text-14 text-dark">
-                        <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-14 font-semibold text-white">{e().rank}</span>
+                        <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary text-14 font-semibold text-white">{e().rank}</span>
                         <div class="flex min-w-0 flex-col items-start">
                           <h2 class="line-clamp-1 text-14 font-semibold">{t("common.leaderboard.you_are_ranked", { rank: e().rank })}</h2>
                           <p class="text-12 font-normal text-gray">{t("common.total_coin")}</p>

@@ -23,7 +23,7 @@ export function PillTabs<T extends string | number>(props: {
             onClick={() => props.onChange(it.value)}
             class={cn(
               "flex h-10 min-w-0 flex-1 items-center justify-center truncate rounded-full px-1 text-14 font-medium transition-colors",
-              props.value === it.value ? "bg-secondary-surface text-primary" : "text-gray-disable",
+              props.value === it.value ? "bg-secondary-surface text-secondary" : "text-gray", // ไม่ได้เลือก = เทาปกติ (เทาอ่อนคอนทราสต์ ~2.9:1 อ่านยาก · 2026-11-28) · ที่เลือก = ม่วงทั้งชิ้น (DSL บทบาทสี: ม่วง = นำทาง/ข้อมูล · 2026-11-28)
             )}
           >
             {it.label}

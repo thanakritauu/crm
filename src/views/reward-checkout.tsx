@@ -135,7 +135,8 @@ export default function RewardSummarize() {
               </div>
             </div>
 
-            <DetailActionBar redeem={{ unit: "points", cost: r().points }}>
+            {/* ไม่มีแถว "ใช้ X · คงเหลือ Y" ด้านล่าง — สรุปคะแนนอยู่ในหน้าแล้ว (เดิม "คงเหลือ" ล่าง = ยอดก่อนแลก ขัดกับ "คะแนนคงเหลือ" ในสรุป · 2026-11-28) */}
+            <DetailActionBar>
               <Button size="block" disabled={!address() || remainingAfter() < 0 || r().stock <= 0} onClick={() => setConfirmOpen(true)}>
                 {remainingAfter() < 0 ? t("privilage.insufficient_points") : t("loyalty.continue")}
               </Button>

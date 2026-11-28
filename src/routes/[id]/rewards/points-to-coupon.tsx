@@ -4,7 +4,6 @@ import { BottomActionBar, BottomActionBarSpacer } from "~/components/layout/bott
 import { PageHeader } from "~/components/layout/page-header";
 import { BalanceBar } from "~/components/ui/balance-bar";
 import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import { FieldError, Input, Label } from "~/components/ui/input";
 import { InfoBox, ResultModal } from "~/components/ui/modal";
@@ -176,8 +175,8 @@ export default function ExchangePointPage() {
           </div>
         </div>
 
-        {/* สรุป (Card) */}
-        <Card class="flex flex-col gap-2 p-4">
+        {/* สรุป = พื้นเรียบคั่นเส้นบน-ล่าง (ข้อมูล ไม่ใช่การ์ด · แบบหน้าสรุปก่อนแลก · 2026-11-28) */}
+        <div class="flex flex-col gap-2 border-y border-stroke py-4">
           <div class="flex items-center justify-between gap-2 text-14">
             <span class="text-gray">{t("profile.exchange_points_to_use_label")}</span>
             <span class="font-semibold text-dark">{amount() > 0 ? `${n0(amount())} ${t("common.points")}` : "-"}</span>
@@ -191,7 +190,7 @@ export default function ExchangePointPage() {
             <span class="font-semibold text-dark">{amount() > 0 && amount() <= balance() ? `${formatNumber(balance() - amount(), 2)} ${t("common.points")}` : "-"}</span>
           </div>
           <p class="border-t border-stroke pt-2 text-12 text-gray">{t("profile.exchange_validity_hint", { days: cfg.coupon_validity_days })}</p>
-        </Card>
+        </div>
 
         {/* ยอมรับเงื่อนไข (Checkbox ของ Design System) */}
         <Checkbox checked={consent()} onChange={(v) => !submitting() && setConsent(v)}>

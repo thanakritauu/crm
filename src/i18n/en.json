@@ -771,7 +771,7 @@
   "profile.form_address.type_work": "Work",
   "profile.form_address.zipcode_placeholder": "Postal code",
   "profile.guest": "Guest",
-  "profile.guest_description": "Sign up to get lots of privileges waiting for you",
+  "profile.guest_description": "Earn points on your purchases and redeem them for products and discount coupons",
   "profile.guest_title": "You're not a member yet",
   "profile.language_english": "English",
   "profile.language_thai": "Thai",
@@ -781,7 +781,7 @@
   "profile.personal_info": "Personal information",
   "profile.profile_group": "Profile",
   "profile.register_button": "Sign up",
-  "profile.register_description": "Sign up to get lots of privileges waiting for you",
+  "profile.register_description": "Earn points on your purchases and redeem them for products and discount coupons",
   "profile.settings_group": "Settings",
   "profile.shipping_address": "Shipping address",
   "profile.total_points": "Total points",
@@ -799,5 +799,6 @@
   "platform.intro_short": "Order from the Charmiss Official store with a connected account and get points automatically, no entering needed",
   "platform.status_not_connected": "Not connected",
   "platform.unbind_short": "Disconnect",
-  "notification.earn_title": "Points"
+  "notification.earn_title": "Points",
+  "common.coupon_use.valid_until": "Valid until {{date}}"
 }

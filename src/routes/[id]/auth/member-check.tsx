@@ -36,7 +36,8 @@ export default function UserVerification() {
           <Button size="block" onClick={() => navigate(to("auth/verify-phone?action=merge"))}>
             {t("account.member_yes")}
           </Button>
-          <Button size="block" onClick={() => navigate(to("auth/register"))}>
+          {/* ปุ่มหลักมีปุ่มเดียว — "ไม่เคย" เป็นปุ่มรอง (2026-11-28) */}
+          <Button variant="secondary" size="block" onClick={() => navigate(to("auth/register"))}>
             {t("account.member_no")}
           </Button>
         </div>

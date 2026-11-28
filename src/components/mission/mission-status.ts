@@ -7,8 +7,8 @@ import type { Translate } from "~/lib/i18n";
  */
 export function missionTrack(m: Mission): { key: string; class: string } | undefined {
   if (m.status === "completed") return { key: "common.mission_complete", class: "bg-success" };
-  if (m.status === "in_progress") return { key: "common.inprogress", class: "bg-warning" };
-  if (m.status === "not_started") return { key: "common.have_not_start", class: "bg-secondary" };
+  if (m.status === "in_progress") return { key: "common.inprogress", class: "bg-secondary" }; // กำลังทำ = ม่วง (เหลืองส้มสงวนให้คอยน์ · DSL 2026-11-28)
+  if (m.status === "not_started") return { key: "common.have_not_start", class: "bg-gray" }; // สถานะ = เทา (DSL บทบาทสี 2026-11-28)
   return undefined;
 }
 

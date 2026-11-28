@@ -26,7 +26,7 @@ export function HomeQuickActions() {
       label: t("club.qa_connect"),
       icon: IconSmartphone,
       href: "profile/platforms",
-      // ป้ายมุมขวาบน "เชื่อมแล้ว/ทั้งหมด" — ยังไม่เชื่อมเลย "0/4" = แดง (DSL แจ้งเตือน) + เด้งเบาๆ ชวนกด · เชื่อมแล้ว "1/4"… = เขียว (2026-11-27)
+      // ป้ายมุมขวาบน "เชื่อมแล้ว/ทั้งหมด" — ยังไม่ครบ (0/4–3/4) = แดง + เด้งเบาๆ ชวนกด · ครบ 4/4 = เขียว ไม่เด้ง (2026-11-28)
       connected: `${connectedCount()}/${platforms().length}`,
     },
     { key: "exchange", label: t("club.qa_exchange"), icon: IconCoins, href: "rewards/points-to-coupon" },
@@ -45,8 +45,8 @@ export function HomeQuickActions() {
                 {(txt) => (
                   <CountBadge
                     text={txt()}
-                    tone={connectedCount() > 0 ? "success" : "error"}
-                    class={cn("absolute -right-2 -top-1", connectedCount() === 0 && "motion-safe:animate-badge-nudge")}
+                    tone={connectedCount() === platforms().length ? "success" : "error"}
+                    class={cn("absolute -right-2 -top-1", connectedCount() < platforms().length && "motion-safe:animate-badge-nudge")}
                   />
                 )}
               </Show>

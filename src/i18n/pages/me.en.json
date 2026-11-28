@@ -9,7 +9,7 @@
   "me.error_email": "Invalid email format",
   "me.error_phone": "Please enter a 10-digit mobile number",
   "me.error_required": "Please enter {{field}}",
-  "me.guest_description": "Sign up to get the many privileges waiting for you",
+  "me.guest_description": "Earn points on your purchases and redeem them for products and discount coupons",
   "me.guest_name": "Guest",
   "me.guest_title": "You're not a member yet",
   "me.logout_description": "Do you want to log out?",

@@ -19,7 +19,6 @@ import { missionService } from "~/services/mission-service";
 import { rewardService } from "~/services/reward-service";
 import { Badge } from "~/components/ui/badge";
 import { ImageRowCard } from "~/components/ui/image-row-card";
-import { Card } from "~/components/ui/card";
 import type { Mission } from "~/mocks/missions";
 import { IconCalendar, IconCheck, IconChevronRight, IconClock, IconInfo, IconRanking } from "~/components/ui/icons";
 
@@ -367,7 +366,8 @@ function MissionProgressCard(props: { mission: Mission }) {
   const left = () => Math.max(0, m().target - m().progress);
   const pct = () => Math.round((shown() / Math.max(1, m().target)) * 100);
   return (
-    <Card class="flex flex-col gap-2 p-4">
+    // ส่วนข้อมูล = พื้นเรียบคั่นเส้น ไม่ใช่การ์ด (DSL การ์ดเฉพาะสิ่งที่กดได้ · 2026-11-28)
+    <section class="flex flex-col gap-2 border-b border-stroke pb-4">
       <div class="flex items-center justify-between gap-2">
         <span class="text-14 font-medium text-dark">{t("mis.progress_title")}</span>
         <span class="text-14 font-semibold text-dark">
@@ -414,6 +414,6 @@ function MissionProgressCard(props: { mission: Mission }) {
         </Show>
         </p>
       </Show>
-    </Card>
+    </section>
   );
 }

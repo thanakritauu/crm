@@ -116,7 +116,7 @@ export default function MissionRedeemDetail() {
           />
 
           <DetailActionBar
-            redeem={data().m.redeemed_code ? undefined : { unit: "coins", cost: cost() }}
+            redeem={data().m.redeemed_code || cost() <= 0 ? undefined : { unit: "coins", cost: cost() }} // รางวัลฟรี (0 คอยน์) ไม่แสดง "ใช้ 0 คอยน์ · คงเหลือ" (2026-11-28)
           >
             <Show
               when={!data().m.redeemed_code}

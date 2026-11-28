@@ -34,13 +34,15 @@ export function ActivityRow(props: {
         {...(props.onClick ? { type: "button", onClick: props.onClick } : {})}
         class={cn("flex w-full items-start gap-2 text-left", props.onClick && "active:opacity-70")}
       >
-        <span class="relative flex size-6 shrink-0 items-center justify-center rounded-full bg-primary-surface">
-          <Dynamic component={props.icon} size={12} class="text-primary" />
+        {/* ไอคอนหน้าแถว = ม่วงอ่อน + ไอคอนม่วง (ข้อมูล · DSL บทบาทสี 2026-11-28) */}
+        <span class="relative flex size-6 shrink-0 items-center justify-center rounded-full bg-secondary-surface">
+          <Dynamic component={props.icon} size={12} class="text-secondary" />
           <Show when={props.unread}>
             <span class="absolute -right-0.5 -top-0.5 size-2 rounded-full border border-white bg-error" aria-label={t("noti.unread")} />
           </Show>
         </span>
-        <span class={cn("min-w-0 flex-1 whitespace-pre-line text-14 font-semibold text-dark", props.clamp && "line-clamp-2")}>{props.title}</span>
+        {/* ตัวปกติ ให้ตัวเลขด้านขวาเด่น · แจ้งเตือนที่ยังไม่อ่าน = ตัวหนา (แยกอ่านแล้ว/ยังไม่อ่าน · 2026-11-28) */}
+        <span class={cn("min-w-0 flex-1 whitespace-pre-line text-14 text-dark", props.unread ? "font-semibold" : "font-normal", props.clamp && "line-clamp-2")}>{props.title}</span>
         <Show when={props.amount}>
           {(a) => (
             <span class={cn("shrink-0 whitespace-nowrap text-14 font-semibold", a().tone === "success" ? "text-success" : a().tone === "error" ? "text-error" : "text-dark")}>

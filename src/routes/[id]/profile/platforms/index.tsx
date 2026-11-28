@@ -23,8 +23,9 @@ export default function OnlinePlatformConnection() {
     <div class="min-h-screen bg-white">
       {/* Figma Connect_SelectPlatform (589:6122): ย้อนกลับ + หัวข้อ 18/700, กล่องแนะนำ, การ์ดแพลตฟอร์ม */}
       {/* ปุ่มรีเฟรชมุมขวา (ผลแบบหน้าเชื่อมต่อแพลตฟอร์มเดิม) — มีที่หน้าสะสมคะแนนด้วย (2026-11-25) */}
-      <PageHeader title={t("platform.connect_platform")} backTo="profile" right={<PlatformRefreshButton />} />
-      <div class="px-4">
+      {/* หัวชมพู ชื่อกึ่งกลาง — หน้ารายการ/หน้าหลักใช้หัวชมพู (DSL หัวหน้า 2026-11-28) */}
+      <PageHeader tone="primary" align="center" title={t("platform.connect_platform")} backTo="profile" right={<PlatformRefreshButton />} />
+      <div class="px-4 pt-4">
         {/* กรอบม่วง: จำนวนที่เชื่อมต่อแล้ว (เช่น 1/4) + คำแนะนำ */}
         {/* สถานะอย่างเดียว + ประโยคเดียว (2026-11-27 ลดคำซ้ำ) — ยังไม่เชื่อมเลย = "ยังไม่ได้เชื่อมต่อแพลตฟอร์ม" · เชื่อมแล้ว = "เชื่อมต่อแล้ว 1 จาก 4 แพลตฟอร์ม" */}
         <InfoBox>

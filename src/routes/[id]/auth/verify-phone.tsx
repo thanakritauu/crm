@@ -300,7 +300,7 @@ export default function VerifyByPhone() {
                 }
               >
                 <div class="text-center">
-                  <button class="hit-area text-secondary underline" type="button" onClick={requestOtp}>
+                  <button class="hit-area text-primary underline" type="button" onClick={requestOtp}>
                     {t("otp.request_again")}
                   </button>
                 </div>

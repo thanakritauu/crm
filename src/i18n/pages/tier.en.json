@@ -1,6 +1,6 @@
 {
   "tier.title": "Membership tier",
-  "tier.to_next": "{{points}} more points to {{tier}}",
+  "tier.to_next": "Earn {{points}} more points to become {{tier}}",
   "tier.top": "You're at the highest tier",
   "tier.earned_12m": "Your membership tier",
   "tier.how_title": "How are tiers calculated?",

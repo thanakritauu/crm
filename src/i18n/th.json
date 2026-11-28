@@ -771,7 +771,7 @@
   "profile.form_address.type_work": "ที่ทำงาน",
   "profile.form_address.zipcode_placeholder": "รหัสไปรษณีย์",
   "profile.guest": "Guest",
-  "profile.guest_description": "สมัครสมาชิก เพื่อรับสิทธิพิเศษ มากมายที่รอคุณอยู่",
+  "profile.guest_description": "สะสมคะแนนจากการซื้อสินค้า แลกเป็นสินค้าและคูปองส่วนลดได้",
   "profile.guest_title": "คุณยังไม่ได้เป็นสมาชิก",
   "profile.language_english": "ภาษาอังกฤษ",
   "profile.language_thai": "ภาษาไทย",
@@ -781,7 +781,7 @@
   "profile.personal_info": "ข้อมูลส่วนตัว",
   "profile.profile_group": "โปรไฟล์",
   "profile.register_button": "สมัครสมาชิก",
-  "profile.register_description": "สมัครสมาชิก เพื่อรับสิทธิพิเศษ มากมายที่รอคุณอยู่",
+  "profile.register_description": "สะสมคะแนนจากการซื้อสินค้า แลกเป็นสินค้าและคูปองส่วนลดได้",
   "profile.settings_group": "การตั้งค่า",
   "profile.shipping_address": "ที่อยู่สำหรับจัดส่งสินค้า",
   "profile.total_points": "คะแนนทั้งหมด",
@@ -799,5 +799,6 @@
   "platform.intro_short": "สั่งซื้อจากร้าน Charmiss Official ผ่านบัญชีที่เชื่อมต่อไว้ ได้คะแนนอัตโนมัติ ไม่ต้องกรอกเอง",
   "platform.status_not_connected": "ยังไม่เชื่อมต่อ",
   "platform.unbind_short": "ยกเลิก",
-  "notification.earn_title": "สะสมคะแนน"
+  "notification.earn_title": "สะสมคะแนน",
+  "common.coupon_use.valid_until": "ใช้ได้ถึง {{date}}"
 }

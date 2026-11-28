@@ -91,7 +91,7 @@ export function PrototypeNav() {
             เอกสาร (README, design system, สรุปการเปลี่ยนแปลง)
           </A>
           <A href="/qr" onClick={() => setOpen(false)} class="block rounded-xl px-4 py-2 text-14 text-secondary hover:bg-surface-gray">
-            QR ตัวอย่าง (ทดสอบแสกนคิวอาร์โค้ด)
+            QR ตัวอย่าง (ทดสอบสแกนคิวอาร์โค้ด)
           </A>
           <button
             type="button"

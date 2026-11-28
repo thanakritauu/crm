@@ -1,6 +1,6 @@
 {
   "tier.title": "ระดับสมาชิก",
-  "tier.to_next": "อีก {{points}} คะแนน เป็น {{tier}}",
+  "tier.to_next": "สะสมอีก {{points}} คะแนน เพื่อเป็น {{tier}}",
   "tier.top": "คุณอยู่ระดับสูงสุดแล้ว",
   "tier.earned_12m": "ระดับสมาชิกของคุณ",
   "tier.how_title": "ระดับสมาชิกคิดยังไง?",

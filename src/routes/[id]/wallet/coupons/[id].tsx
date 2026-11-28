@@ -41,6 +41,9 @@ export default function CouponDetail() {
     const timer = setInterval(() => setNow(Date.now()), 1000);
     onCleanup(() => clearInterval(timer));
   });
+  // แสดงหลังโหลดในเบราว์เซอร์เท่านั้น — เปิดลิงก์ตรง/รีเฟรชแล้ว HTML จากเซิร์ฟเวอร์ (ข้อมูลตั้งต้น) ไม่ตรงกับคูปองใน localStorage → Hydration Mismatch (2026-11-28)
+  const [mounted, setMounted] = createSignal(false);
+  onMount(() => setMounted(true));
   const usable = () => coupon()?.status === "available";
   const canReopenCode = () => {
     const c = coupon();
@@ -48,6 +51,7 @@ export default function CouponDetail() {
   };
 
   return (
+    <Show when={mounted()}>
     <Show
       when={coupon()}
       fallback={
@@ -78,7 +82,7 @@ export default function CouponDetail() {
             items={[
               {
                 icon: IconTicket,
-                text: `${t("common.coupon_use.period_label")}: ${formatDate(c().valid_from ?? c().expires_at)} - ${formatDate(c().expires_at)}`,
+                text: c().valid_from ? `${t("common.coupon_use.period_label")}: ${formatDate(c().valid_from!)} - ${formatDate(c().expires_at)}` : t("common.coupon_use.valid_until", { date: formatDate(c().expires_at) }),
               },
             ]}
           />
@@ -132,6 +136,7 @@ export default function CouponDetail() {
           />
         </DetailLayout>
       )}
+    </Show>
     </Show>
   );
 }

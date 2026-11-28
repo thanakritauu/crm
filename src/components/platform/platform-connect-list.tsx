@@ -64,7 +64,8 @@ export function PlatformConnectList(props: { class?: string }) {
                   <p class="flex items-center gap-2 text-14 font-semibold text-dark">
                     <span class="truncate">{p.display_name}</span>
                     <Show when={p.platform === "line"}>
-                      <span class="shrink-0 rounded-full bg-primary-surface px-2 text-12 font-medium text-primary">{t("core.line_promo_badge")}</span>
+                      {/* ป้ายโปรในบรรทัด = พื้นแดงอ่อน ตัวแดงเข้ม (DSL ป้ายเด่น · 2026-11-28) */}
+                      <span class="shrink-0 rounded-full bg-error-surface px-2 text-12 font-medium text-error">{t("core.line_promo_badge")}</span>
                     </Show>
                   </p>
                   <p class="truncate text-12 text-gray">
