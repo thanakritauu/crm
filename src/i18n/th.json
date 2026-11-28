@@ -587,7 +587,7 @@
   "mission.view_location_google_maps": "ดูตำแหน่งบน Google Maps",
   "mission.view_on_map": "ดูบนแผนที่",
   "mission.waiting_for_approve_order_id": "กำลังรอตรวจหมายเลขคำสั่งซื้อ",
-  "notification.no_notifications": "ยังไม่มีการแจ้งเตือนในตอนนี้",
+  "notification.no_notifications": "ยังไม่มีการแจ้งเตือน",
   "notification.redeem_title": "แลกรางวัล",
   "notification.title": "การแจ้งเตือน",
   "platform.answer_is_incorrect_please_try_again": "คำตอบไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง",
@@ -800,5 +800,6 @@
   "platform.status_not_connected": "ยังไม่เชื่อมต่อ",
   "platform.unbind_short": "ยกเลิก",
   "notification.earn_title": "สะสมคะแนน",
-  "common.coupon_use.valid_until": "ใช้ได้ถึง {{date}}"
+  "common.coupon_use.valid_until": "ใช้ได้ถึง {{date}}",
+  "notification.no_notifications_desc": "เราจะแจ้งเมื่อคุณได้รับคะแนน ทำภารกิจสำเร็จ หรือมีความคืบหน้าของการแลกรางวัล"
 }

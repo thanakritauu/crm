@@ -5,7 +5,7 @@ import { PageHeader } from "~/components/layout/page-header";
 import { privilegeState } from "~/components/privilege/privilege-card";
 import { Button } from "~/components/ui/button";
 import { EmptyData } from "~/components/ui/empty-data";
-import { IconSort } from "~/components/ui/icons";
+import { IconSort, IconGift } from "~/components/ui/icons";
 import { BalanceBar } from "~/components/ui/balance-bar";
 import { PillTabs } from "~/components/ui/pill-tabs";
 import { RewardGridCard } from "~/components/ui/reward-grid-card";
@@ -140,7 +140,7 @@ function ProductCatalog() {
           <IconSort size={16} />
         </Button>
       </div>
-      <Show when={items().length} fallback={<div class="flex min-h-[40vh] items-center justify-center"><EmptyData title={t("loyalty.no_rewards")} /></div>}>
+      <Show when={items().length} fallback={<div class="flex min-h-[40vh] items-center justify-center"><EmptyData icon={IconGift} title={t("loyalty.no_rewards")} /></div>}>
         {/* grid 2 คอลัมน์แบบ Okya · คะแนนไม่พอ = กุญแจ + "ขาดอีก X คะแนน" */}
         <div class="grid grid-cols-2 gap-4">
           <For each={items()}>

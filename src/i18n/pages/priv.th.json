@@ -10,7 +10,7 @@
   "priv.free": "ฟรี",
   "priv.no_address": "คุณยังไม่ได้กรอกที่อยู่สำหรับจัดส่งสินค้าโปรดเพิ่มที่อยู่สำหรับจัดส่ง",
   "priv.no_history": "ยังไม่มีประวัติการแลก",
-  "priv.no_history_desc": "แลกสิทธิพิเศษแล้ว รายการจะแสดงที่นี่",
+  "priv.no_history_desc": "ใช้คะแนนแลกสินค้าและสิทธิพิเศษ แล้วติดตามสถานะได้ที่นี่",
   "priv.points_used": "คะแนนที่ใช้แลก",
   "priv.redeem_status_label": "สถานะการแลกสินค้า:",
   "priv.redeemed_overlay": "แลกแล้ว",
@@ -26,5 +26,6 @@
   "priv.type_home": "บ้าน",
   "priv.type_other": "อื่นๆ",
   "priv.type_work": "ที่ทำงาน",
-  "priv.view_detail": "ดูรายละเอียด"
+  "priv.view_detail": "ดูรายละเอียด",
+  "priv.go_redeem": "ไปแลกรางวัล"
 }

@@ -2,7 +2,7 @@ import { A, useSearchParams } from "@solidjs/router";
 import { createSignal, For, Show } from "solid-js";
 import { FigmaCouponCard } from "~/components/figma/coupon-card";
 import { Button } from "~/components/ui/button";
-import { IconSort } from "~/components/ui/icons";
+import { IconSort, IconTicket } from "~/components/ui/icons";
 import { SortSheet } from "~/components/ui/sort-sheet";
 import { EmptyData } from "~/components/ui/empty-data";
 import { useI18n } from "~/lib/i18n";
@@ -37,7 +37,8 @@ export function MyCoupons() {
   };
   return (
     <div class="flex flex-col gap-4 p-4">
-      {/* เรียงลำดับโดย + ปุ่มเปิดตัวเลือก (แบบเดียวกับแท็บแลกสินค้า) */}
+      {/* เรียงลำดับโดย + ปุ่มเปิดตัวเลือก (แบบเดียวกับแท็บแลกสินค้า) — ไม่มีคูปองเลย = ซ่อน (ไม่มีอะไรให้เรียง · 2026-11-28) */}
+      <Show when={session.myCoupons.length > 0}>
       <div class="flex items-center justify-between">
         <h2 class="text-12 font-medium">
           <span class="text-gray">{t("common.sort_by")}:</span> <span class="text-primary">{sortOptions.find((o) => o.type === status())?.title}</span>
@@ -46,14 +47,12 @@ export function MyCoupons() {
           <IconSort size={16} />
         </Button>
       </div>
+      </Show>
       <Show
         when={list().length}
         fallback={
-          <div class="flex flex-col items-center gap-4 pt-12">
-            <EmptyData title={t("core.no_coupons_yet")} />
-            <A href={to("rewards?type=coupons")} class="text-14 font-medium text-primary underline">
-              {t("core.redeem_coupon_cta")}
-            </A>
+          <div class="pt-12">
+            <EmptyData icon={IconTicket} title={t("core.no_coupons_yet")} description={t("core.no_coupons_desc")} action={{ label: t("core.redeem_coupon_cta"), href: to("rewards?type=coupons") }} />
           </div>
         }
       >

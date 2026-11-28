@@ -1,6 +1,6 @@
 import { useNavigate } from "@solidjs/router";
 import { BottomActionBar } from "~/components/layout/bottom-action-bar";
-import { BrandHeader } from "~/components/layout/brand-header";
+import { PageHeader } from "~/components/layout/page-header";
 import { Button } from "~/components/ui/button";
 import { useI18n } from "~/lib/i18n";
 import { session } from "~/lib/session";
@@ -27,9 +27,10 @@ export default function UserVerification() {
 
   return (
     <div class="min-h-screen bg-white">
-      <BrandHeader />
-      <div class="mt-8 flex flex-col items-center justify-center bg-white px-4 py-8">
-        <h1 class="self-start text-18 font-semibold text-dark">
+      {/* หัวหน้าแบบเดียวกับหน้าด้านใน: ชมพู ชื่อกึ่งกลาง (เดิมหัวโลโก้ · 2026-11-28) */}
+      <PageHeader tone="primary" align="center" title={t("profile.register_button")} />
+      <div class="flex flex-col items-center justify-center bg-white px-4 py-8">
+        <h1 class="text-center text-18 font-semibold text-dark">
           {t("account.have_you_been_member", { brand: theme().display_name.replace(/\b\w/g, (c) => c.toUpperCase()) })}
         </h1>
         <div class="mt-8 flex w-full max-w-xs flex-col gap-4">

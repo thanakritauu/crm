@@ -67,7 +67,7 @@ export default function NotificationPage() {
         />
       </PageHeader>
 
-      <Show when={list().length > 0} fallback={<ActivityEmpty title={t("notification.no_notifications")} />}>
+      <Show when={list().length > 0} fallback={<ActivityEmpty icon={IconBell} title={t("notification.no_notifications")} description={t("notification.no_notifications_desc")} />}>
         <For each={list()}>
           {(n) => (
             <ActivityRow

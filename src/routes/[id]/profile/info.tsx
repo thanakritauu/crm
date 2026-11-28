@@ -201,7 +201,7 @@ export default function PersonalInformation() {
         </form>
       </div>
 
-      <BottomActionBar class="flex items-center pb-8">
+      <BottomActionBar>
         <Button type="submit" form="customerForm" size="block" disabled={!changed()}>
           {t("profile.form.save")}
         </Button>

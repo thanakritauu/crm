@@ -115,7 +115,7 @@ export default function PrivilegeDetail() {
         fallback={
           <div class="min-h-screen bg-white">
             <PageHeader title={t("privilage.privilage")} backTo="rewards" />
-            <EmptyData class="pt-16" title={t("privilage.no_privilage_found")} />
+            <EmptyData icon={IconGift} class="pt-16" title={t("privilage.no_privilage_found")} />
           </div>
         }
       >

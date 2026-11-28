@@ -56,7 +56,7 @@
   "core.method_scan": "สแกนคิวอาร์โค้ด",
   "core.mock_not_found_hint": "ข้อมูลจำลอง: ขึ้นต้นด้วย 0000 = ไม่พบในระบบ",
   "core.mock_order_hint": "ข้อมูลจำลอง: น้อยกว่า 6 ตัว = ไม่พบ · ขึ้นต้น X = ตอบผิด · ขึ้นต้น U = บัญชีถูกคนอื่นเชื่อมแล้ว · เลขเดียวกับบัญชีที่เชื่อมอยู่ = เคยเชื่อมแล้ว · ขึ้นต้น V = ยืนยันแล้ว (ข้ามคำถาม)",
-  "core.no_coupons_yet": "ยังไม่มีคูปองในขณะนี้",
+  "core.no_coupons_yet": "ยังไม่มีคูปอง",
   "core.no_points_history_yet": "ยังไม่มีประวัติคะแนนในขณะนี้",
   "core.not_connected_with": "คุณยังไม่ได้เชื่อมต่อกับ {{platform}}",
   "core.of_order_number": "ของหมายเลขคำสั่งซื้อ {{orderNumber}}",
@@ -114,5 +114,6 @@
   "core.banner_placeholder": "พื้นที่แบนเนอร์",
   "core.banner_size": "ขนาดรูป 1200 × 600 px (สัดส่วน 2:1)",
   "core.line_promo_short": "x10 คะแนนทุกออเดอร์",
-  "core.line_promo_badge": "รับคะแนน x10"
+  "core.line_promo_badge": "รับคะแนน x10",
+  "core.no_coupons_desc": "แลกคะแนนเป็นคูปองส่วนลด แล้วคูปองจะมาอยู่ที่นี่"
 }

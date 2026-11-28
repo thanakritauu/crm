@@ -57,7 +57,7 @@ export default function CouponDetail() {
       fallback={
         <div class="min-h-screen bg-white">
           <PageHeader title={t("home.my_coupon")} backTo="wallet/coupons" />
-          <EmptyData class="pt-16" title={t("core.coupon_not_found")} />
+          <EmptyData icon={IconTicket} class="pt-16" title={t("core.coupon_not_found")} />
         </div>
       }
     >

@@ -1,7 +1,8 @@
 import { useNavigate, useSearchParams } from "@solidjs/router";
 import { createSignal, Match, onCleanup, onMount, Show, Switch } from "solid-js";
 import { OtpInput } from "~/components/account/otp-input";
-import { NavigationTopbar } from "~/components/layout/navigation-topbar";
+import { PageHeader } from "~/components/layout/page-header";
+import { BottomActionBar, BottomActionBarSpacer } from "~/components/layout/bottom-action-bar";
 import { Button } from "~/components/ui/button";
 import { FieldError, Input, Label } from "~/components/ui/input";
 import { AlertDialog, ResultModal } from "~/components/ui/modal";
@@ -218,16 +219,20 @@ export default function VerifyByPhone() {
   return (
     <div class="flex min-h-screen flex-col bg-white">
       {/* ขั้น OTP: ย้อนกลับ = กลับไปแก้เบอร์ (เปลี่ยนเบอร์ = กลับหน้าข้อมูลส่วนตัว โดยข้อมูลที่แก้ยังอยู่) */}
-      <NavigationTopbar isLightColor navTo={changePhone() ? "profile/info" : undefined} onBack={step() === 2 || registerFlow() ? resetToPhoneStep : undefined} />
+      {/* หัวหน้าแบบเดียวกับหน้าด้านใน: ชมพู ชื่อกึ่งกลาง (เดิมหัวชมพูสูงแบบ hero · 2026-11-28) · คำอธิบายย้ายมาอยู่ใต้หัว */}
+      <PageHeader
+        tone="primary"
+        align="center"
+        title={step() === 1 ? t("me.check_member_title") : changePhone() ? t("me.verify_new_phone_title") : t("me.verify_title")}
+        backTo={changePhone() ? "profile/info" : undefined}
+        onBack={step() === 2 || registerFlow() ? resetToPhoneStep : undefined}
+      />
 
       <Switch>
         {/* ขั้นที่ 1: กรอกเบอร์โทรศัพท์ */}
         <Match when={step() === 1}>
-          <div class="flex h-hero w-full flex-col items-center justify-center gap-1 rounded-b-3xl bg-primary p-4 text-center text-white">
-            <h2 class="text-24 font-semibold">{t("me.check_member_title")}</h2>
-            <p class="text-16">{t("me.check_member_subtitle")}</p>
-          </div>
-          <div class="mt-8 px-4">
+          <div class="flex flex-col gap-4 px-4 pt-4">
+            <p class="text-14 text-gray">{t("me.check_member_subtitle")}</p>
             <form id="phone" onSubmit={submitPhone}>
               <div class="w-full">
                 <Label for="phone-input">{t("profile.form.phone.label")}</Label>
@@ -253,22 +258,20 @@ export default function VerifyByPhone() {
               </div>
             </form>
           </div>
-          <div class="mt-auto p-4 pt-8">
+          <BottomActionBarSpacer />
+          <BottomActionBar>
             <Button form="phone" type="submit" size="block">
               {t("me.next")}
             </Button>
-          </div>
+          </BottomActionBar>
         </Match>
 
         {/* ขั้นที่ 2: ยืนยัน OTP */}
         <Match when={step() === 2}>
-          <div class="flex h-hero w-full flex-col items-center justify-center gap-1 rounded-b-3xl bg-primary p-4 text-center text-white">
-            <h2 class="text-24 font-semibold">{changePhone() ? t("me.verify_new_phone_title") : t("me.verify_title")}</h2>
-            <p class="text-16">
-              {t("me.otp_sent_to")} <br /> {t("me.otp_sent_phone", { phone: `${phone().slice(0, 3)} ${phone().slice(3, 6)} xxxx` })}
+          <div class="flex flex-col gap-4 px-4 pt-4">
+            <p class="text-14 text-gray">
+              {t("me.otp_sent_to")} {t("me.otp_sent_phone", { phone: `${phone().slice(0, 3)} ${phone().slice(3, 6)} xxxx` })}
             </p>
-          </div>
-          <div class="mt-8 flex flex-col gap-4 px-4">
             <form id="otp" onSubmit={submitOtp}>
               <div class="flex w-full flex-col gap-2">
                 <div class="flex items-center justify-between text-dark">
@@ -295,7 +298,7 @@ export default function VerifyByPhone() {
                 fallback={
                   <h2 class="text-center text-dark">
                     <span class="text-16">{t("me.otp_not_received")}</span>
-                    <span class="ml-2 text-14 font-normal text-gray-placeholder">{t("me.otp_resend_in", { time: countdownText() })}</span>
+                    <span class="ml-2 text-14 font-normal text-gray">{t("me.otp_resend_in", { time: countdownText() })}</span>
                   </h2>
                 }
               >
@@ -307,11 +310,12 @@ export default function VerifyByPhone() {
               </Show>
             </div>
           </div>
-          <div class="mt-auto p-4 pt-8">
+          <BottomActionBarSpacer />
+          <BottomActionBar>
             <Button form="otp" type="submit" size="block" disabled={otp().join("").length !== 6}>
               {t("me.confirm_otp")}
             </Button>
-          </div>
+          </BottomActionBar>
         </Match>
       </Switch>
 

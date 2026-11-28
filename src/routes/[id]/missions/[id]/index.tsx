@@ -3,7 +3,7 @@ import { createMemo, createSignal, For, onMount, Show } from "solid-js";
 import { ResultModal } from "~/components/ui/modal";
 import { DetailActionBar, DetailLayout, DetailMeta, DetailSectionTitle, DetailTitle } from "~/components/detail/detail-layout";
 import { CoinIcon } from "~/components/mission/coin-icon";
-import { BalanceBar } from "~/components/ui/balance-bar";
+import { CountUp } from "~/components/ui/count-up";
 import { CountdownTimer } from "~/components/mission/countdown-timer";
 import { InfoTabs } from "~/components/ui/info-tabs";
 import { isCoinTarget, missionActionPath, missionCtaLabel, missionFull } from "~/components/mission/mission-status";
@@ -14,13 +14,12 @@ import { CoverImage } from "~/components/ui/cover-image";
 import { EmptyData } from "~/components/ui/empty-data";
 import { useI18n } from "~/lib/i18n";
 import { usePartnerPath } from "~/lib/theme";
-import { formatDate, formatNumber } from "~/lib/utils";
+import { cn, formatDate, formatNumber } from "~/lib/utils";
 import { missionService } from "~/services/mission-service";
 import { rewardService } from "~/services/reward-service";
-import { Badge } from "~/components/ui/badge";
 import { ImageRowCard } from "~/components/ui/image-row-card";
 import type { Mission } from "~/mocks/missions";
-import { IconCalendar, IconCheck, IconChevronRight, IconClock, IconInfo, IconRanking } from "~/components/ui/icons";
+import { IconCalendar, IconCheck, IconChevronRight, IconClock, IconInfo, IconRanking, IconMission } from "~/components/ui/icons";
 
 /**
  * /:partner/mission/detail/:id — รายละเอียดภารกิจ
@@ -121,7 +120,7 @@ export default function MissionDetail() {
       when={mission()}
       fallback={
         <div class="flex min-h-screen flex-col items-center justify-center bg-white px-4">
-          <EmptyData title={t("mission.not_found_title")} description={t("mission.mission_not_found")} />
+          <EmptyData icon={IconMission} title={t("mission.not_found_title")} description={t("mission.mission_not_found")} />
           <Button size="block" class="mt-4 max-w-xs" onClick={() => navigate(to("missions"))}>
             {t("mission.mission")}
           </Button>
@@ -155,16 +154,21 @@ export default function MissionDetail() {
           <Show when={m().target > 0 && m().status !== "expired"}>
             <MissionProgressCard mission={m()} />
           </Show>
-          {/* คอยน์ของภารกิจนี้ (แยกจากคอยน์รวม) — BalanceBar pattern เดียวกับทุกหน้า */}
+          {/* คอยน์ของภารกิจนี้ (แยกจากคอยน์รวม) — แถวเรียบคั่นเส้น ต่อจากความคืบหน้า (เดิมการ์ดเงาลอยใบเดียว · 2026-11-28)
+              ตัวเลข = ปลายทางเหรียญปลิว (data-fly-target mission-coins:<id>) + นับขึ้นตอนเหรียญถึง */}
           <Show when={isCoin()}>
-            <BalanceBar
-              unit="coins"
-              inline
-              amount={m().coin_balance ?? 0}
-              label={t("club.this_mission_coins")}
-              history={false}
-              countId={`mission-coins:${m().id}`}
-            />
+            <div class="flex items-center justify-between gap-2 border-b border-stroke pb-4">
+              <span class="flex min-w-0 items-center gap-2 text-14 font-medium text-dark">
+                <CoinIcon size={20} />
+                <span class="truncate">{t("club.this_mission_coins")}</span>
+              </span>
+              <span class="flex shrink-0 items-baseline gap-1 text-teriary-text">
+                <span class="text-18 font-semibold" data-fly-target={`mission-coins:${m().id}`}>
+                  <CountUp value={m().coin_balance ?? 0} id={`mission-coins:${m().id}`} waitFor={`mission-coins:${m().id}`} />
+                </span>
+                <span class="text-14 font-medium">{t("common.coins")}</span>
+              </span>
+            </div>
           </Show>
           <DetailTitle title={m().title} description={m().description}>
             <Show when={m().coin_rules?.length}>
@@ -207,9 +211,9 @@ export default function MissionDetail() {
 
           {/* รางวัลที่แลกได้หลังทำภารกิจ — การ์ดแบบเดียวกับรางวัลของภารกิจสะสมคอยน์ (ImageRowCard: รูป 1:1 102px · ชื่อสูงสุด 2 บรรทัด — 2026-11-26) */}
           <Show when={rewards().length > 0}>
-            <section class="flex flex-col gap-4 rounded-2xl bg-primary-surface p-4">
+            <section class="flex flex-col gap-4 rounded-2xl bg-secondary-surface p-4">
               <div>
-                <h2 class="text-16 font-semibold text-primary">{t("mission.reward_can_redeem")}</h2>
+                <h2 class="text-16 font-semibold text-secondary">{t("mission.reward_can_redeem")}</h2>
                 <Show when={m().redeem_start && m().redeem_end}>
                   <p class="mt-1 text-12 text-gray">
                     {t("mission.redemption_period")}: {formatDate(m().redeem_start!)} - {formatDate(m().redeem_end!)}
@@ -222,12 +226,14 @@ export default function MissionDetail() {
                     onClick={() => openReward(r!.id)}
                     image={{ colors: r!.cover, src: r!.image }}
                     badge={
-                      <Badge>
+                      // ไม่มีพื้นหลังป้าย — เหรียญ + ตัวอักษรสีคอยน์ (2026-11-28)
+                      // ใช้คอยน์ = ส้มคอยน์ · ไม่ใช้คอยน์ ("ใช้สิทธิ์แลกรับของรางวัล") = ม่วง (ไม่ใช่เรื่องคอยน์ · 2026-11-28)
+                      <span class={cn("flex items-center gap-1 text-12 font-medium", m().redeem_coins ? "text-teriary-text" : "text-secondary")}>
                         <Show when={m().redeem_coins} fallback={t("mission.use_your_rights_to_redeem")}>
                           <CoinIcon size={14} />
                           {formatNumber(m().redeem_coins)} {t("common.coins")}
                         </Show>
-                      </Badge>
+                      </span>
                     }
                     title={r!.name}
                   />
@@ -241,8 +247,8 @@ export default function MissionDetail() {
 
           {/* รางวัลที่แลกได้ด้วยคอยน์ของภารกิจ (Figma Mission coin) */}
           <Show when={isCoin() && coinRewards().length > 0}>
-            <section class="flex flex-col gap-4 rounded-2xl bg-primary-surface p-4">
-              <h2 class="text-16 font-semibold text-primary">{t("mis.rewards_title")}</h2>
+            <section class="flex flex-col gap-4 rounded-2xl bg-secondary-surface p-4">
+              <h2 class="text-16 font-semibold text-secondary">{t("mis.rewards_title")}</h2>
               <For each={coinRewards()}>
                 {(cr) => {
                   const st = () => missionService.coinRewardState(m(), cr.reward_id);
@@ -255,10 +261,11 @@ export default function MissionDetail() {
                       badge={
                         // ป้าย "ใช้ X คอยน์" + (คอยน์ไม่พอ) "ขาดอีก X คอยน์" บรรทัดเดียวกัน → การ์ดสูง 102 รูป 1:1 พอดี (2026-11-26)
                         <span class="flex items-center gap-2">
-                          <Badge>
+                          {/* "ใช้ X คอยน์" ไม่มีพื้นหลังป้าย — เหรียญ + ตัวอักษรสีคอยน์ (2026-11-28) */}
+                          <span class="flex items-center gap-1 text-12 font-medium text-teriary-text">
                             <CoinIcon size={14} />
                             {t("mis.use_coins", { coins: cr.coins })}
-                          </Badge>
+                          </span>
                           <Show when={st() === "available" && (m().coin_balance ?? 0) < cr.coins}>
                             <span class="text-12 text-error">{t("club.short_coins_brief", { amount: formatNumber(cr.coins - (m().coin_balance ?? 0)) })}</span>
                           </Show>
@@ -375,7 +382,7 @@ function MissionProgressCard(props: { mission: Mission }) {
         </span>
       </div>
       <div class={`h-2 w-full overflow-hidden rounded-full ${done() ? "bg-success-surface" : "bg-warning-surface"}`}>
-        <div class={`h-2 rounded-full ${done() ? "bg-success" : "bg-teriary"}`} style={{ width: `${pct()}%` }} />
+        <div class={`h-2 rounded-full ${done() ? "bg-success-bright" : "bg-teriary"}`} style={{ width: `${pct()}%` }} />
       </div>
       {/* สำเร็จแล้ว/ครบแล้ว: ✓ "ภารกิจสำเร็จ · ได้รับ 30 คอยน์" · สะสมคอยน์แบบมีจำนวนครั้ง = "สะสมครบ 5 ครั้งแล้ว" */}
       <Show

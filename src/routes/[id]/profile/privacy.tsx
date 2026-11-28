@@ -1,4 +1,5 @@
 import { useNavigate } from "@solidjs/router";
+import { BottomActionBar, BottomActionBarSpacer } from "~/components/layout/bottom-action-bar";
 import { createSignal } from "solid-js";
 import { PolicyHtml } from "~/components/account/policy-html";
 import { PageHeader } from "~/components/layout/page-header";
@@ -36,10 +37,14 @@ export default function Policy() {
             {t("account.policy_receive_news")}
           </Checkbox>
         </div>
+      </div>
+      {/* ปุ่มลอยล่างแบบเดียวทั้งเว็บ (BottomActionBar · 2026-11-28) */}
+      <BottomActionBarSpacer />
+      <BottomActionBar>
         <Button size="block" disabled={!read()} onClick={() => navigate(to("home"))}>
           {t("common.accept")}
         </Button>
-      </div>
+      </BottomActionBar>
     </div>
   );
 }

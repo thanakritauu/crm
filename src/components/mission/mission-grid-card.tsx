@@ -67,14 +67,14 @@ export function MissionGridCard(props: { mission: Mission }) {
           when={m().type === "coin"}
           fallback={
             <Show when={m().reward_coins > 0}>
-              <p class="mt-2 flex items-center gap-1 text-14 font-medium text-teriary">
+              <p class="mt-2 flex items-center gap-1 text-14 font-medium text-teriary-text">
                 <CoinIcon size={16} />
                 {t("club.mission_reward_coins", { coins: m().reward_coins })}
               </p>
             </Show>
           }
         >
-          <p class="mt-2 flex items-center gap-1 text-14 font-medium text-teriary">
+          <p class="mt-2 flex items-center gap-1 text-14 font-medium text-teriary-text">
             <CoinIcon size={16} />
             {t("club.mission_collected_coins", { coins: formatNumber(m().coin_balance ?? 0) })}
           </p>

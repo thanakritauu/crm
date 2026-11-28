@@ -10,7 +10,7 @@
   "priv.free": "Free",
   "priv.no_address": "You haven't added a shipping address yet. Please add one for delivery.",
   "priv.no_history": "No redemptions yet",
-  "priv.no_history_desc": "Privileges you redeem will show up here.",
+  "priv.no_history_desc": "Redeem products and privileges with your points and track them here",
   "priv.points_used": "Points used",
   "priv.redeem_status_label": "Redemption status:",
   "priv.redeemed_overlay": "Redeemed",
@@ -26,5 +26,6 @@
   "priv.type_home": "Home",
   "priv.type_other": "Other",
   "priv.type_work": "Work",
-  "priv.view_detail": "View details"
+  "priv.view_detail": "View details",
+  "priv.go_redeem": "Browse rewards"
 }

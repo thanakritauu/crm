@@ -114,5 +114,6 @@
   "core.banner_placeholder": "Banner area",
   "core.banner_size": "Image size 1200 × 600 px (2:1)",
   "core.line_promo_short": "10x points on every order",
-  "core.line_promo_badge": "Get 10x points"
+  "core.line_promo_badge": "Get 10x points",
+  "core.no_coupons_desc": "Redeem points for discount coupons and they'll show up here"
 }

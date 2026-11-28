@@ -13,7 +13,7 @@ import { usePartnerPath } from "~/lib/theme";
 import { delay, formatDate, formatNumber } from "~/lib/utils";
 import { missionService } from "~/services/mission-service";
 import { rewardService } from "~/services/reward-service";
-import { IconCalendar } from "~/components/ui/icons";
+import { IconCalendar, IconMission } from "~/components/ui/icons";
 
 /**
  * /:partner/mission/redeem-detail/:id — แลกของรางวัลของภารกิจ (id = id ภารกิจ, ?reward=<reward id> ไม่บังคับ)
@@ -71,7 +71,7 @@ export default function MissionRedeemDetail() {
       when={mission() && reward() ? { m: mission()!, r: reward()! } : undefined}
       fallback={
         <div class="flex min-h-screen flex-col items-center justify-center bg-white px-4">
-          <EmptyData title={t("mission.not_found_title")} description={t("mission.not_found_desc")} />
+          <EmptyData icon={IconMission} title={t("mission.not_found_title")} description={t("mission.not_found_desc")} />
           <Button size="block" class="mt-4 max-w-xs" onClick={() => navigate(to("missions"))}>
             {t("mission.mission")}
           </Button>
@@ -97,9 +97,9 @@ export default function MissionRedeemDetail() {
           {/* โค้ดหลังแลกสำเร็จ */}
           <Show when={data().m.redeemed_code}>
             {(code) => (
-              <div class="flex w-full flex-col items-center rounded-2xl bg-primary-surface p-4">
+              <div class="flex w-full flex-col items-center rounded-2xl bg-secondary-surface p-4">
                 <span class="text-12 font-semibold text-gray">{t("mission.coupon_code_title")}</span>
-                <div class="my-1 select-all font-mono text-18 font-semibold tracking-wider text-primary">{code()}</div>
+                <div class="my-1 select-all font-mono text-18 font-semibold tracking-wider text-secondary">{code()}</div>
                 <Button size="sm" class="mt-1" onClick={() => copy(code())}>
                   {copied() ? t("mission.coupon_copied") : t("mission.coupon_copy")}
                 </Button>

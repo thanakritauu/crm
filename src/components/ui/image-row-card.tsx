@@ -93,7 +93,7 @@ export function PointsBadge(props: { points: number }) {
   const { t } = useI18n();
   const { theme } = useTheme();
   return (
-    <Badge>
+    <Badge tone="primary">
       <img src={theme().image_point} alt="" class="size-3.5 rounded-full object-cover" />
       {t("core.use_points", { points: formatNumber(props.points) })}
     </Badge>

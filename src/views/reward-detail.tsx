@@ -3,7 +3,7 @@ import { Match, Show, Switch } from "solid-js";
 import { PageHeader } from "~/components/layout/page-header";
 import { DetailActionBar, DetailLayout, DetailMeta, DetailTitle, StatSplitBox } from "~/components/detail/detail-layout";
 import { InfoTabs } from "~/components/ui/info-tabs";
-import { IconBox, IconCalendar } from "~/components/ui/icons";
+import { IconBox, IconCalendar, IconGift } from "~/components/ui/icons";
 import { Button } from "~/components/ui/button";
 import { EmptyData } from "~/components/ui/empty-data";
 import { requireMember } from "~/lib/member-gate";
@@ -34,7 +34,7 @@ export default function RewardDetail() {
       fallback={
         <div class="min-h-screen bg-white">
           <PageHeader title={t("landing.member_info.redeem")} backTo="rewards?type=products" />
-          <EmptyData class="pt-16" title={t("loyalty.reward_not_found")} />
+          <EmptyData icon={IconGift} class="pt-16" title={t("loyalty.reward_not_found")} />
         </div>
       }
     >

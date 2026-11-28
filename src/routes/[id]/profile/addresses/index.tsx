@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "@solidjs/router";
+import { IconMapPin } from "~/components/ui/icons";
 import { createSignal, For, onCleanup, onMount, Show } from "solid-js";
 import { AddressCard } from "~/components/account/address-card";
 import { useAddressBookNav, type AddressToast } from "~/components/account/address-form";
@@ -60,7 +61,7 @@ export default function AddressBookPage() {
 
       <Show
         when={ready() && list().length}
-        fallback={<Show when={ready()}><EmptyData title={t("profile.empty_shipping_address")} class="px-4" /></Show>}
+        fallback={<Show when={ready()}><EmptyData icon={IconMapPin} title={t("profile.empty_shipping_address")} class="px-4" /></Show>}
       >
         <div class="flex flex-col gap-4 px-4 pb-4" role={nav.selectMode() ? "radiogroup" : undefined}>
           <For each={list()}>

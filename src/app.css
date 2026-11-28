@@ -33,6 +33,7 @@
     --secondary-dark: #23184d;
     --secondary-surface: color-mix(in srgb, var(--secondary-base) 10%, white);
     --teriary-base: #ff9300;
+    --teriary-text: #cc6e00; /* ตัวอักษรสีคอยน์ — ส้มเดียวทั้งแอป (ทางเลือก 3 ตามเจ้าของ · 3.62:1 · 2026-11-28) · #ff9300 บนขาว 2.23:1 อ่านยาก */
     --teriary-light: #ffe9cc;
     --teriary-dark: #4d2c00;
   }

@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js";
 import { ActivityEmpty, ActivityGroupTitle, ActivityRow } from "~/components/history/activity-row";
-import { IconCoins, IconGift } from "~/components/ui/icons";
+import { IconCoins, IconGift, IconHistory } from "~/components/ui/icons";
 import { useI18n } from "~/lib/i18n";
 import { formatDate, formatNumber, txText } from "~/lib/utils";
 import type { PointTransaction } from "~/mocks/history";
@@ -14,7 +14,7 @@ import { groupByMonth } from "~/services/history-service";
 export function TransactionList(props: { items: PointTransaction[]; unit: string; emptyText: string }) {
   const { t } = useI18n();
   return (
-    <Show when={props.items.length > 0} fallback={<ActivityEmpty title={props.emptyText} />}>
+    <Show when={props.items.length > 0} fallback={<ActivityEmpty icon={IconHistory} title={props.emptyText} />}>
       <For each={groupByMonth(props.items)}>
         {(group) => (
           <section>

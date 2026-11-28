@@ -16,8 +16,14 @@ export function InfoTabs(props: { items: InfoTab[]; defaultValue?: string; hideE
   return (
     <Show when={items().length > 0}>
       <section class={props.class}>
-        <PillTabs value={current()?.value ?? ""} onChange={setValue} items={items().map((x) => ({ value: x.value, label: x.label }))} />
-        <div class="flex flex-col gap-1 pt-4">
+        {/* แท็บเดียว = หัวข้อธรรมดา (แถบแท็บเต็มความกว้างกดไม่ได้ ดูเหมือนปุ่ม · 2026-11-28) */}
+        <Show
+          when={items().length > 1}
+          fallback={<h2 class="text-16 font-semibold text-dark">{items()[0]?.label}</h2>}
+        >
+          <PillTabs value={current()?.value ?? ""} onChange={setValue} items={items().map((x) => ({ value: x.value, label: x.label }))} />
+        </Show>
+        <div class={items().length > 1 ? "flex flex-col gap-1 pt-4" : "flex flex-col gap-1 pt-2"}>
           <Show when={current()?.heading}>
             <h2 class="text-14 font-semibold text-dark">{current()!.heading}</h2>
           </Show>

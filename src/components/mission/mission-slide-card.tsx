@@ -28,13 +28,13 @@ export function MissionSlideCard(props: { mission: Mission; class?: string }) {
         when={m().type === "coin"}
         fallback={
           <Show when={m().reward_coins > 0}>
-            <Badge size="md">
+            <Badge tone="teriary" size="md">
               <CoinIcon size={14} />+{m().reward_coins} {t("common.coins")}
             </Badge>
           </Show>
         }
       >
-        <Badge size="md">
+        <Badge tone="teriary" size="md">
           <CoinIcon size={14} />
           {t("club.mission_collected_coins", { coins: formatNumber(m().coin_balance ?? 0) })}
         </Badge>

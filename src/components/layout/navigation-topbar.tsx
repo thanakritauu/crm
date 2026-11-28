@@ -41,7 +41,8 @@ export function NavigationTopbar(props: {
       class={cn(
         "left-0 top-0 w-full transition-colors duration-200",
         scrolled() ? "sticky z-header bg-white/50 shadow-card backdrop-blur-md" : "absolute z-header bg-transparent",
-        props.overImage && !scrolled() && "bg-gradient-to-b from-black/40 to-transparent",
+        // เงาไล่สีเข้มขึ้น (40% → 60%) ให้ชื่อหน้าตัวขาวอ่านได้บนรูปที่มีตัวหนังสือเยอะ (2026-11-28)
+        props.overImage && !scrolled() && "bg-gradient-to-b from-black/60 to-transparent",
       )}
     >
       <div class="box-border grid w-full max-w-full grid-cols-[auto_minmax(0,_1fr)_auto] items-center gap-2 overflow-hidden p-4">
@@ -57,7 +58,7 @@ export function NavigationTopbar(props: {
           </button>
         </Show>
         <div class="w-full min-w-0 overflow-hidden text-left">
-          <span class={cn("block whitespace-pre-line break-words text-18 font-semibold", light() ? "text-white" : "text-dark")}>
+          <span class={cn("block whitespace-pre-line break-words text-18 font-semibold", light() ? "text-white" : "text-dark", props.overImage && !scrolled() && "drop-shadow-card")}>
             {props.textMain}
           </span>
         </div>

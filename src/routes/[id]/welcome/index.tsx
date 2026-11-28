@@ -63,6 +63,7 @@ export default function Landing() {
         <p class="text-24 font-semibold text-primary">{theme().display_name}</p>
       </div>
 
+
       <div class="mt-auto flex flex-col items-center gap-4 px-4 py-10">
         <p class="text-18 font-semibold text-dark">{t("auth.select_method")}</p>
         <div class="flex w-full flex-col gap-4">
@@ -81,13 +82,15 @@ export default function Landing() {
             <span class="text-14 text-gray">{t("landing.or")}</span>
             <span class="h-px flex-1 bg-stroke" />
           </div>
-          <Button size="block" onClick={enterGuest}>
-            <IconUser size={20} class="text-white" />
+          {/* ปุ่มหลักมีปุ่มเดียวต่อกลุ่ม — Guest เป็นปุ่มรอง (LINE/เบอร์โทร = ทางหลัก · 2026-11-28) */}
+          <Button variant="secondary" size="block" onClick={enterGuest}>
+            <IconUser size={20} />
             {t("landing.register_guest")}
           </Button>
         </div>
+        {/* ลิงก์ตัวสีเทา → เปิด bottom sheet เปรียบเทียบ Guest / Member (2026-11-28) */}
         <button type="button" class="flex items-center gap-2 pt-6 text-14 text-gray underline" onClick={() => setCompareOpen(true)}>
-          <IconInfo size={16} class="text-gray" />
+          <IconInfo size={16} />
           {t("auth.guest_vs_member_link")}
         </button>
       </div>

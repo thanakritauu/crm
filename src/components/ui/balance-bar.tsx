@@ -101,7 +101,7 @@ function BalanceBody(props: {
         {/* ">" → ประวัติของสกุลนั้น อยู่บรรทัดเดียวกับ "คะแนนของคุณ / คอยน์ของคุณ" (2026-11-25) */}
         {historyLink()}
       </span>
-      <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary" : "text-primary")}>
+      <span class={cn("flex items-baseline gap-1", props.onBrand ? "text-white" : coins() ? "text-teriary-text" : "text-primary")}>
         {/* countUp (การ์ดหน้าแรก) = ปลายทางเหรียญปลิว: กดอัปเดตคะแนนแล้ว P ปลิวเข้าตัวเลขนี้ตรงๆ (2026-11-27) */}
         <span class={cn("truncate font-semibold", props.size === "lg" ? "text-24" : "text-18")} data-fly-target={props.countUp ? props.unit : undefined}>
           <Show when={props.countUp} fallback={formatNumber(props.amount)}>
@@ -195,7 +195,7 @@ function BalanceInline(props: { unit: BalanceUnit; amount: number; label?: strin
         <BalanceIcon unit={props.unit} size={24} />
         <span class="truncate text-14 font-medium text-dark">{props.label ?? t(coins() ? "club.your_coins" : "club.your_points")}</span>
       </span>
-      <span class={cn("flex shrink-0 items-center gap-2", coins() ? "text-teriary" : "text-primary")}>
+      <span class={cn("flex shrink-0 items-center gap-2", coins() ? "text-teriary-text" : "text-primary")}>
         <span class="flex items-baseline gap-1">
           {/* countId: ปลายทางเหรียญปลิว + ตัวเลขนับขึ้น (ยอดคอยน์ของภารกิจ) */}
           <span class="text-24 font-semibold" data-fly-target={props.countId}>
@@ -319,7 +319,7 @@ export function RedeemSummary(props: { unit: BalanceUnit; cost: number; balance?
       <span class="flex shrink-0 items-center gap-1 text-gray">
         {t("club.balance")}
         <BalanceIcon unit={props.unit} size={16} />
-        <span class={cn("font-semibold", coins() ? "text-teriary" : "text-primary")}>{formatNumber(balance())}</span>
+        <span class={cn("font-semibold", coins() ? "text-teriary-text" : "text-primary")}>{formatNumber(balance())}</span>
       </span>
     </div>
   );

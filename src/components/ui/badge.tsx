@@ -6,7 +6,7 @@ import { cn } from "~/lib/utils";
 export const badgeVariants = cva("inline-flex items-center gap-x-1 rounded-full font-medium whitespace-nowrap", {
   variants: {
     tone: {
-      teriary: "bg-warning-surface text-teriary",
+      teriary: "bg-warning-surface text-teriary-text",
       primary: "bg-primary-surface text-primary",
       secondary: "bg-secondary-surface text-secondary",
       success: "bg-success-surface text-success",
@@ -20,7 +20,8 @@ export const badgeVariants = cva("inline-flex items-center gap-x-1 rounded-full 
       lg: "px-4 py-1 text-12",
     },
   },
-  defaultVariants: { tone: "teriary", size: "md" },
+  // ค่าเริ่มต้น = ม่วง (ข้อมูล) — ส้มสงวนให้คอยน์ ใช้ tone="teriary" เมื่อเป็นเรื่องคอยน์เท่านั้น (DSL บทบาทสี 2026-11-28)
+  defaultVariants: { tone: "secondary", size: "md" },
 });
 
 export function Badge(props: VariantProps<typeof badgeVariants> & { class?: string; children: JSX.Element }) {

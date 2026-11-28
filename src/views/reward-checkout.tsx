@@ -15,7 +15,7 @@ import { session, sessionActions } from "~/lib/session";
 import { usePartnerPath } from "~/lib/theme";
 import { delay, formatNumber } from "~/lib/utils";
 import { rewardService } from "~/services/reward-service";
-import { IconInfo } from "~/components/ui/icons";
+import { IconInfo, IconGift } from "~/components/ui/icons";
 
 /**
  * /:partner/reward/summarize?id=… — สรุปการแลกของรางวัล
@@ -64,7 +64,7 @@ export default function RewardSummarize() {
   return (
     <div class="mx-auto flex h-full min-h-screen flex-1 flex-col bg-white">
       <PageHeader title={t("common.redeem_item")} backTo={reward() ? `rewards/${reward()!.id}` : "rewards?type=products"} />
-      <Show when={reward()} fallback={<div class="pt-8"><EmptyData title={t("loyalty.reward_not_found")} /></div>}>
+      <Show when={reward()} fallback={<div class="pt-8"><EmptyData icon={IconGift} title={t("loyalty.reward_not_found")} /></div>}>
         {(r) => (
           <>
             <div class="px-4">

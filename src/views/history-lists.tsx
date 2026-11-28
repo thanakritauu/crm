@@ -2,7 +2,7 @@ import { For, Show } from "solid-js";
 import { ActivityEmpty, ActivityRow } from "~/components/history/activity-row";
 import { TransactionList } from "~/components/history/transaction-list";
 import { Button } from "~/components/ui/button";
-import { IconClock, IconCoins, IconGift } from "~/components/ui/icons";
+import { IconClock, IconCoins, IconGift, IconHistory } from "~/components/ui/icons";
 import { PillTabs } from "~/components/ui/pill-tabs";
 import { translate, useI18n } from "~/lib/i18n";
 import { session } from "~/lib/session";
@@ -62,7 +62,7 @@ export function PointHistory(props: { filter?: string; onFilter: (f: PointFilter
   return (
     <>
       <Filters tabs={props.tabs} value={filter()} items={filters()} onChange={props.onFilter} />
-      <Show when={items().length} fallback={<ActivityEmpty title={t("core.no_points_history_yet")} />}>
+      <Show when={items().length} fallback={<ActivityEmpty icon={IconHistory} title={t("core.no_points_history_yet")} />}>
         <For each={items()}>
           {(it) => (
             <ActivityRow

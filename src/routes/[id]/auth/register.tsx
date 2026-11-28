@@ -2,7 +2,8 @@ import { useNavigate, useSearchParams } from "@solidjs/router";
 import { createSignal, For, Match, onMount, Switch } from "solid-js";
 import { pendingRegister } from "~/lib/pending-register";
 import { ConsentDialog } from "~/components/account/consent-dialog";
-import { NavigationTopbar } from "~/components/layout/navigation-topbar";
+import { PageHeader } from "~/components/layout/page-header";
+import { BottomActionBar, BottomActionBarSpacer } from "~/components/layout/bottom-action-bar";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { FieldError, Input, Label } from "~/components/ui/input";
@@ -96,14 +97,11 @@ export default function Register() {
     <div class="flex min-h-screen flex-col bg-white">
       <Switch>
         <Match when={!done()}>
-          <NavigationTopbar isLightColor />
-          {/* หัวสีชมพู สูง 256 มุมล่าง 24 (NavigationTopbar ซ้อนทับ) */}
-          <div class="flex h-64 w-full flex-col items-center justify-center gap-1 rounded-b-3xl bg-primary p-4 text-center text-white">
-            <h2 class="text-24 font-semibold">{t("profile.register_button")}</h2>
-            <p class="text-16">{t("profile.register_description")}</p>
-          </div>
+          {/* หัวหน้าแบบเดียวกับหน้าด้านใน: ชมพู ชื่อกึ่งกลาง (เดิม hero · 2026-11-28) · คำอธิบายใต้หัว */}
+          <PageHeader tone="primary" align="center" title={t("profile.register_button")} />
 
-          <div class="mt-8 flex flex-1 flex-col px-4">
+          <div class="flex flex-1 flex-col gap-4 px-4 pt-4">
+            <p class="text-14 text-gray">{t("profile.register_description")}</p>
             <form id="detail_customer" onSubmit={submit} novalidate>
               <div class="flex flex-col gap-4">
                 <For each={fields}>
@@ -153,31 +151,33 @@ export default function Register() {
             </form>
           </div>
 
-          <div class="p-4 pt-8">
+          <BottomActionBarSpacer />
+          <BottomActionBar>
             <Button form="detail_customer" type="submit" size="block">
               {t("common.next")}
             </Button>
-          </div>
+          </BottomActionBar>
         </Match>
 
         {/* ลงทะเบียนสำเร็จ: หัวชมพู 200 มุมล่าง 24 + วงกลมเขียว 80 ซ้อนขอบ · หัวข้อ 18/Semi · ปุ่ม 48 ชิดล่าง */}
         <Match when={done()}>
-          <div class="flex h-hero items-end justify-center rounded-b-3xl bg-primary">
-            <div class="-mb-10 flex size-20 items-center justify-center rounded-full border-4 border-white bg-success text-white shadow-card">
+          {/* หัวหน้าแบบเดียวกับหน้าด้านใน (ไม่มีปุ่มย้อนกลับ — สมัครเสร็จแล้ว) · วงติ๊กเขียวอยู่ในเนื้อหา (เดิมซ้อนขอบหัว hero · 2026-11-28) */}
+          <PageHeader tone="primary" align="center" hideBack title={t("profile.register_button")} />
+          <div class="mt-16 flex flex-col items-center gap-2 px-4 text-center">
+            <div class="mb-4 flex size-20 items-center justify-center rounded-full bg-success-surface text-success">
               <IconCheck size={40} strokeWidth={2.5} />
             </div>
-          </div>
-          <div class="mt-16 flex flex-col gap-2 px-4 text-center">
             <h2 class="text-18 font-semibold text-dark">{t("account.register_success")}</h2>
             <p class="px-8 text-14 font-normal text-gray">
               {t("account.register_success_description", { name: session.customer.name })}
             </p>
           </div>
-          <div class="mt-auto p-4 pt-8">
+          <BottomActionBarSpacer />
+          <BottomActionBar>
             <Button size="block" onClick={finish}>
               {t("common.done")}
             </Button>
-          </div>
+          </BottomActionBar>
         </Match>
       </Switch>
 

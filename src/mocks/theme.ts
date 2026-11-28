@@ -26,7 +26,7 @@ export const themes: Record<string, PartnerTheme> = {
     teriary: { base: "#FF9300", light: "#ffe9cc", dark: "#4d2c00" },
     card_style: 1,
     logo: "/images/logo.png",
-    display_name: "charmiss club",
+    display_name: "Charmiss Club", // ตัวพิมพ์ใหญ่ตามชื่อแบรนด์ (เดิม "charmiss club" · 2026-11-28)
     image_point: "/images/icons/point.png",
     image_coin: "/images/coin.jpg",
     is_active: true,

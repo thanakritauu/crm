@@ -103,7 +103,7 @@ export default function FillIn(props: { kind: "receipt" | "product-code" }) {
         </form>
       </div>
       <BottomActionBarSpacer />
-      <BottomActionBar class="pb-8">
+      <BottomActionBar>
         <Button size="block" disabled={!value().trim()} onClick={submit}>
           {collectLabel()}
         </Button>

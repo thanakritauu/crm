@@ -6,7 +6,7 @@ import { IconCheck } from "~/components/ui/icons";
 export function StampGrid(props: { progress: number; target: number }) {
   const slots = () => Array.from({ length: props.target }, (_, i) => i < props.progress);
   return (
-    <div class="grid grid-cols-5 gap-2 rounded-2xl bg-primary-surface/50 p-4">
+    <div class="grid grid-cols-5 gap-2 rounded-2xl bg-secondary-surface p-4">
       <For each={slots()}>
         {(filled, i) => (
           <div class="flex flex-col items-center gap-y-1">

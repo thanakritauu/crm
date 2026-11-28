@@ -158,7 +158,7 @@ export default function EarnPoint() {
               <div class="flex items-center justify-between gap-x-2">
                 <h2 class="line-clamp-1 text-14 font-semibold text-dark">{m().title}</h2>
                 {/* ภารกิจสะสมคอยน์ = คอยน์ที่สะสมได้ในภารกิจ · ภารกิจอื่น = คอยน์ที่จะได้เมื่อสำเร็จ */}
-                <span class="flex shrink-0 items-center gap-x-1 text-12 font-medium text-teriary">
+                <span class="flex shrink-0 items-center gap-x-1 text-12 font-medium text-teriary-text">
                   <CoinIcon size={14} />
                   {m().type === "coin" ? t("club.mission_collected_coins", { coins: formatNumber(m().coin_balance ?? 0) }) : `+${m().reward_coins}`}
                 </span>

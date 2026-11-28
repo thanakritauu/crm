@@ -96,15 +96,20 @@ module.exports = {
         dark: "var(--secondary-dark)",
       },
       teriary: {
-        DEFAULT: "var(--teriary-base)", // Yellow-500
+        DEFAULT: "var(--teriary-base)", // Yellow-500 — พื้น/แถบ/ไอคอนใหญ่ (คอนทราสต์บนขาว 2.23:1 ห้ามใช้เป็นตัวอักษร)
+        text: "var(--teriary-text)", // ตัวอักษรสีคอยน์ — ส้มเดียว #CC6E00 (3.62:1 · เจ้าของเลือก 2026-11-28)
         light: "var(--teriary-light)",
         dark: "var(--teriary-dark)",
       },
 
       // ---- System ----
-      success: { DEFAULT: "#00C763", surface: "#DAF8E6" }, // System/Green
-      error: { DEFAULT: "#F23030", surface: "#FEEAEA" }, // System/Red
-      warning: { DEFAULT: "#FF9300", surface: "#FFF4E6" }, // Yellow-500 / Yellow-50
+      // คอนทราสต์ (WCAG AA ตัวอักษร ≥ 4.5:1 บนขาว · 2026-11-28): DEFAULT = ใช้กับตัวอักษร/ไอคอน และพื้นทึบที่มีตัวขาว
+      //   ปรับให้สดขึ้น 1 ระดับตามเจ้าของ (2026-11-28) โดยยังผ่าน 4.5:1 บนขาว
+      //   success #00833C (4.87:1) · bright #00C763 = แถบความคืบหน้า/ส่วนที่ไม่มีตัวอักษรเท่านั้น
+      //   error #D12A2A (5.15:1) · warning #CC6E00 (3.62:1 — ส้มเดียวตามเจ้าของ ไม่อยากให้สีเยอะ)
+      success: { DEFAULT: "#00833C", bright: "#00C763", surface: "#DAF8E6" }, // System/Green
+      error: { DEFAULT: "#D12A2A", surface: "#FEEAEA" }, // System/Red
+      warning: { DEFAULT: "#CC6E00", bright: "#FF9300", surface: "#FFF4E6" }, // Yellow-500 / Yellow-50
 
       // ---- สีของแพลตฟอร์มภายนอก (ใช้กับโลโก้/ปุ่มของแพลตฟอร์มนั้นเท่านั้น) ----
       platform: {

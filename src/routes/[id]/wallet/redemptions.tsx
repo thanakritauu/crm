@@ -4,6 +4,7 @@ import { ActivityEmpty } from "~/components/history/activity-row";
 import { PageHeader } from "~/components/layout/page-header";
 import { Badge } from "~/components/ui/badge";
 import { ImageRowCard } from "~/components/ui/image-row-card";
+import { IconGift } from "~/components/ui/icons";
 import { useI18n } from "~/lib/i18n";
 import { session } from "~/lib/session";
 import { usePartnerPath } from "~/lib/theme";
@@ -41,7 +42,7 @@ function RedemptionList() {
   const coverOf = (h: RedeemRecord) => (h.privilege_id ? privilegeService.get(h.privilege_id) : undefined);
   return (
     <div class="p-4">
-      <Show when={session.redeemHistory.length} fallback={<ActivityEmpty title={t("priv.no_history")} />}>
+      <Show when={session.redeemHistory.length} fallback={<ActivityEmpty icon={IconGift} title={t("priv.no_history")} description={t("priv.no_history_desc")} action={{ label: t("priv.go_redeem"), href: to("rewards") }} />}>
         <ul class="flex flex-col gap-4">
           <For each={session.redeemHistory}>
             {(h) => {

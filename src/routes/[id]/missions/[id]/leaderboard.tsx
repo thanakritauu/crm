@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "@solidjs/router";
+import { IconRanking } from "~/components/ui/icons";
 import { createMemo, For, onMount, Show } from "solid-js";
 import { BottomActionBar, BottomActionBarSpacer } from "~/components/layout/bottom-action-bar";
 import { PageHeader } from "~/components/layout/page-header";
@@ -76,7 +77,7 @@ export default function Leaderboard() {
           <div class="flex min-h-screen flex-col">
             <PageHeader title={t("common.coin_acc_ranking")} backTo="missions" />
             <div class="flex flex-1 flex-col items-center justify-center px-4">
-              <EmptyData title={mission() ? t("common.mission_not_leaderboard") : t("common.mission_not_found")} />
+              <EmptyData icon={IconRanking} title={mission() ? t("common.mission_not_leaderboard") : t("common.mission_not_found")} />
               <Button size="block" class="mt-4 max-w-xs" onClick={() => navigate(to("missions"))}>
                 {t("mission.mission")}
               </Button>

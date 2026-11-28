@@ -112,9 +112,13 @@ export default function ExchangePointPage() {
         {/* อัตราแลก (InfoBox) · คะแนนไม่ถึงขั้นต่ำ = กล่องแดง */}
         <div class="flex flex-col gap-2">
           {/* "10 คะแนน = ส่วนลด 1 บาท" (เอาคำว่า "อัตราแลกเปลี่ยน" และ ฿ ออก — 2026-11-26) */}
+          {/* กล่องเดียวรวมกติกาทั้งหมด (2026-11-28): อัตราแลก (ม่วงหนา) · ขั้นต่ำ/เพิ่มทีละ · อายุคูปอง — เดิมกระจาย 3 ที่ (กล่อง / ใต้หัวข้อ / ท้ายสรุป) */}
           <InfoBox>
-            {/* สีม่วง (secondary) ให้เข้ากับกล่อง InfoBox — 2026-11-26 */}
-            <b class="font-semibold text-secondary">{t("profile.exchange_points_rate_value", { points: n0(cfg.points_per_unit), discount: n0(cfg.discount_per_unit) })}</b>
+            <span class="flex flex-col gap-1">
+              <b class="font-semibold text-secondary">{t("profile.exchange_points_rate_value", { points: n0(cfg.points_per_unit), discount: n0(cfg.discount_per_unit) })}</b>
+              <span>{t("profile.exchange_points_rule_hint", { min: n0(cfg.min_points_per_redemption), step: n0(cfg.point_step) })}</span>
+              <span>{t("profile.exchange_validity_hint", { days: cfg.coupon_validity_days })}</span>
+            </span>
           </InfoBox>
           <Show when={balance() < cfg.min_points_per_redemption}>
             <p role="alert" class="rounded-2xl bg-error-surface p-4 text-14 text-error">
@@ -127,12 +131,9 @@ export default function ExchangePointPage() {
         <div class="flex flex-col gap-2">
           {/* เอาลิงก์ "ใช้คะแนนสูงสุด (X)" ข้างหัวข้อออก — ใช้ชิป "ใช้คะแนนสูงสุด" ด้านล่างแทน (2026-11-26) */}
           {/* หัวข้อ + บรรทัดเงื่อนไข "ขั้นต่ำ 10 คะแนน เพิ่มได้ครั้งละ 10 คะแนน" อยู่ใต้หัวข้อ (2026-11-26) */}
-          <div class="flex flex-col gap-1">
-            <Label for="exchange-points-input" required class="mb-0">
-              {t("profile.exchange_input_label")}
-            </Label>
-            <p class="text-12 text-gray">{t("profile.exchange_points_rule_hint", { min: n0(cfg.min_points_per_redemption), step: n0(cfg.point_step) })}</p>
-          </div>
+          <Label for="exchange-points-input" required class="mb-0">
+            {t("profile.exchange_input_label")}
+          </Label>
           <div class="flex items-center gap-2">
             {/* ปุ่ม − / + พื้นชมพูอ่อน ตัวชมพู · ตัวเลขกึ่งกลางช่อง (2026-11-26) */}
             <Button variant="outline" size="icon" type="button" aria-label="-" class={STEP_BTN} onClick={() => step(-cfg.point_step)} disabled={amount() <= cfg.min_points_per_redemption || submitting()}>
@@ -189,7 +190,6 @@ export default function ExchangePointPage() {
             <span class="text-gray">{t("profile.exchange_remaining_points_label")}</span>
             <span class="font-semibold text-dark">{amount() > 0 && amount() <= balance() ? `${formatNumber(balance() - amount(), 2)} ${t("common.points")}` : "-"}</span>
           </div>
-          <p class="border-t border-stroke pt-2 text-12 text-gray">{t("profile.exchange_validity_hint", { days: cfg.coupon_validity_days })}</p>
         </div>
 
         {/* ยอมรับเงื่อนไข (Checkbox ของ Design System) */}

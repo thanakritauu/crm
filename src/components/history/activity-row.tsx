@@ -86,8 +86,8 @@ export function ActivityRow(props: {
 export const ActivityGroupTitle = (props: { children: JSX.Element }) => <h3 class="px-4 pt-4 text-14 font-semibold text-dark">{props.children}</h3>;
 
 /** สถานะว่างของรายการ — กึ่งกลางพื้นที่ใต้ header เหมือนหน้าการแจ้งเตือน */
-export const ActivityEmpty = (props: { title: string }) => (
+export const ActivityEmpty = (props: { title: string; description?: string; icon?: Parameters<typeof EmptyData>[0]["icon"]; action?: { label: string; href: string } }) => (
   <div class="flex min-h-[60vh] items-center justify-center">
-    <EmptyData title={props.title} />
+    <EmptyData title={props.title} description={props.description} icon={props.icon} action={props.action} />
   </div>
 );

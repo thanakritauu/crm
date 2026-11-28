@@ -50,7 +50,7 @@ export function RewardGridCard(props: {
       <div class="flex flex-1 flex-col justify-between gap-2 p-2">
         <p class="line-clamp-2 break-words text-14 font-semibold text-dark">{props.title}</p>
         <div class="flex flex-col">
-          <p class={cn("flex items-center gap-1 text-14 font-medium", coins() ? "text-teriary" : "text-primary")}>
+          <p class={cn("flex items-center gap-1 text-14 font-medium", coins() ? "text-teriary-text" : "text-primary")}>
             <Show when={coins()} fallback={<img src={theme().image_point} alt="" class="size-4 rounded-full object-cover" />}>
               <CoinIcon size={16} />
             </Show>

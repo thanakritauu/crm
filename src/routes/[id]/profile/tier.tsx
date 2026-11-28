@@ -5,7 +5,7 @@ import { tierSystem } from "~/prototype/settings";
 import { Badge } from "~/components/ui/badge";
 import { cardClass } from "~/components/ui/card";
 import { Sheet } from "~/components/ui/sheet";
-import { IconCheck, IconInfo } from "~/components/ui/icons";
+import { IconCheck, IconInfo, IconCrown } from "~/components/ui/icons";
 import { useI18n } from "~/lib/i18n";
 import { cn, formatNumber } from "~/lib/utils";
 import { TIERS, tierStatus } from "~/services/tier-service";
@@ -30,7 +30,7 @@ export default function TierPage() {
         <div class="min-h-screen bg-white">
           <PageHeader tone="primary" backTo="profile" title={t("tier.title")} />
           <div class="flex min-h-[50vh] items-center justify-center px-4">
-            <EmptyData title={t("tier.no_tier_system")} description={t("tier.no_tier_system_desc")} />
+            <EmptyData icon={IconCrown} title={t("tier.no_tier_system")} description={t("tier.no_tier_system_desc")} />
           </div>
         </div>
       }
@@ -101,6 +101,7 @@ export default function TierPage() {
 
       <div class="flex flex-col gap-4 p-4">
         {/* สิทธิประโยชน์แต่ละระดับ */}
+        {/* หัวข้อชิดรายการ (ไม่มีการ์ดแล้ว — รายการแรกไม่มีระยะบน · 2026-11-28) */}
         <h2 class="text-18 font-semibold text-dark">{t("tier.benefits")}</h2>
         {/* ระดับปัจจุบันอยู่บนสุดเสมอ แล้วตามด้วยระดับอื่นตามลำดับ */}
         {/* รายการเรียบคั่นเส้น (ข้อมูล ไม่ใช่การ์ด · 2026-11-28) — ระดับปัจจุบันบนสุด + ป้าย "ระดับของคุณ" */}
@@ -109,7 +110,7 @@ export default function TierPage() {
             {(tier) => {
               const current = () => tier.id === s().current.id;
               return (
-                <li class="flex flex-col gap-2 border-b border-stroke py-4 last:border-b-0">
+                <li class="flex flex-col gap-2 border-b border-stroke py-4 first:pt-0 last:border-b-0 last:pb-0">
                   <div class="flex items-center gap-2">
                     <img src={tier.mark} alt="" width="40" height="40" class="size-10 shrink-0 object-contain" />
                     <span class="flex min-w-0 flex-1 flex-col">

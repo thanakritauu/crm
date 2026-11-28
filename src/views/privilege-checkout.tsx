@@ -66,7 +66,7 @@ export default function PrivilegeSummary() {
         fallback={
           <>
             <PageHeader title={t("priv.delivery_address_title")} backTo="rewards" />
-            <EmptyData class="pt-16" title={t("privilage.no_privilage_found")} />
+            <EmptyData icon={IconGift} class="pt-16" title={t("privilage.no_privilage_found")} />
           </>
         }
       >

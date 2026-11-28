@@ -6,6 +6,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ResultModal } from "~/components/ui/modal";
 import { BottomActionBar, BottomActionBarSpacer } from "~/components/layout/bottom-action-bar";
+import { StepProgress } from "~/components/ui/step-progress";
 import { PageLoading } from "~/components/ui/page-loading";
 import { useI18n } from "~/lib/i18n";
 import { session, sessionActions } from "~/lib/session";
@@ -219,17 +220,8 @@ export default function PlatformQuestionAnswer() {
         {(q) => (
           <>
             <div class="flex flex-col gap-4 px-4">
-              {/* ความคืบหน้า: "คำถามข้อที่ x / y" + ขีดแต่ละข้อ (ไม่แสดง %) */}
-              <div class="flex flex-col gap-2 rounded-2xl border border-stroke bg-white p-2">
-                <div class="flex items-center justify-between">
-                  <span class="text-12 font-semibold text-dark">{t("platform.question_step_progress", { current: current() + 1, total: total() })}</span>
-                </div>
-                <div class="flex items-center gap-1">
-                  <For each={questions()}>
-                    {(_, i) => <span class={cn("h-2 flex-1 rounded-full transition-all", i() <= current() ? "bg-primary" : "bg-surface-gray", i() === current() ? "opacity-100" : "opacity-60")} />}
-                  </For>
-                </div>
-              </div>
+              {/* ความคืบหน้า: StepProgress (ต้นแบบ DSL — ใช้ร่วมกับภารกิจตอบคำถาม) */}
+              <StepProgress current={current()} total={total()} />
               <div class="flex flex-col gap-2 rounded-2xl bg-secondary-surface p-4">
                 <div class="flex items-start gap-2">
                   <span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-secondary text-14 font-semibold text-white">{current() + 1}</span>
@@ -278,7 +270,7 @@ export default function PlatformQuestionAnswer() {
       </Show>
 
       <BottomActionBarSpacer />
-      <BottomActionBar class="pb-8">
+      <BottomActionBar>
         {/* ปุ่มคู่ตามเว็บจริง: ขั้น 1 "ยกเลิก | ตรวจสอบคำสั่งซื้อ" · ขั้น 2 "ย้อนกลับ | ถัดไป" */}
         <div class="grid grid-cols-2 gap-4">
           <Show
@@ -308,6 +300,7 @@ export default function PlatformQuestionAnswer() {
       <ResultModal
         open={suggestOpen()}
         onOpenChange={setSuggestOpen}
+        tone="primary"
         icon={<IconInfo size={24} />}
         title={t("platform.suggestion")}
         description={

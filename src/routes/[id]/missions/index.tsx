@@ -16,7 +16,7 @@ import { session } from "~/lib/session";
 import { missionService } from "~/services/mission-service";
 import { cardClass } from "~/components/ui/card";
 import { SortSheet } from "~/components/ui/sort-sheet";
-import { IconChevronRight, IconSort } from "~/components/ui/icons";
+import { IconChevronRight, IconSort, IconMission } from "~/components/ui/icons";
 
 /**
  * /:partner/missions — รายการภารกิจ (แท็บในแถบล่าง — ไม่มีปุ่มย้อนกลับ)
@@ -96,7 +96,7 @@ export default function MissionList() {
         <div class="grid grid-cols-12 gap-4">
           <Show when={items().length < 1}>
             <div class="col-span-12 flex h-full min-h-[300px] items-center justify-center">
-              <EmptyData title={missionService.list().length ? t("mis.no_match") : t("mis.no_missions")} />
+              <EmptyData icon={IconMission} title={missionService.list().length ? t("mis.no_match") : t("mis.no_missions")} />
             </div>
           </Show>
           <For each={items()}>{(m) => <MissionGridCard mission={m} />}</For>

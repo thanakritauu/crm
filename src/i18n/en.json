@@ -800,5 +800,6 @@
   "platform.status_not_connected": "Not connected",
   "platform.unbind_short": "Disconnect",
   "notification.earn_title": "Points",
-  "common.coupon_use.valid_until": "Valid until {{date}}"
+  "common.coupon_use.valid_until": "Valid until {{date}}",
+  "notification.no_notifications_desc": "We'll let you know when you earn points, complete a mission, or your redemption moves forward"
 }

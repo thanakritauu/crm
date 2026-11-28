@@ -32,12 +32,20 @@ const ModalShell: ParentComponent<{ open: boolean; onOpenChange: (o: boolean) =>
   </AlertDialogPrimitive>
 );
 
+/** ไอคอนเริ่มต้นตาม tone — popup ทุกอันมีวงไอคอนเสมอ (ระบบเดียวทั้งเว็บ · 2026-11-28) */
+const TONE_ICON: Record<Tone, () => JSX.Element> = {
+  primary: () => <IconInfo size={24} />,
+  warning: () => <IconInfo size={24} />,
+  success: () => <IconCheckCircle size={24} />,
+  error: () => <IconCloseCircle size={24} />,
+};
+
 function ModalBody(props: { icon?: JSX.Element; tone?: Tone; title: JSX.Element; description?: JSX.Element }) {
   return (
     <div class="flex w-full flex-col items-center gap-4">
-      <Show when={props.icon}>
-        <span class={cn("flex size-12 items-center justify-center rounded-full", TONE_BG[props.tone ?? "primary"], TONE_FG[props.tone ?? "primary"])}>{props.icon}</span>
-      </Show>
+      <span class={cn("flex size-12 items-center justify-center rounded-full", TONE_BG[props.tone ?? "primary"], TONE_FG[props.tone ?? "primary"])}>
+        {props.icon ?? TONE_ICON[props.tone ?? "primary"]()}
+      </span>
       <div class="flex w-full flex-col items-center text-center">
         <AlertDialogPrimitive.Title class="whitespace-pre-line text-18 font-semibold text-dark">{props.title}</AlertDialogPrimitive.Title>
         <Show when={props.description}>
@@ -61,12 +69,14 @@ export function ResultModal(props: {
   icon?: JSX.Element;
   /** เนื้อหาเพิ่มใต้คำอธิบาย เหนือปุ่ม (เช่น ชวนเชื่อมต่อแพลตฟอร์ม) */
   extra?: JSX.Element;
+  /** สีวงไอคอน — ไม่ส่ง = ตาม variant (สำเร็จเขียว / ผิดพลาดแดง) · คำแนะนำ/ข้อมูล = "primary" (2026-11-28) */
+  tone?: Tone;
 }) {
   const ok = () => props.variant !== "error";
   return (
     <ModalShell open={props.open} onOpenChange={props.onOpenChange}>
       <ModalBody
-        tone={ok() ? "success" : "error"}
+        tone={props.tone ?? (ok() ? "success" : "error")}
         icon={props.icon ?? (ok() ? <IconCheckCircle size={24} /> : <IconCloseCircle size={24} />)}
         title={props.title}
         description={props.description}

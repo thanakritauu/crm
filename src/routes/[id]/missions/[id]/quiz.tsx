@@ -1,4 +1,6 @@
 import { useNavigate, useParams } from "@solidjs/router";
+import { StepProgress } from "~/components/ui/step-progress";
+import { BottomActionBar, BottomActionBarSpacer } from "~/components/layout/bottom-action-bar";
 import { createMemo, createSignal, For, onMount, Show } from "solid-js";
 import { PageHeader } from "~/components/layout/page-header";
 import { CoinIcon } from "~/components/mission/coin-icon";
@@ -11,7 +13,7 @@ import { sessionActions } from "~/lib/session";
 import { usePartnerPath } from "~/lib/theme";
 import { cn, delay, formatNumber } from "~/lib/utils";
 import { missionService } from "~/services/mission-service";
-import { IconCheck } from "~/components/ui/icons";
+import { IconCheck, IconMission } from "~/components/ui/icons";
 
 /**
  * /:partner/quiz-activity/:id — กิจกรรมตอบคำถาม (id = id ภารกิจแบบ quiz เช่น m-002)
@@ -68,7 +70,7 @@ export default function QuizActivity() {
         when={mission() && questions().length > 0}
         fallback={
           <div class="flex flex-1 flex-col items-center justify-center px-4">
-            <EmptyData title={t("mission.not_found_title")} description={t("mission.not_found_desc")} />
+            <EmptyData icon={IconMission} title={t("mission.not_found_title")} description={t("mission.not_found_desc")} />
             <Button size="block" class="mt-4 max-w-xs" onClick={() => navigate(to("missions"))}>
               {t("mission.mission")}
             </Button>
@@ -90,7 +92,7 @@ export default function QuizActivity() {
                 </p>
                 <div class="mt-4 flex items-center gap-x-2 rounded-full bg-white px-4 py-2">
                   <CoinIcon size={20} />
-                  <span class="text-16 font-semibold text-teriary">
+                  <span class="text-16 font-semibold text-teriary-text">
                     +{formatNumber(mission()!.reward_coins)} {t("common.coins")}
                   </span>
                 </div>
@@ -98,7 +100,9 @@ export default function QuizActivity() {
               <Show when={alreadyDone()}>
                 <p class="mt-4 text-center text-12 text-gray">{t("mission.already_joined")}</p>
               </Show>
-              <div class="mt-auto flex flex-col gap-2 py-4">
+              {/* ปุ่มลอยล่างแบบเดียวทั้งเว็บ — หลายปุ่มซ้อนในแถบเดียว ห่าง 8 (2026-11-28) */}
+              <div class="h-48" aria-hidden="true" />
+              <BottomActionBar class="flex flex-col gap-2">
                 <Show when={mission()!.has_leaderboard}>
                   <Button variant="secondary" size="block" onClick={() => navigate(to(`missions/${mission()!.id}/leaderboard`))}>
                     {t("common.coin_acc_ranking")}
@@ -110,23 +114,25 @@ export default function QuizActivity() {
                 <Button variant="ghost" size="block" class="text-gray" onClick={() => navigate(to("missions"))}>
                   {t("mission.mission")}
                 </Button>
-              </div>
+              </BottomActionBar>
             </div>
           }
         >
           <div class="px-4">
-            <div class="min-h-[120px] w-full rounded-2xl bg-primary p-4">
-              <p class="mb-2 text-center text-12 font-semibold text-white/80">
-                {t("common.step")} {step() + 1}/{questions().length}
-              </p>
-              <h2 class="text-center text-16 font-semibold text-white">{question()?.question}</h2>
-              <section id="hint" class="mt-2">
-                <div class="flex min-h-12 items-center justify-center rounded-lg bg-white/20 p-2">
-                  <strong class="text-14 font-semibold text-white">
-                    {t("loyalty.hint")} <span class="font-normal">{question()?.hint}</span>
-                  </strong>
-                </div>
-              </section>
+            {/* ความคืบหน้าแบบเดียวกับตอบคำถามเชื่อมต่อแพลตฟอร์ม (StepProgress · DSL 2026-11-28) — เดิม "ขั้นตอน 1/3" ในการ์ดชมพู */}
+            <StepProgress current={step()} total={questions().length} class="mb-4" />
+            {/* กล่องคำถามแบบเดียวกับตอบคำถามเชื่อมต่อแพลตฟอร์ม (2026-11-28 · เดิมการ์ดชมพูทึบตัวขาว):
+                ม่วงอ่อน · วงเลขข้อม่วง + คำถาม 14/Medium ตัวดำ · คำใบ้ 12 เทา */}
+            <div class="flex flex-col gap-2 rounded-2xl bg-secondary-surface p-4">
+              <div class="flex items-start gap-2">
+                <span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-secondary text-14 font-semibold text-white">{step() + 1}</span>
+                <h2 class="min-w-0 flex-1 text-14 font-medium text-dark">{question()?.question}</h2>
+              </div>
+              <Show when={question()?.hint}>
+                <p id="hint" class="pl-8 text-12 text-gray">
+                  <span class="font-semibold">{t("loyalty.hint")}</span> {question()?.hint}
+                </p>
+              </Show>
             </div>
             <section id="choice" class="mt-4">
               <div class="grid grid-cols-12 gap-2">
@@ -158,17 +164,19 @@ export default function QuizActivity() {
               </div>
             </section>
           </div>
-          <div class="flex flex-1 flex-col justify-end p-4">
+          <BottomActionBarSpacer />
+          <BottomActionBar>
             <Button size="block" disabled={selected() === null} onClick={submit}>
               {step() < questions().length - 1 ? t("common.next") : t("loyalty.quiz_submit")}
             </Button>
-          </div>
+          </BottomActionBar>
         </Show>
       </Show>
 
       <AlertDialog
         open={wrongOpen()}
         onOpenChange={setWrongOpen}
+        tone="error"
         title={t("loyalty.quiz_wrong_title")}
         description={t("loyalty.quiz_wrong_desc")}
         confirmText={t("common.ok")}
